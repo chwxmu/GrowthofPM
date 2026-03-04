@@ -9,11 +9,15 @@
 *.booproj
 
 # Unity 生成的文件
+.utmp/
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+[Ll]ogs/
+UserSettings/
+*.log
 Assets/AssetStoreTools*
 
 # 系统文件
@@ -22,3 +26,4 @@ Assets/AssetStoreTools*
 *.swo
 
 .codex
+*.lfs
