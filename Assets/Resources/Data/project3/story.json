@@ -1,0 +1,642 @@
+﻿{
+  "projectNumber": 3,
+  "projectName": "智慧校园教务系统",
+  "totalWeeks": 12,
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "phase": "startup",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司门口", "text": "【周一早上 8:50 公司门口】" },
+        { "speaker": "", "location": "公司门口", "text": "你刚进公司，就看到徐姐抱着一堆资料冲过来。" },
+        { "speaker": "徐姐", "location": "公司门口", "text": "走！去XX大学，见教务处张老师！" },
+        { "speaker": "徐姐", "location": "车上", "text": "教务处的项目我做过，特点是：流程多、决策慢、领导多。但是搞定一个，后续几年都不用愁。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "XX大学教务处", "text": "【周一早上 9:00】你带着徐姐、李华来到XX大学教务处。张老师是个50多岁的老教授，看起来很和蔼。" },
+        { "speaker": "张老师", "location": "XX大学教务处", "text": "小朱啊，我们这个教务系统很简单，就是查成绩、查课表、查学分，你们做个网页就行。" },
+        { "speaker": "徐姐", "location": "XX大学教务处", "text": "没问题张老师，我们一周内出原型！" },
+        { "speaker": "", "location": "XX大学教务处", "text": "你心里咯噔一下：以你的经验，\"很简单\"往往是项目的第一个坑。" },
+        { "speaker": "", "location": "公司", "text": "果然，回到公司一分析——" },
+        { "speaker": "李华", "location": "公司", "text": "查成绩？那得对接现有数据库，他们的数据库超级老超级烂。" },
+        { "speaker": "韩梅梅", "location": "公司", "text": "我打听过了，光成绩这个模块，涉及教务处、院系、任课老师三方录入。" },
+        { "speaker": "王小明", "location": "公司", "text": "UI要做响应式吗？手机、电脑、平板都要？" },
+        { "speaker": "徐姐", "location": "公司", "text": "那个……我好像话说大了。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w1_d1",
+        "description": "面对客户说的\"很简单\"的需求，实际分析后发现远比想象复杂。你怎么处理？",
+        "aiAdvice": "徐姐是老手哦，要不要交给她试试？",
+        "aiQuality": "good",
+        "aiRecommendedOption": 2,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "签确认书，把需求框死",
+            "narrative": "张老师觉得你太死板，但至少需求明确了。后续开发有了清晰的边界。",
+            "effects": { "techPower": 0, "commPower": -3, "managePower": 8, "stressPower": 2 },
+            "riskChange": 0
+          },
+          {
+            "text": "先做着，边做边沟通",
+            "narrative": "灵活但容易失控。你决定先推进，遇到问题再沟通。",
+            "effects": { "techPower": -3, "commPower": 8, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "让徐姐搞定",
+            "narrative": "徐姐在职场混久了，是老江湖。她三言两语就让张老师签了初步需求确认书。",
+            "effects": { "techPower": 0, "commPower": 5, "managePower": 3, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "回公司的车上", "text": "【场景：周一傍晚，回公司的车上】" },
+        { "speaker": "徐姐", "location": "回公司的车上", "text": "张老师人还挺好的，说话和气。" },
+        { "speaker": "李华", "location": "回公司的车上", "text": "和气没用，他那数据库是2003年的SQL Server，我看了眼版本，比我们公司实习生的年龄都大。" },
+        { "speaker": "韩梅梅", "location": "回公司的车上", "text": "而且成绩数据分布在三个不同的系统里，教务处一个，院系一个，还有个手工Excel表。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 3, "commPower": 0, "managePower": 0, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 2,
+      "phase": "startup",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司茶水间", "text": "【周三早上 9:00 公司茶水间】" },
+        { "speaker": "韩梅梅", "location": "公司茶水间", "text": "老大，听说教务处那边要加功能？我有个前同事在那当老师，说张老师最近压力大，校长天天催他要'信息化建设成果'。" },
+        { "speaker": "", "location": "公司茶水间", "text": "你心里有数了：这周肯定要出幺蛾子。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周三下午 2:30】" },
+        { "speaker": "", "location": "办公室", "text": "张老师突然打电话：\"小朱啊，校长说还要加个功能，教师端评教系统，没问题吧？\"" },
+        { "speaker": "徐姐", "location": "办公室", "text": "这得加钱至少50万。" },
+        { "speaker": "", "location": "办公室", "text": "你还没开口，王总的消息就来了：\"客户很重要，先做着，钱的事后面谈。\"" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w2_d1",
+        "description": "张老师要加教师端评教系统，王总说先做着不谈钱。你怎么办？",
+        "aiAdvice": "合同怎么写就该怎么弄的吧！",
+        "aiQuality": "bad",
+        "aiRecommendedOption": 2,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "接下，团队加班",
+            "narrative": "团队士气下降了，但至少客户满意了。",
+            "effects": { "techPower": -5, "commPower": 0, "managePower": 3, "stressPower": 8 },
+            "riskChange": 0
+          },
+          {
+            "text": "谈判，加钱加时间",
+            "narrative": "你和张老师、王总分别谈判。最终加了30万和两周时间，一半成功一半得罪人。",
+            "effects": { "techPower": 0, "commPower": 10, "managePower": 5, "stressPower": -3 },
+            "riskChange": 0
+          },
+          {
+            "text": "拒绝，按合同来",
+            "narrative": "你理直气壮地拒绝了。合同白纸黑字。但客户明显不爽。",
+            "effects": { "techPower": 0, "commPower": -8, "managePower": 5, "stressPower": 2 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "公司楼下便利店", "text": "【场景：周四晚上，公司楼下便利店】" },
+        { "speaker": "李华", "location": "公司楼下便利店", "text": "老大，你说王总那句'钱的事后面谈'，后面到底是啥时候？" },
+        { "speaker": "朱诀", "location": "公司楼下便利店", "text": "怎么，担心了？" },
+        { "speaker": "李华", "location": "公司楼下便利店", "text": "我不担心钱，我担心活儿。加一个教师端评教，等于半套系统了。" },
+        { "speaker": "朱诀", "location": "公司楼下便利店", "text": "放心，我心里有数。" },
+        { "speaker": "", "location": "公司楼下便利店", "text": "你站在便利店门口，看着来来往往的下班人群，第一次感觉到：项目经理的担子，比想象中重。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 3 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 3,
+      "phase": "planning",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司楼下", "text": "【周一早上 8:30 公司楼下】" },
+        { "speaker": "王小明", "location": "公司楼下", "text": "老大，我今天要讲原型...我有点紧张..." },
+        { "speaker": "", "location": "公司楼下", "text": "你正准备安慰他，王总从后面拍你肩膀。" },
+        { "speaker": "王总", "location": "公司楼下", "text": "好好干，今天要是原型过了，晚上我请吃饭！" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "教务处大会议室", "text": "【周一上午 10:00】教务处大会议室，来了7个老师。" },
+        { "speaker": "", "location": "教务处大会议室", "text": "王小明紧张地展示原型，刚讲到第二页——" },
+        { "speaker": "A老师", "location": "教务处大会议室", "text": "按钮要大！我们老同志眼神不好。" },
+        { "speaker": "B老师", "location": "教务处大会议室", "text": "按钮要小！现在流行极简风。" },
+        { "speaker": "C老师", "location": "教务处大会议室", "text": "颜色要红！喜庆。" },
+        { "speaker": "D老师", "location": "教务处大会议室", "text": "颜色要绿！护眼。" },
+        { "speaker": "李华", "location": "教务处大会议室", "text": "这活没法干了。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w3_d1",
+        "description": "7个老师7种意见，原型评审陷入僵局。你怎么处理？",
+        "aiAdvice": "反正也没什么，全部采纳重新做也不会花太多时间吧。",
+        "aiQuality": "bad",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "强势要求指定决策人",
+            "narrative": "你直接要求张老师指定一个人拍板。其他老师有意见，但效率提高了。",
+            "effects": { "techPower": 0, "commPower": -5, "managePower": 10, "stressPower": 2 },
+            "riskChange": 0
+          },
+          {
+            "text": "全部采纳",
+            "narrative": "你答应了所有人的意见。7种方案全要，开发团队崩溃。",
+            "effects": { "techPower": -8, "commPower": 5, "managePower": -3, "stressPower": 8 },
+            "riskChange": 0
+          },
+          {
+            "text": "按原计划推进",
+            "narrative": "你坚持按原有设计推进。老师们不太满意，但至少能继续往前走。",
+            "effects": { "techPower": 0, "commPower": -3, "managePower": 8, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "公司茶水间", "text": "【场景：周一下午，公司茶水间】" },
+        { "speaker": "", "location": "公司茶水间", "text": "王小明蹲在角落里，一言不发。" },
+        { "speaker": "张小红", "location": "公司茶水间", "text": "第一次见这种场面吧？习惯就好，我每次提Bug被开发怼的时候，也这样。" },
+        { "speaker": "王小明", "location": "公司茶水间", "text": "可是……他们吵得好凶……" },
+        { "speaker": "张小红", "location": "公司茶水间", "text": "凶就对了，不凶说明对你的原型没兴趣。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 2, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 4,
+      "phase": "planning",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "技术部", "text": "【周四早上 9:30 技术部】" },
+        { "speaker": "", "location": "技术部", "text": "李华神秘兮兮地把你拉到角落。" },
+        { "speaker": "李华", "location": "技术部", "text": "老大，我有个想法，能彻底解决技术债..." },
+        { "speaker": "", "location": "技术部", "text": "你一看他的眼神，就知道他又想重构了。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周四下午 4:00】" },
+        { "speaker": "李华", "location": "办公室", "text": "我想好了，用微服务重构！" },
+        { "speaker": "朱诀", "location": "办公室", "text": "现在？" },
+        { "speaker": "李华", "location": "办公室", "text": "现有代码是屎山，重构能还技术债，以后维护轻松。" },
+        { "speaker": "韩梅梅", "location": "办公室", "text": "重构？按他的速度，明年这时候都重构不完。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w4_d1",
+        "description": "李华要求用微服务重构现有代码。韩梅梅嘲讽说重构来不及。你怎么决定？",
+        "aiAdvice": "李华是专业的，要不交给他吧。",
+        "aiQuality": "neutral",
+        "aiRecommendedOption": 0,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "同意重构",
+            "narrative": "李华开心地开始画架构图。但你知道进度可能会很危险。",
+            "effects": { "techPower": 12, "commPower": -3, "managePower": -5, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "拒绝重构",
+            "narrative": "李华不爽地回到工位。进度保住了，但他的积极性明显下降。",
+            "effects": { "techPower": -8, "commPower": 0, "managePower": 10, "stressPower": 3 },
+            "riskChange": 0
+          },
+          {
+            "text": "折中，只重构核心模块",
+            "narrative": "你允许李华重构最核心的模块，其他部分保持不变。平衡方案。",
+            "effects": { "techPower": 8, "commPower": 0, "managePower": 5, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "公司", "text": "【场景：周四晚上，公司】" },
+        { "speaker": "", "location": "公司", "text": "李华还在工位上画架构图，韩梅梅已经下班了。" },
+        { "speaker": "朱诀", "location": "公司", "text": "还不走？" },
+        { "speaker": "李华", "location": "公司", "text": "老大，我想好了，微服务现在不做，以后更难。这个项目虽然急，但也是机会。" },
+        { "speaker": "", "location": "公司", "text": "这时手机响了，韩梅梅发来消息：\"老大，李华要是坚持重构，核心模块的外键让他找我，我帮他设计。\"" },
+        { "speaker": "李华", "location": "公司", "text": "她这人……还挺口是心非的。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 3, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 5,
+      "phase": "execution",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "王总办公室", "text": "【周三早上 10:00 王总办公室】" },
+        { "speaker": "", "location": "王总办公室", "text": "王总脸色不太好看。" },
+        { "speaker": "王总", "location": "王总办公室", "text": "上周进度怎么样？登录模块做完没？" },
+        { "speaker": "", "location": "王总办公室", "text": "你还没开口，他就继续说。" },
+        { "speaker": "王总", "location": "王总办公室", "text": "客户那边在催了，说想看阶段性成果。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周三上午 11:00】" },
+        { "speaker": "", "location": "办公室", "text": "你看了眼李华的工位，他正在画微服务架构图，登录模块一行代码没写。" },
+        { "speaker": "韩梅梅", "location": "办公室", "text": "我就说重构不靠谱。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w5_d1",
+        "description": "登录模块只完成60%，李华在画架构图没写代码。王总在催进度。你怎么办？",
+        "aiAdvice": "要不要请个帮手？",
+        "aiQuality": "good",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "逼李华交代码",
+            "narrative": "你严厉要求李华今天交出登录模块。他不情愿地交了一堆质量一般的代码。",
+            "effects": { "techPower": -3, "commPower": -5, "managePower": 8, "stressPower": 3 },
+            "riskChange": 0
+          },
+          {
+            "text": "让韩梅梅帮忙",
+            "narrative": "韩梅梅答应了，但她可能会甩锅。\"没问题老大，包在我身上。\"",
+            "effects": { "techPower": -5, "commPower": 5, "managePower": 3, "stressPower": 2 },
+            "riskChange": 0
+          },
+          {
+            "text": "亲自盯进度",
+            "narrative": "你天天坐在李华旁边，他终于动了。但你几乎没时间处理其他事务。",
+            "effects": { "techPower": 5, "commPower": 0, "managePower": 3, "stressPower": -10 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "王总办公室门口", "text": "【场景：周四上午，王总办公室门口】" },
+        { "speaker": "徐姐", "location": "王总办公室门口", "text": "挨骂了？" },
+        { "speaker": "朱诀", "location": "王总办公室门口", "text": "没有，就是催进度。" },
+        { "speaker": "徐姐", "location": "王总办公室门口", "text": "王总不骂人反而更可怕，说明事情真急了。" },
+        { "speaker": "徐姐", "location": "王总办公室门口", "text": "我去趟教务处吧，跟张老师聊聊，探探口风。有时候客户急，但不是催我们，是上面在催他们。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 2, "managePower": 0, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 6,
+      "phase": "execution",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "工位", "text": "【周二早上 9:00 工位】" },
+        { "speaker": "", "location": "工位", "text": "你发现王小明的工位空了，桌上留了张纸条。" },
+        { "speaker": "", "location": "工位", "text": "\"老大，我去楼下便利店坐会儿，有点扛不住...\"" },
+        { "speaker": "张小红", "location": "工位", "text": "昨晚他又加班到凌晨三点。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周二晚上 9:00】连续加班两周，你还在工位改方案。突然听到角落里抽泣声。" },
+        { "speaker": "王小明", "location": "办公室", "text": "我……我受不了了，每天改来改去，UI换了8版……" },
+        { "speaker": "张小红", "location": "办公室", "text": "哭有什么用，Bug还没改完。" },
+        { "speaker": "李华", "location": "办公室", "text": "我就说该重构吧，现在这些代码都是垃圾。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w6_d1",
+        "description": "王小明压力崩溃哭泣。连续加班两周，UI改了8版。你怎么处理？",
+        "aiAdvice": "哭吧哭吧不是罪，哭完接着干活才是好牛马。",
+        "aiQuality": "neutral",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "准假，让他回家休息",
+            "narrative": "你让王小明回家休息两天。他很感激，进度稍微慢了一点，但回来后效率提高了。",
+            "effects": { "techPower": 0, "commPower": 3, "managePower": 10, "stressPower": -3 },
+            "riskChange": 0
+          },
+          {
+            "text": "哄一哄，继续干",
+            "narrative": "你说了半天安慰的话。他擦了眼泪继续干活了，但你知道他随时可能再次崩溃。",
+            "effects": { "techPower": -3, "commPower": 10, "managePower": 0, "stressPower": -5 },
+            "riskChange": 0
+          },
+          {
+            "text": "开会批评",
+            "narrative": "你在会上批评了王小明的表现。他更委屈了，团队气氛变得更差。",
+            "effects": { "techPower": -5, "commPower": -8, "managePower": 5, "stressPower": 3 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 7,
+      "phase": "execution",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司", "text": "【周五早上 8:00 公司】" },
+        { "speaker": "运维", "location": "公司", "text": "朱哥，昨晚压力测试，查询接口响应要10秒...我把数据发你邮箱了，你看看吧。" },
+        { "speaker": "", "location": "公司", "text": "你打开电脑一看，心里一沉。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周五下午 3:00】" },
+        { "speaker": "运维", "location": "办公室", "text": "朱经理，压力测试，查询成绩要10秒。" },
+        { "speaker": "朱诀", "location": "办公室", "text": "多少并发？" },
+        { "speaker": "运维", "location": "办公室", "text": "1000个学生同时查，CPU 100%。" },
+        { "speaker": "李华", "location": "办公室", "text": "我早说韩梅梅的表结构有问题，外键都没建。" },
+        { "speaker": "韩梅梅", "location": "办公室", "text": "那你重构啊，别只会叫。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w7_d1",
+        "description": "数据库设计出问题，查询成绩要10秒，1000并发CPU直接100%。你怎么解决？",
+        "aiAdvice": "技术人员该紧急救场了！",
+        "aiQuality": "good",
+        "aiRecommendedOption": 0,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "让李华加班重写",
+            "narrative": "李华周末不睡了，重写了数据库查询模块。性能提升了10倍，但他更累了。",
+            "effects": { "techPower": 12, "commPower": -3, "managePower": -5, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "让韩梅梅紧急优化",
+            "narrative": "韩梅梅加了几个索引，查询时间从10秒降到3秒。勉强能用。",
+            "effects": { "techPower": 3, "commPower": -5, "managePower": 5, "stressPower": -2 },
+            "riskChange": 0
+          },
+          {
+            "text": "自己查资料解决",
+            "narrative": "你通宵研究数据库优化方案，亲手重写了查询语句。性能大幅提升。",
+            "effects": { "techPower": 15, "commPower": 0, "managePower": 0, "stressPower": -15 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 8,
+      "phase": "execution",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司门口", "text": "【周一早上 9:30 公司门口】" },
+        { "speaker": "徐姐", "location": "公司门口", "text": "老大！好消息！教务处那边说要加新功能！证明他们满意我们做的，明年续约稳了！" },
+        { "speaker": "朱诀", "location": "公司门口", "text": "...什么新功能？" },
+        { "speaker": "徐姐", "location": "公司门口", "text": "学分预警！" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周一上午 10:00】" },
+        { "speaker": "张老师", "location": "办公室", "text": "小朱啊，我们要加一个'学分预警'功能，学生学分不够时自动提醒。" },
+        { "speaker": "徐姐", "location": "办公室", "text": "这个需求合理，但不在合同里，至少值30万。" },
+        { "speaker": "王总", "location": "办公室", "text": "做了吧，明年续约就靠这个。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w8_d1",
+        "description": "教务处要加学分预警功能，不在合同里。徐姐说值30万，王总说先做着。",
+        "aiAdvice": "开什么玩笑哦现在才加新需求，老虎不发威你当我是病猫！",
+        "aiQuality": "bad",
+        "aiRecommendedOption": 2,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "免费做",
+            "narrative": "团队怨声载道，但客户满意了。王总暗示明年续约有你的份。",
+            "effects": { "techPower": -5, "commPower": 5, "managePower": 0, "stressPower": 8 },
+            "riskChange": 0
+          },
+          {
+            "text": "收费做",
+            "narrative": "你找张老师谈增加预算。经过艰难谈判，最终加了20万。专业且合理。",
+            "effects": { "techPower": 0, "commPower": 10, "managePower": 8, "stressPower": -3 },
+            "riskChange": 0
+          },
+          {
+            "text": "拒绝",
+            "narrative": "你有理有据地拒绝了。王总不太高兴，但你保住了团队的工作节奏。",
+            "effects": { "techPower": 0, "commPower": -8, "managePower": 8, "stressPower": 2 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 9,
+      "phase": "monitoring",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "测试部", "text": "【周一早上 9:00 测试部】" },
+        { "speaker": "", "location": "测试部", "text": "张小红拿着一沓纸走过来。" },
+        { "speaker": "张小红", "location": "测试部", "text": "老大，200个Bug，我分类好了。" },
+        { "speaker": "", "location": "测试部", "text": "你看着那沓纸，厚度堪比一本小说。" },
+        { "speaker": "张小红", "location": "测试部", "text": "我已经连续一周没睡好觉了。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "测试部", "text": "张小红扔给你一张表：\"200个Bug。\"" },
+        { "speaker": "", "location": "测试部", "text": "P0级（严重）：15个——登录都登不上\nP1级（高）：50个——成绩算错了\nP2级（中）：80个——页面错位\nP3级（低）：55个——错别字" },
+        { "speaker": "张小红", "location": "测试部", "text": "这代码是人写的吗？我测了三年，没见过这么烂的。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w9_d1",
+        "description": "张小红提交了200个Bug。P0级15个，P1级50个，P2级80个，P3级55个。怎么处理？",
+        "aiAdvice": "要不选择性修一点就好……？",
+        "aiQuality": "neutral",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "全部修完",
+            "narrative": "全组通宵一周。人都麻了，但代码质量有了质的飞跃。",
+            "effects": { "techPower": 10, "commPower": -5, "managePower": -3, "stressPower": 8 },
+            "riskChange": 0
+          },
+          {
+            "text": "只修P0和P1",
+            "narrative": "你优先修复严重和高级Bug，P2P3留到后续迭代。务实的选择。",
+            "effects": { "techPower": 5, "commPower": -3, "managePower": 3, "stressPower": 3 },
+            "riskChange": 0
+          },
+          {
+            "text": "让韩梅梅背锅",
+            "narrative": "你把锅甩给韩梅梅。她怒了，团队氛围变得更差了。",
+            "effects": { "techPower": -5, "commPower": -10, "managePower": 3, "stressPower": -3 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "测试部", "text": "【场景：周二下午，测试部】" },
+        { "speaker": "", "location": "测试部", "text": "张小红正在一张一张地贴Bug标签。你走过去帮忙。" },
+        { "speaker": "张小红", "location": "测试部", "text": "老大，你知道吗，这200个Bug里，有50个是同一个原因——字段类型不一致。" },
+        { "speaker": "朱诀", "location": "测试部", "text": "那你怎么不合并？" },
+        { "speaker": "张小红", "location": "测试部", "text": "合并了，但我要让开发看到，一个问题能引发50个Bug。不然他们不长记性。" },
+        { "speaker": "朱诀", "location": "测试部", "text": "你这是……" },
+        { "speaker": "张小红", "location": "测试部", "text": "教育他们。用Bug教育。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 2, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 10,
+      "phase": "monitoring",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "会议室", "text": "【周三早上 10:00 会议室】" },
+        { "speaker": "徐姐", "location": "会议室", "text": "教务处说这周要组织学生验收测试，大概30人。" },
+        { "speaker": "李华", "location": "会议室", "text": "30人？！那不是挑刺大会吗？" },
+        { "speaker": "韩梅梅", "location": "会议室", "text": "没事，甩锅给我就行，我擅长。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "教务处", "text": "【周三下午 2:00】教务处组织了30个学生代表来测试。" },
+        { "speaker": "学生1", "location": "教务处", "text": "这个页面怎么全是红色，太晃眼了。" },
+        { "speaker": "学生2", "location": "教务处", "text": "查询要好几秒，点按钮次数多了还会闪退。" },
+        { "speaker": "学生3", "location": "教务处", "text": "为什么不能适配手机？现在谁用电脑查成绩。" },
+        { "speaker": "", "location": "教务处", "text": "张老师在旁边笑而不语。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w10_d1",
+        "description": "30个学生代表来验收测试，各种挑刺。你怎么应对？",
+        "aiAdvice": "解释解释原因吧，至少让客户知道现况。",
+        "aiQuality": "good",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "当场承诺改",
+            "narrative": "你承诺一周内修复所有问题。学生满意了，但团队要崩溃了。",
+            "effects": { "techPower": -8, "commPower": 5, "managePower": -3, "stressPower": 8 },
+            "riskChange": 0
+          },
+          {
+            "text": "解释原因",
+            "narrative": "你耐心解释了技术限制和改进计划。学生们勉强接受了。",
+            "effects": { "techPower": 0, "commPower": 12, "managePower": 3, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "敷衍过去",
+            "narrative": "你含糊地回应了几句。先过了验收再说，但你知道问题还在。",
+            "effects": { "techPower": 0, "commPower": -8, "managePower": 8, "stressPower": 2 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 11,
+      "phase": "closing",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "王总办公室", "text": "【周四早上 9:00 王总办公室】" },
+        { "speaker": "", "location": "王总办公室", "text": "王总递给你一份文件。" },
+        { "speaker": "王总", "location": "王总办公室", "text": "这是下个月的服务器预算，财务部说超了，你看着办。" },
+        { "speaker": "", "location": "王总办公室", "text": "你一看：加服务器要50万，不加怕顶不住。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【周四下午 4:00】" },
+        { "speaker": "运维", "location": "办公室", "text": "模拟10000人同时查成绩，CPU 100%，服务器要炸。" },
+        { "speaker": "王总", "location": "办公室", "text": "加机器不要钱吗？你们自己想办法。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w11_d1",
+        "description": "压力测试，10000并发CPU 100%。服务器不够，但王总不给钱。你怎么办？",
+        "aiAdvice": "要不先请李华优化一下代码吧。",
+        "aiQuality": "neutral",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "加服务器",
+            "narrative": "你找王总要钱，据理力争，最终批了20万加了两台服务器。",
+            "effects": { "techPower": 0, "commPower": 3, "managePower": 10, "stressPower": -3 },
+            "riskChange": 0
+          },
+          {
+            "text": "优化代码",
+            "narrative": "李华接手优化，性能提升了50%。不花钱但需要时间。",
+            "effects": { "techPower": 12, "commPower": 0, "managePower": 3, "stressPower": -8 },
+            "riskChange": 0
+          },
+          {
+            "text": "限流，分批放量",
+            "narrative": "你设计了分批查询方案。用户体验差点，但能顶住。",
+            "effects": { "techPower": 3, "commPower": -3, "managePower": 5, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "机房", "text": "【场景：周四晚上，机房】" },
+        { "speaker": "运维", "location": "机房", "text": "你看，这个峰值，要是没限流，服务器早炸了。" },
+        { "speaker": "", "location": "机房", "text": "你看着屏幕上平稳的曲线，松了口气。" },
+        { "speaker": "运维", "location": "机房", "text": "朱哥，这项目做完，你有什么打算？" },
+        { "speaker": "朱诀", "location": "机房", "text": "睡觉。睡三天。" },
+        { "speaker": "运维", "location": "机房", "text": "项目经理都这么说，但第二天还是准时来上班。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 2 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 12,
+      "phase": "closing",
+      "dailyIntroDialogues": [
+        { "speaker": "", "location": "公司大会议室", "text": "【周三早上 9:00 公司大会议室】" },
+        { "speaker": "王总", "location": "公司大会议室", "text": "最后一周了！12周，三个月，就看这一哆嗦！上线日期定了：本周五凌晨4点。你们有没有信心？！" },
+        { "speaker": "", "location": "公司大会议室", "text": "李华、韩梅梅、王小明、张小红齐声：\"有！\"" },
+        { "speaker": "", "location": "公司大会议室", "text": "你看着他们，突然有点感动。" }
+      ],
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司", "text": "【周三凌晨 4:00】距离上线还有4小时。" },
+        { "speaker": "张小红", "location": "公司", "text": "手机功能有Bug，课表显示不完全！" },
+        { "speaker": "韩梅梅", "location": "公司", "text": "我代码没问题，是测试环境问题。" },
+        { "speaker": "张小红", "location": "公司", "text": "我测出来过，你们说不改！" },
+        { "speaker": "", "location": "公司", "text": "两人吵了起来。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p3_w12_d1",
+        "description": "上线前几小时，发现手机功能有Bug。张小红和韩梅梅吵了起来。怎么办？",
+        "aiAdvice": "来不及了不管了直接上吧！",
+        "aiQuality": "bad",
+        "aiRecommendedOption": 2,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "关闭有Bug的模块",
+            "narrative": "你决定关闭手机课表功能，安全上线。客户后来发现少了功能，但系统稳定运行。",
+            "effects": { "techPower": 3, "commPower": -5, "managePower": 8, "stressPower": 2 },
+            "riskChange": 0
+          },
+          {
+            "text": "通宵修Bug",
+            "narrative": "你带着李华通宵修复。凌晨6点终于修好，赶在上线前。所有人都累瘫了，但成功了。",
+            "effects": { "techPower": 15, "commPower": -3, "managePower": 0, "stressPower": -5 },
+            "riskChange": 0
+          },
+          {
+            "text": "赌一把，直接上",
+            "narrative": "你选择不管Bug直接上线。如果赌赢了皆大欢喜，赌输了就是事故。",
+            "effects": { "techPower": -5, "commPower": 5, "managePower": -3, "stressPower": 8 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "公司", "text": "距离上线还有半小时。所有人都盯着大屏幕，没人说话。" },
+        { "speaker": "王小明", "location": "公司", "text": "老大，不管今天成不成，这三个月，谢谢你。" },
+        { "speaker": "李华", "location": "公司", "text": "闭嘴，别说这种flag。" },
+        { "speaker": "韩梅梅", "location": "公司", "text": "就是，上线前别说丧气话。" },
+        { "speaker": "张小红", "location": "公司", "text": "他说的是好话。" },
+        { "speaker": "运维", "location": "公司", "text": "倒计时，10分钟。" },
+        { "speaker": "朱诀", "location": "公司", "text": "不管成不成，这三个月，我也谢谢你们。" },
+        { "speaker": "", "location": "公司", "text": "大家愣了一下，然后都笑了。" }
+      ],
+      "postDecisionStatChanges": { "techPower": 0, "commPower": 0, "managePower": 10, "stressPower": 0 },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    }
+  ]
+}
+
+

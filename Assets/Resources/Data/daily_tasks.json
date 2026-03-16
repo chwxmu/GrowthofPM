@@ -1,0 +1,64 @@
+{
+  "tasks": [
+    {
+      "name": "开会",
+      "energyCost": 40,
+      "effects": { "techPower": 0, "commPower": 0, "managePower": 20, "stressPower": 0 }
+    },
+    {
+      "name": "资源协调",
+      "energyCost": 30,
+      "effects": { "techPower": 0, "commPower": 0, "managePower": 15, "stressPower": 0 }
+    },
+    {
+      "name": "项目成员面谈",
+      "energyCost": 20,
+      "effects": { "techPower": 0, "commPower": 0, "managePower": 5, "stressPower": 5 }
+    },
+    {
+      "name": "团建",
+      "energyCost": 20,
+      "effects": { "techPower": 0, "commPower": 0, "managePower": 5, "stressPower": 5 }
+    },
+    {
+      "name": "参加行业会议",
+      "energyCost": 40,
+      "effects": { "techPower": 20, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "竞品分析",
+      "energyCost": 20,
+      "effects": { "techPower": 10, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "风险评估",
+      "energyCost": 20,
+      "effects": { "techPower": 10, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "写项目计划",
+      "energyCost": 20,
+      "effects": { "techPower": 10, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "给领导汇报",
+      "energyCost": 30,
+      "effects": { "techPower": 0, "commPower": 15, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "客户开会",
+      "energyCost": 30,
+      "effects": { "techPower": 0, "commPower": 15, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "和产品对需求",
+      "energyCost": 30,
+      "effects": { "techPower": 0, "commPower": 15, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "name": "摸鱼",
+      "energyCost": 10,
+      "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 5 }
+    }
+  ]
+}

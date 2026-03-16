@@ -1,0 +1,378 @@
+﻿{
+  "projectNumber": 1,
+  "projectName": "智慧食堂系统",
+  "totalWeeks": 9,
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "phase": "startup",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司大厅", "text": "今天是你上班的第一天。" },
+        { "speaker": "", "location": "公司会议室", "text": "【场景：公司会议室，项目资料堆成山】" },
+        { "speaker": "王总", "location": "公司会议室", "text": "朱诀，你来了。这是智慧食堂项目，前任项目经理上周离职了。项目已经延期两个月，客户张总天天打电话骂人。现在交给你了，不要让我失望啊！" },
+        { "speaker": "", "location": "公司会议室", "text": "你看着面前半人高的文档，沉默了三秒。" },
+        { "speaker": "王总", "location": "公司会议室", "text": "怎么？有问题？" },
+        { "speaker": "朱诀", "location": "公司会议室", "text": "没问题，我接。" },
+        { "speaker": "", "location": "公司会议室", "text": "系统提示：抗压力+2，临危受命" },
+        { "speaker": "", "location": "工位", "text": "你先简单熟悉了一下接手的项目，认识了项目组都有哪些成员，通过文件了解了客户张总的需求。" },
+        { "speaker": "", "location": "工位", "text": "【场景：工位上，老陈背对着你敲代码】" },
+        { "speaker": "朱诀", "location": "工位", "text": "大家好，我是新来的PM朱诀，以后多关照。" },
+        { "speaker": "老陈", "location": "工位", "text": "哦，又来了一个。别问我项目情况，我已经跟三个PM汇报过了，每次都要从头说一遍。" },
+        { "speaker": "小李", "location": "工位", "text": "朱经理，项目文档很乱，测试用例都不全..." },
+        { "speaker": "小张", "location": "工位", "text": "朱经理，我能做点什么吗？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w1_d1",
+        "description": "第一天，你需要决定如何快速了解项目现状。",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "跟老陈单独聊",
+            "narrative": "你找到老陈，耐心地听他吐槽了一个小时。虽然他嘴上说烦，但把项目的核心问题都告诉了你。",
+            "effects": { "techPower": 0, "commPower": 2, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "组织团队会议",
+            "narrative": "你召集了全体会议，让每个人汇报自己的工作进展和遇到的问题。虽然有些尴尬，但你快速掌握了全局。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 3, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "看项目文档",
+            "narrative": "你花了一整天翻看项目文档。发现：需求文档有5个版本互相矛盾，代码没有注释，测试用例只有3个，项目计划停留在2个月前。你在本子上写：第一周目标——搞清楚到底要做什么。",
+            "effects": { "techPower": 2, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 2 }
+    },
+    {
+      "weekNumber": 2,
+      "phase": "planning",
+      "prologueDialogues": [
+        { "speaker": "", "location": "育才中学校长办公室", "text": "【场景：育才中学校长办公室】" },
+        { "speaker": "张总", "location": "育才中学校长办公室", "text": "你们公司还有脸来？！说好8周上线，现在12周了！我的50万就买个登录页面？！" },
+        { "speaker": "刘校长", "location": "育才中学校长办公室", "text": "朱经理，你不知道，现在食堂中午排队一个小时，学生天天投诉，家长群里都在骂..." },
+        { "speaker": "朱诀", "location": "育才中学校长办公室", "text": "张总，刘校长，我今天来是了解情况的。给我一周时间，我拿出整改方案。" },
+        { "speaker": "张总", "location": "育才中学校长办公室", "text": "一周？行，我就等你一周！" },
+        { "speaker": "", "location": "育才中学校长办公室", "text": "系统提示：抗压力+3" },
+        { "speaker": "", "location": "办公室", "text": "【场景：办公室，只有小张也在】\n你画了一张干系人分析图：" },
+        { "speaker": "", "location": "办公室", "text": "张总：要看到成果，要省钱\n刘校长：要解决排队问题，要好用\n王总：要交付，别让客户投诉\n老陈：别烦他，让他安安静静写代码\n小张：想学东西\n小李：想让测试被重视" },
+        { "speaker": "小张", "location": "办公室", "text": "朱经理，我帮你整理需求文档吧？" },
+        { "speaker": "朱诀", "location": "办公室", "text": "好，我们一起。" },
+        { "speaker": "", "location": "办公室", "text": "系统提示：技术力+2，管理力+1" },
+        { "speaker": "", "location": "办公室", "text": "你在白板上画出了整改方案：\n第3-4周：完成核心功能（订餐、出餐）\n第5-6周：完成报表和扫码\n第7周：测试和修复bug\n第8周：试运行和培训\n第9-10周：正式上线和优化" },
+        { "speaker": "老陈", "location": "办公室", "text": "这次计划靠谱多了。" },
+        { "speaker": "", "location": "办公室", "text": "系统提示：技术力+2，管理力+3" }
+      ],
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 4, "commPower": 0, "managePower": 4, "stressPower": 3 }
+    },
+    {
+      "weekNumber": 3,
+      "phase": "planning",
+      "prologueDialogues": [
+        { "speaker": "", "location": "王总办公室", "text": "【场景：王总办公室】" },
+        { "speaker": "王总", "location": "王总办公室", "text": "朱诀，接手两周了，有什么想法？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w3_d1",
+        "description": "王总问你项目情况，你该如何汇报？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "说实话：\"项目比想象的烂，需求混乱，代码一团糟，至少需要10周。\"",
+            "narrative": "王总沉默了一会儿，然后点点头：\"我欣赏你的诚实。需要什么支持跟我说。\"他给你更多的信任和支持。",
+            "effects": { "techPower": 0, "commPower": 3, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "报喜不报忧：\"项目还行，我评估一下，下周给详细计划。\"",
+            "narrative": "王总暂时放心了，但你知道问题只是被推迟了。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 2, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "画大饼：\"王总放心，我保证8周内交付！\"",
+            "narrative": "王总很满意，但你心里清楚这个承诺有多大压力。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 3 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "secondDecisionEvent": {
+        "eventId": "p1_w3_d2",
+        "description": "向张总汇报后，张总问你：如果到时候交不出来，怎么办？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "立军令状：\"如果延期，我主动辞职。\"",
+            "narrative": "张总被你的决心打动，表示愿意全力配合。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 4 },
+            "riskChange": 0
+          },
+          {
+            "text": "留余地：\"我会尽全力，但技术问题有时不可控。\"",
+            "narrative": "张总理解，但对你有点怀疑。",
+            "effects": { "techPower": 0, "commPower": 3, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "反问：\"张总，如果贵校配合得好，10周没问题。\"",
+            "narrative": "张总愣了一下，然后笑了：\"小朱，你挺有意思。行，我们配合。\"",
+            "effects": { "techPower": 0, "commPower": 3, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 4,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【场景：你的办公室】" },
+        { "speaker": "", "location": "办公室", "text": "刘校长打来电话：\"朱经理，能不能加个功能？让家长也能看到孩子吃了什么？\"" },
+        { "speaker": "", "location": "办公室", "text": "你心里一紧，说先评估一下，待会再回复。" },
+        { "speaker": "", "location": "办公室", "text": "你问团队能不能做。老陈翻了个白眼：\"又加需求？至少两周。\"" },
+        { "speaker": "", "location": "张总办公室", "text": "【场景：张总办公室】\n你去见张总谈这件事。" },
+        { "speaker": "张总", "location": "张总办公室", "text": "要加多少钱？" },
+        { "speaker": "朱诀", "location": "张总办公室", "text": "两周，再加5万。" },
+        { "speaker": "", "location": "张总办公室", "text": "张总脸色不太好。" },
+        { "speaker": "朱诀", "location": "张总办公室", "text": "或者放二期，先保证核心功能上线。" },
+        { "speaker": "张总", "location": "张总办公室", "text": "行，先做核心。" },
+        { "speaker": "", "location": "张总办公室", "text": "谈判结束后——" },
+        { "speaker": "张总", "location": "张总办公室", "text": "朱经理，家长端功能你说放二期。但我现在就要，有没有别的办法？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w4_d1",
+        "description": "张总坚持要家长端功能，你怎么处理？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "坚持原则：\"张总，真的不行，会影响核心功能质量。\"",
+            "narrative": "张总虽然不爽，但尊重了你的专业判断。你守住了项目底线。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 4, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "技术折中：\"可以做简化版，只显示菜单，不做交互。\"",
+            "narrative": "技术方案可行，双方都能接受，但价格被压低了。",
+            "effects": { "techPower": 0, "commPower": 2, "managePower": 0, "stressPower": 1 },
+            "riskChange": 0
+          },
+          {
+            "text": "谈条件：\"可以做，但验收时要放宽松点。\"",
+            "narrative": "张总答应了，但你隐约感觉后期可能会有麻烦。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 3 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 5,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "【场景：办公室】" },
+        { "speaker": "老陈", "location": "办公室", "text": "朱经理，我老婆怀孕了，要回老家。我想请假一个月。" },
+        { "speaker": "", "location": "办公室", "text": "你愣住了。" },
+        { "speaker": "", "location": "办公室", "text": "你召开团队会议，宣布老陈要请假的消息。大家都沉默了。" },
+        { "speaker": "老陈", "location": "办公室", "text": "朱经理，我知道这个时间走不地道。但团队里剩两个人能不能顶上，你心里有数。要不要我从外面找个人？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w5_d1",
+        "description": "核心开发老陈要请假一个月，项目正处于关键期，你怎么办？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "培养团队：\"我相信他们，你多教教他们就行。\"",
+            "narrative": "老陈花了两天给小张和小李做了技术交接。虽然有些吃力，但团队在成长。",
+            "effects": { "techPower": 0, "commPower": 4, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "自己顶上：\"核心代码我来写。\"",
+            "narrative": "你亲自下场写代码。质量有保障，但你几乎没时间管其他事情了。",
+            "effects": { "techPower": 5, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "和老陈谈：\"你再留一个月，我给双倍工资。\"",
+            "narrative": "老陈犹豫了一会儿，最终同意留下。他完成了报表和扫码的工作后还是请假了。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 4 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 6,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "你开始准备中期汇报材料。" },
+        { "speaker": "小李", "location": "办公室", "text": "朱经理，测试报告要加进去吗？" },
+        { "speaker": "朱诀", "location": "办公室", "text": "加，bug修复情况也要展示。" },
+        { "speaker": "", "location": "项目组", "text": "王总来项目组视察了。你有点紧张，但还是展示了看板、代码、测试报告。" },
+        { "speaker": "王总", "location": "项目组", "text": "项目进行的还不错。" },
+        { "speaker": "", "location": "项目组", "text": "系统提示：沟通力+3，抗压力+2" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w6_d1",
+        "description": "老陈请假后，王总问你：\"朱诀，项目整体还行，但老陈走了，你确定你们几个能顶住？\"",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "实话实说：\"有风险，但我盯着他们。\"",
+            "narrative": "王总点点头：\"我信你。有问题随时找我。\"他给了你更多的信任。",
+            "effects": { "techPower": 0, "commPower": 4, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "打包票：\"没问题，他们两个学得很快。\"",
+            "narrative": "王总放心了，但你知道自己需要更努力地盯进度。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 3, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "要支援：\"能不能派一位技术熟手远程支持？\"",
+            "narrative": "王总帮你联系了一位资深开发远程协助。技术问题有了后盾。",
+            "effects": { "techPower": 3, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 3, "managePower": 0, "stressPower": 2 }
+    },
+    {
+      "weekNumber": 7,
+      "phase": "monitoring",
+      "prologueDialogues": [
+        { "speaker": "小张", "location": "办公室", "text": "朱经理，扫码识别老出错，有时扫得出来，有时不行。" },
+        { "speaker": "朱诀", "location": "办公室", "text": "可能光线问题没处理好，你看一下这方面的代码。" },
+        { "speaker": "", "location": "办公室", "text": "两天后——" },
+        { "speaker": "小张", "location": "办公室", "text": "朱经理，我查了两天资料，还是搞不定。要不要找外包？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w7_d1",
+        "description": "扫码功能卡住了，小张搞不定，你怎么办？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "自己上：\"我来写这段。\"",
+            "narrative": "你亲自搞定了扫码模块。代码质量过硬，小张看着你的代码学到了很多。",
+            "effects": { "techPower": 5, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "找王总帮忙：\"王总认识人，让他介绍。\"",
+            "narrative": "王总介绍了一位外部专家，远程指导搞定了问题。",
+            "effects": { "techPower": 3, "commPower": 4, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "和小张一起啃：\"我陪你熬夜，一起研究。\"",
+            "narrative": "你和小张熬了两个通宵。凌晨2点终于搞定了。小张很感动。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 3, "stressPower": 4 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "postDecisionDialogues": [
+        { "speaker": "", "location": "办公室", "text": "你和小张在办公室优化代码。凌晨2点。" },
+        { "speaker": "小张", "location": "办公室", "text": "改好了，再测一遍。" },
+        { "speaker": "小李", "location": "办公室", "text": "好了！现在300并发没问题！" },
+        { "speaker": "", "location": "办公室", "text": "系统提示：抗压力+3" }
+      ],
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 3 }
+    },
+    {
+      "weekNumber": 8,
+      "phase": "monitoring",
+      "prologueDialogues": [
+        { "speaker": "", "location": "育才中学食堂", "text": "试运行开始了。只开放一个窗口。" },
+        { "speaker": "", "location": "育才中学食堂", "text": "第一个学生扫码成功取餐时，刘校长笑了。" },
+        { "speaker": "刘校长", "location": "育才中学食堂", "text": "成了！" },
+        { "speaker": "", "location": "育才中学食堂", "text": "小李收集了50条反馈：大部分说方便，有几个说扫码太慢。" },
+        { "speaker": "小张", "location": "育才中学食堂", "text": "扫码慢是网络问题，可以优化一下。" },
+        { "speaker": "", "location": "育才中学食堂", "text": "张总亲自来看试运行。看到学生排队10分钟全部取完餐。" },
+        { "speaker": "张总", "location": "育才中学食堂", "text": "以前要排半小时，现在10分钟，不错。" },
+        { "speaker": "张总", "location": "育才中学食堂", "text": "朱经理，系统不错。但我想要再加个功能：学生充值自动返现，促进消费。能加吗？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p1_w8_d1",
+        "description": "试运行成功后，张总又提出新功能需求（充值返现），你怎么回应？",
+        "aiAdvice": "",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "接受：\"可以，但上线时间要推迟一周。\"",
+            "narrative": "张总满意，但项目要延期一周。团队加班加点赶工。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 4, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "拒绝：\"张总，系统已经冻结功能了，现在加风险太大。\"",
+            "narrative": "张总虽然失望，但尊重了你的专业判断。系统按时上线。",
+            "effects": { "techPower": 5, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          },
+          {
+            "text": "折中：\"上线后一周内给您加上。\"",
+            "narrative": "双方都满意。你承诺上线后立即开发这个功能。",
+            "effects": { "techPower": 0, "commPower": 5, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 9,
+      "phase": "closing",
+      "prologueDialogues": [
+        { "speaker": "", "location": "育才中学食堂", "text": "正式上线日。周一早上7点，你带着团队在学校食堂待命。" },
+        { "speaker": "", "location": "育才中学食堂", "text": "一切准备就绪，系统即将投入正式运行……" }
+      ],
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    }
+  ]
+}
+
+

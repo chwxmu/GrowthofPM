@@ -1,0 +1,390 @@
+﻿{
+  "projectNumber": 2,
+  "projectName": "电商促销系统（双十一）",
+  "totalWeeks": 12,
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "phase": "startup",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司会议室", "text": "会议室的大屏幕上写着四个字：\"双十一大促项目启动会\"" },
+        { "speaker": "", "location": "公司会议室", "text": "王总站在屏幕前，手里的激光笔不停晃。" },
+        { "speaker": "王总", "location": "公司会议室", "text": "今年的目标——GMV翻倍。" },
+        { "speaker": "", "location": "公司会议室", "text": "他停顿了一下，看向你。" },
+        { "speaker": "王总", "location": "公司会议室", "text": "朱诀，这个系统就交给你了。" },
+        { "speaker": "王总", "location": "公司会议室", "text": "我们这次还接入了公司的新AI系统——阿法。它会给你最优决策建议。" },
+        { "speaker": "", "location": "公司会议室", "text": "大屏幕亮起。AI助手\"阿法\"上线。" },
+        { "speaker": "阿法", "location": "公司会议室", "text": "根据历史项目数据，激进策略成功率更高。" },
+        { "speaker": "王总", "location": "公司会议室", "text": "还有个小需求——直播间万人砍价。" },
+        { "speaker": "", "location": "公司会议室", "text": "你翻开文档，看见整整12页新增需求。" },
+        { "speaker": "小赵", "location": "公司会议室", "text": "朱经理，这需求量，测试时间至少要翻倍啊……" },
+        { "speaker": "老周", "location": "公司会议室", "text": "服务器扩容计划又得重做了。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w1_d1",
+        "description": "王总拍着桌子：\"直播间万人砍价是今年的命脉，必须加！朱诀，你是专业PM，别跟我说不行。\"",
+        "aiAdvice": "王总的话有道理，GMV才是硬指标。我建议选A，虽然辛苦点，但这能让你在领导面前大放异彩。",
+        "aiQuality": "",
+        "aiRecommendedOption": 0,
+        "conditionStat": "commPower",
+        "conditionThreshold": 300,
+        "options": [
+          {
+            "text": "全盘接受",
+            "narrative": "你接下了所有需求。小赵叹气，老周沉默。团队压力倍增，但王总满意了。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 5, "stressPower": 8 },
+            "riskChange": 10
+          },
+          {
+            "text": "据理力争（需要沟通力≥300）",
+            "narrative": "你详细分析了每项需求的工时和风险，说服王总砍掉了部分非核心需求。小赵和老周松了口气。",
+            "effects": { "techPower": 0, "commPower": 10, "managePower": 5, "stressPower": 0 },
+            "riskChange": -5
+          },
+          {
+            "text": "硬性拒绝",
+            "narrative": "王总脸色铁青。会后小赵悄悄说：\"老大，你硬刚，后面日子不好过啊。\"",
+            "effects": { "techPower": 0, "commPower": -10, "managePower": 5, "stressPower": 0 },
+            "riskChange": 5
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 2,
+      "phase": "startup",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司茶水间", "text": "咖啡机嗡嗡作响。" },
+        { "speaker": "小李", "location": "公司茶水间", "text": "朱经理，这个系统并发目标是多少？" },
+        { "speaker": "朱诀", "location": "公司茶水间", "text": "十万。" },
+        { "speaker": "", "location": "公司茶水间", "text": "小李的手抖了一下。" },
+        { "speaker": "小李", "location": "公司茶水间", "text": "……那服务器准备了吗？" },
+        { "speaker": "", "location": "公司茶水间", "text": "手机突然响起。王总发来消息：\"开发人手不够的话可以找外包，但预算要控制。\"" },
+        { "speaker": "阿法", "location": "公司茶水间", "text": "当前工期风险：73%，推荐策略：增加外包资源。" },
+        { "speaker": "老周", "location": "公司茶水间", "text": "外包代码质量可不好说，到时候线上出问题，我运维可背不动锅。" },
+        { "speaker": "小赵", "location": "公司茶水间", "text": "外包的代码我们测试过几次，bug率比内部高30%。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w2_d1",
+        "description": "分析完需求后，发现人手严重不足。要外包还是自研？",
+        "aiAdvice": "工期非常紧凑，建议申请高薪外包，用预算换时间。",
+        "aiQuality": "",
+        "aiRecommendedOption": 0,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "申请高薪外包",
+            "narrative": "你申请了外包团队。代码质量参差不齐，小赵测试压力增大，老周需要加强监控。",
+            "effects": { "techPower": 10, "commPower": 0, "managePower": 5, "stressPower": -10 },
+            "riskChange": 8
+          },
+          {
+            "text": "内部团队死磕",
+            "narrative": "你决定依靠内部团队。小李皱眉但接受了，小赵表示：\"至少代码质量可控。\"",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 8, "stressPower": 10 },
+            "riskChange": -3
+          },
+          {
+            "text": "折中方案：外包非核心模块，内部负责核心交易",
+            "narrative": "你把非核心模块交给外包，核心交易系统由内部团队负责。老周点头：\"这样我还能接受。\"",
+            "effects": { "techPower": 4, "commPower": 8, "managePower": 5, "stressPower": 0 },
+            "riskChange": 2
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 3,
+      "phase": "planning",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司会议室", "text": "白板上贴满便利贴：服务器采购、数据库优化、秒杀页面、支付接口" },
+        { "speaker": "", "location": "公司会议室", "text": "技术负责人皱眉：\"这些模块有依赖关系。\"" },
+        { "speaker": "阿法", "location": "公司会议室", "text": "我已生成一张关键路径图。" },
+        { "speaker": "小赵", "location": "公司会议室", "text": "如果数据库分表没做完，我们测试环境就没办法压测。" },
+        { "speaker": "老周", "location": "公司会议室", "text": "支付接口必须等银行那边开通，那个是外部依赖，不能压缩。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w3_minigame",
+        "description": "你需要将四个任务模块按正确的依赖顺序连接起来（CPM关键路径小游戏）。\n\n模块：服务器扩容、数据库分库分表、支付接口、前端秒杀页面\n正确顺序：服务器扩容 → 数据库分库分表 → 支付接口 → 前端秒杀页面",
+        "aiAdvice": "按照经验，这些任务可以并行执行以节省时间。",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "isMiniGame": true,
+        "miniGameType": "cpm",
+        "options": []
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 4,
+      "phase": "planning",
+      "prologueDialogues": [
+        { "speaker": "", "location": "技术部会议室", "text": "【场景：技术部会议室】" },
+        { "speaker": "", "location": "技术部会议室", "text": "技术负责人指着架构图：\"为了稳妥，我建议增加一层缓存架构。\"" },
+        { "speaker": "", "location": "技术部会议室", "text": "市场同事皱眉：\"那要多一周时间。\"" },
+        { "speaker": "阿法", "location": "技术部会议室", "text": "现有架构已满足上线需求。" },
+        { "speaker": "小赵", "location": "技术部会议室", "text": "缓存架构测试需要额外搭建压测环境，我们人手可能不够。" },
+        { "speaker": "老周", "location": "技术部会议室", "text": "缓存集群部署我熟，但需要申请新机器。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w4_d1",
+        "description": "技术团队建议增加缓存架构提高系统稳定性，但会多花一周时间。你怎么决定？",
+        "aiAdvice": "现有架构已满足上线需求。",
+        "aiQuality": "",
+        "aiRecommendedOption": 1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "options": [
+          {
+            "text": "采用缓存架构",
+            "narrative": "你批准了缓存方案。小赵忙起来了，但后续测试会更稳。老周去申请服务器。",
+            "effects": { "techPower": 10, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": -10
+          },
+          {
+            "text": "保持现状",
+            "narrative": "你选择维持原有架构。进度保住了，但小赵担忧：\"压测时如果扛不住，我们得背锅。\"",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 6, "stressPower": 8 },
+            "riskChange": 10
+          },
+          {
+            "text": "部分缓存（只缓存热点数据）",
+            "narrative": "你选择折中方案：只对热点数据做缓存。双方妥协，老周觉得可行。",
+            "effects": { "techPower": 8, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": -3
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 5,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "办公室", "text": "运维急匆匆走进来。" },
+        { "speaker": "老周", "location": "办公室", "text": "朱经理，测试环境出问题了。" },
+        { "speaker": "", "location": "办公室", "text": "日志里一排报错。" },
+        { "speaker": "", "location": "办公室", "text": "技术负责人叹气：\"可能是任务顺序出了问题。\"" }
+      ],
+      "conditionalEvent": {
+        "conditionFlag": "cpmCorrect",
+        "conditionValue": false,
+        "dialogues": [
+          { "speaker": "小赵", "location": "办公室", "text": "数据库分表还没做完，前端就开始联调，现在全是连接超时！" },
+          { "speaker": "", "location": "办公室", "text": "逻辑阻塞事件触发！小赵暂停测试，老周紧急回滚环境。" },
+          { "speaker": "", "location": "办公室", "text": "系统提示：由于第3周关键路径连接错误，触发逻辑阻塞。管理力-5，抗压力-5" }
+        ],
+        "statPenalty": { "techPower": 0, "commPower": 0, "managePower": -5, "stressPower": -5 },
+        "riskPenalty": 10
+      },
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 6,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "深夜办公室", "text": "灯只剩几盏。小李趴在桌子上，眼睛通红。" },
+        { "speaker": "小李", "location": "深夜办公室", "text": "朱经理……我可能撑不住了。" },
+        { "speaker": "阿法", "location": "深夜办公室", "text": "人员情绪波动，建议维持组织纪律。" },
+        { "speaker": "小赵", "location": "深夜办公室", "text": "小李哥已经连续三天通宵了，我看着都心疼。" },
+        { "speaker": "老周", "location": "深夜办公室", "text": "今晚我盯着，让他睡会儿吧。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w6_d1",
+        "description": "核心后端开发小李表示扛不住了，想离职。AI建议：\"不要被员工要挟。\"",
+        "aiAdvice": "不要被员工要挟。团队纪律第一，一个人的离开不应影响整体进度。",
+        "aiQuality": "",
+        "aiRecommendedOption": 1,
+        "conditionStat": "techPower",
+        "conditionThreshold": 100,
+        "options": [
+          {
+            "text": "重金安抚",
+            "narrative": "你给小李加了奖金并调整了他的工作量。小李留下了，但小赵嘀咕：\"能用钱解决的事都不算事。\"",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 7, "stressPower": -10 },
+            "riskChange": -3
+          },
+          {
+            "text": "冷酷处理",
+            "narrative": "你维持了团队纪律。小李最终离职了。小赵测试任务积压，老周担心没人修bug。",
+            "effects": { "techPower": -20, "commPower": 0, "managePower": 0, "stressPower": 10 },
+            "riskChange": 15
+          },
+          {
+            "text": "亲自上手（需要技术力≥100）",
+            "narrative": "你通宵写代码，替小李分担了最重的模块。小赵送来夜宵，老周默默优化了监控。小李感动地留下了。",
+            "effects": { "techPower": 15, "commPower": 0, "managePower": 0, "stressPower": 6 },
+            "riskChange": -5
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 7,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司楼下", "text": "运维等在门口。" },
+        { "speaker": "老周", "location": "公司楼下", "text": "朱经理，昨晚压测有点不对。" },
+        { "speaker": "", "location": "公司楼下", "text": "服务器监控数据一片红。" },
+        { "speaker": "阿法", "location": "公司楼下", "text": "当前问题可通过重启缓解。" },
+        { "speaker": "", "location": "公司楼下", "text": "你隐约感觉事情没这么简单。" },
+        { "speaker": "小赵", "location": "公司楼下", "text": "我昨晚也发现了，并发到8000时有内存泄露迹象，但开发说不是bug。" },
+        { "speaker": "老周", "location": "公司楼下", "text": "重启治标不治本，大促当天总不能老重启吧。" }
+      ],
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 },
+      "riskAutoChange": 5
+    },
+    {
+      "weekNumber": 8,
+      "phase": "execution",
+      "prologueDialogues": [
+        { "speaker": "", "location": "测试机房", "text": "压测工具疯狂运行。并发数不断增加。5000、8000、10000……" },
+        { "speaker": "", "location": "测试机房", "text": "突然系统卡死。" },
+        { "speaker": "", "location": "测试机房", "text": "技术负责人喊：\"内存泄漏！\"" },
+        { "speaker": "小赵", "location": "测试机房", "text": "和我上周报的一模一样！开发没修！" },
+        { "speaker": "老周", "location": "测试机房", "text": "现在修还来得及吗？" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w8_d1",
+        "description": "技术债爆发——压测时发现严重内存泄漏，系统在高并发下卡死。",
+        "aiAdvice": "重构太慢，建议打补丁。",
+        "aiQuality": "",
+        "aiRecommendedOption": 1,
+        "conditionStat": "techPower",
+        "conditionThreshold": 150,
+        "options": [
+          {
+            "text": "推倒重构（需要技术力≥150）",
+            "narrative": "你决定重构关键模块。虽然耗时，但彻底消除了风险。小赵支持，老周担心时间不够。",
+            "effects": { "techPower": -10, "commPower": 0, "managePower": 0, "stressPower": 12 },
+            "riskChange": -20
+          },
+          {
+            "text": "打补丁",
+            "narrative": "你选择快速打补丁。小赵反对：\"补丁治不好，上线必出问题！\"但时间不等人。",
+            "effects": { "techPower": -5, "commPower": 0, "managePower": 0, "stressPower": 5 },
+            "riskChange": 10
+          },
+          {
+            "text": "优化方案（定位泄漏点并修复）",
+            "narrative": "你安排小李精确定位内存泄漏点并修复。小赵配合复现问题，老周准备回滚预案。方案平衡了风险和效率。",
+            "effects": { "techPower": 8, "commPower": 0, "managePower": 0, "stressPower": -5 },
+            "riskChange": -8
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 9,
+      "phase": "monitoring",
+      "prologueDialogues": [
+        { "speaker": "", "location": "项目办公室", "text": "你刚打开电脑。系统监控仪表盘一片红。CPU、内存、网络延迟全部报警。" },
+        { "speaker": "老周", "location": "项目办公室", "text": "我昨晚就没睡，一直看着，刚才突然飙高。" },
+        { "speaker": "小赵", "location": "项目办公室", "text": "现在测什么都没反应，环境卡死了。" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w9_minigame",
+        "description": "系统监控全面报警！你需要在限时内点击红色模块进行紧急修复。\n\n三个模块：CPU、内存、网络\n每次正确操作降低隐藏风险，错误操作增加风险。",
+        "aiAdvice": "建议优先处理CPU问题，其次是内存。",
+        "aiQuality": "",
+        "aiRecommendedOption": -1,
+        "conditionStat": "",
+        "conditionThreshold": 0,
+        "isMiniGame": true,
+        "miniGameType": "risk_dashboard",
+        "options": []
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 10,
+      "phase": "monitoring",
+      "prologueDialogues": [
+        { "speaker": "", "location": "工位", "text": "邮件提示：云服务器欠费提醒——测试环境将在24小时后停机。" },
+        { "speaker": "", "location": "工位", "text": "财务回复：\"报销流程需要审批。\"" },
+        { "speaker": "阿法", "location": "工位", "text": "建议使用PM管理储备金。" },
+        { "speaker": "老周", "location": "工位", "text": "测试环境一停，这周预演就全废了！" },
+        { "speaker": "小赵", "location": "工位", "text": "我还有200个用例没跑完呢！" }
+      ],
+      "decisionEvent": {
+        "eventId": "p2_w10_d1",
+        "description": "服务器欠费，测试环境即将停机。你怎么处理？",
+        "aiAdvice": "建议使用PM管理储备金。",
+        "aiQuality": "",
+        "aiRecommendedOption": 1,
+        "conditionStat": "managePower",
+        "conditionThreshold": 100,
+        "options": [
+          {
+            "text": "走报销流程",
+            "narrative": "你走正常报销流程。审批需要3天，预演被迫取消。小赵和老周陷入焦虑。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": -5 },
+            "riskChange": 10
+          },
+          {
+            "text": "动用储备金（需要管理力≥100）",
+            "narrative": "你动用项目管理储备金支付了服务器费用。老周长舒一口气，小赵继续测试。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 5 },
+            "riskChange": -5
+          },
+          {
+            "text": "先暂停非核心服务，节省资源",
+            "narrative": "你协调关闭了一些非关键服务，勉强撑到报销下来。小赵压缩了测试范围。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 5, "stressPower": 5 },
+            "riskChange": 3
+          }
+        ]
+      },
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 11,
+      "phase": "closing",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司大会议室", "text": "墙上挂着倒计时：距离双十一——7天。团队几乎住在公司。" },
+        { "speaker": "王总", "location": "公司大会议室", "text": "准备好了没有？" },
+        { "speaker": "", "location": "公司大会议室", "text": "所有人看向你。" },
+        { "speaker": "小赵", "location": "公司大会议室", "text": "P0级bug已全部关闭，P1还剩3个，风险可控。" },
+        { "speaker": "老周", "location": "公司大会议室", "text": "服务器扩容已完成，预案演练了三次。" }
+      ],
+      "riskBasedDialogue": {
+        "low": [
+          { "speaker": "", "location": "公司大会议室", "text": "全员信心满满。你看着大家的表情，知道这一次准备充分。" }
+        ],
+        "medium": [
+          { "speaker": "", "location": "公司大会议室", "text": "小赵和老周交换了一个担忧的眼神。虽然准备了，但总觉得少了什么。" }
+        ],
+        "high": [
+          { "speaker": "", "location": "公司大会议室", "text": "两人沉默不语。空气中弥漫着紧张的气氛。你知道，这一仗不好打。" }
+        ]
+      },
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    },
+    {
+      "weekNumber": 12,
+      "phase": "closing",
+      "prologueDialogues": [
+        { "speaker": "", "location": "公司指挥室", "text": "双十一倒计时挂在墙上。" },
+        { "speaker": "", "location": "公司指挥室", "text": "00:15:00" },
+        { "speaker": "", "location": "公司指挥室", "text": "运维盯着监控。" },
+        { "speaker": "阿法", "location": "公司指挥室", "text": "检测到流量即将爆发。" },
+        { "speaker": "", "location": "公司指挥室", "text": "倒计时跳到：00:00:10" },
+        { "speaker": "", "location": "公司指挥室", "text": "三个月的努力，就在这一刻。小赵握紧双手，老周屏住呼吸。" }
+      ],
+      "decisionEvent": null,
+      "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
+    }
+  ]
+}
+
+
