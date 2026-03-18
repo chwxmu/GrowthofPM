@@ -3,7 +3,19 @@
     {
       "projectNumber": 1,
       "excellentThreshold": 550,
+      "excellentStatThresholds": {
+        "techPower": 130,
+        "commPower": 130,
+        "managePower": 130,
+        "stressPower": 130
+      },
       "passThreshold": 350,
+      "passStatThresholds": {
+        "techPower": 80,
+        "commPower": 80,
+        "managePower": 80,
+        "stressPower": 80
+      },
       "riskFailThreshold": -1,
       "excellent": {
         "endingId": "p1_excellent",
@@ -27,7 +39,19 @@
     {
       "projectNumber": 2,
       "excellentThreshold": 1200,
+      "excellentStatThresholds": {
+        "techPower": 280,
+        "commPower": 280,
+        "managePower": 280,
+        "stressPower": 280
+      },
       "passThreshold": 800,
+      "passStatThresholds": {
+        "techPower": 180,
+        "commPower": 180,
+        "managePower": 180,
+        "stressPower": 180
+      },
       "riskFailThreshold": 60,
       "excellent": {
         "endingId": "p2_excellent",
@@ -51,7 +75,19 @@
     {
       "projectNumber": 3,
       "excellentThreshold": 2000,
+      "excellentStatThresholds": {
+        "techPower": 460,
+        "commPower": 460,
+        "managePower": 460,
+        "stressPower": 460
+      },
       "passThreshold": 1400,
+      "passStatThresholds": {
+        "techPower": 320,
+        "commPower": 320,
+        "managePower": 320,
+        "stressPower": 320
+      },
       "riskFailThreshold": -1,
       "excellent": {
         "endingId": "p3_excellent",
@@ -74,5 +110,3 @@
     }
   ]
 }
-
-

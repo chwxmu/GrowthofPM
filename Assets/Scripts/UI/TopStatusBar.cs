@@ -22,15 +22,22 @@ public class TopStatusBar : MonoBehaviour
     [SerializeField] private Slider _energySlider;
     [SerializeField] private TMP_Text _energyValueText;
     [SerializeField] private Button _quizEntryButton;
+    [SerializeField] private Button _scheduleEntryButton;
 
     #region Unity Lifecycle
 
     private void Awake()
     {
         AutoBindIfNeeded();
+
         if (_quizEntryButton != null)
         {
             _quizEntryButton.onClick.AddListener(OnClickQuizEntry);
+        }
+
+        if (_scheduleEntryButton != null)
+        {
+            _scheduleEntryButton.onClick.AddListener(OnClickScheduleEntry);
         }
     }
 
@@ -56,6 +63,11 @@ public class TopStatusBar : MonoBehaviour
         if (_quizEntryButton != null)
         {
             _quizEntryButton.onClick.RemoveListener(OnClickQuizEntry);
+        }
+
+        if (_scheduleEntryButton != null)
+        {
+            _scheduleEntryButton.onClick.RemoveListener(OnClickScheduleEntry);
         }
     }
 
@@ -91,6 +103,16 @@ public class TopStatusBar : MonoBehaviour
         UpdateSliderAndText(_energySlider, _energyValueText, data.energy, GameConstants.BASE_ENERGY_PER_WEEK);
     }
 
+    public void SetQuizEntryInteractable(bool interactable)
+    {
+        ApplyEntryButtonVisualState(_quizEntryButton, interactable);
+    }
+
+    public void SetScheduleEntryInteractable(bool interactable)
+    {
+        ApplyEntryButtonVisualState(_scheduleEntryButton, interactable);
+    }
+
     #endregion
 
     #region Internal Helpers
@@ -112,12 +134,21 @@ public class TopStatusBar : MonoBehaviour
         UIManager.Instance.ShowPanel("QuizPanel");
     }
 
-    public void SetQuizEntryInteractable(bool interactable)
+    private void OnClickScheduleEntry()
     {
-        if (_quizEntryButton != null)
+        if (StoryManager.Instance != null && !StoryManager.Instance.CanOpenSchedule())
         {
-            _quizEntryButton.interactable = interactable;
+            Debug.Log("[TopStatusBar] 当前阶段暂不可进入日程安排。\n");
+            return;
         }
+
+        if (StoryManager.Instance != null)
+        {
+            StoryManager.Instance.OpenScheduleFromTopBar();
+            return;
+        }
+
+        UIManager.Instance.ShowPanel("SchedulePanel");
     }
 
     private void AutoBindIfNeeded()
@@ -142,11 +173,199 @@ public class TopStatusBar : MonoBehaviour
 
         if (_quizEntryButton == null)
         {
-            Transform target = transform.Find("QuizButton");
-            if (target != null)
+            Transform quizTarget = transform.Find("QuizButton");
+            if (quizTarget != null)
             {
-                _quizEntryButton = target.GetComponent<Button>();
+                _quizEntryButton = quizTarget.GetComponent<Button>();
             }
+        }
+
+        if (_scheduleEntryButton == null)
+        {
+            Transform scheduleTarget = transform.Find("ScheduleButton");
+            if (scheduleTarget != null)
+            {
+                _scheduleEntryButton = scheduleTarget.GetComponent<Button>();
+            }
+        }
+
+        if (_scheduleEntryButton == null)
+        {
+            _scheduleEntryButton = CreateScheduleButton();
+        }
+
+        EnsureEntryButtonVisuals();
+        AdjustEnergyRowLayout();
+    }
+
+    private Button CreateScheduleButton()
+    {
+        GameObject buttonObject = new GameObject("ScheduleButton", typeof(RectTransform), typeof(Image), typeof(Button));
+        buttonObject.transform.SetParent(transform, false);
+
+        RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+        buttonRect.anchorMin = new Vector2(1f, 0f);
+        buttonRect.anchorMax = new Vector2(1f, 0f);
+        buttonRect.pivot = new Vector2(1f, 0f);
+        buttonRect.sizeDelta = new Vector2(132f, 44f);
+
+        Vector2 anchoredPosition = new Vector2(-128f, 12f);
+        if (_quizEntryButton != null)
+        {
+            RectTransform quizRect = _quizEntryButton.GetComponent<RectTransform>();
+            if (quizRect != null)
+            {
+                anchoredPosition = new Vector2(quizRect.anchoredPosition.x - quizRect.sizeDelta.x - 12f, quizRect.anchoredPosition.y);
+            }
+        }
+
+        buttonRect.anchoredPosition = anchoredPosition;
+
+        Image image = buttonObject.GetComponent<Image>();
+        image.color = new Color32(63, 107, 186, 255);
+
+        Button button = buttonObject.GetComponent<Button>();
+
+        GameObject labelObject = new GameObject("Label", typeof(RectTransform));
+        labelObject.transform.SetParent(buttonObject.transform, false);
+
+        RectTransform labelRect = labelObject.GetComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = Vector2.zero;
+        labelRect.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
+        if (_projectInfoText != null && _projectInfoText.font != null)
+        {
+            label.font = _projectInfoText.font;
+        }
+
+        label.fontSize = 24f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = Color.white;
+        label.enableWordWrapping = false;
+        label.text = "日程安排";
+
+        return button;
+    }
+
+    private void EnsureEntryButtonVisuals()
+    {
+        SetQuizEntryLabel();
+        AlignScheduleButtonLeftOfQuiz();
+    }
+
+    private void SetQuizEntryLabel()
+    {
+        if (_quizEntryButton == null)
+        {
+            return;
+        }
+
+        RectTransform quizRect = _quizEntryButton.GetComponent<RectTransform>();
+        if (quizRect != null && quizRect.sizeDelta.x < 96f)
+        {
+            quizRect.sizeDelta = new Vector2(96f, quizRect.sizeDelta.y);
+        }
+
+        TMP_Text quizLabel = _quizEntryButton.GetComponentInChildren<TMP_Text>(true);
+        if (quizLabel == null)
+        {
+            return;
+        }
+
+        if (_projectInfoText != null && _projectInfoText.font != null)
+        {
+            quizLabel.font = _projectInfoText.font;
+        }
+
+        quizLabel.enableWordWrapping = false;
+        quizLabel.alignment = TextAlignmentOptions.Center;
+        quizLabel.fontSize = 24f;
+        quizLabel.text = "答题";
+    }
+
+    private void AlignScheduleButtonLeftOfQuiz()
+    {
+        if (_scheduleEntryButton == null || _quizEntryButton == null)
+        {
+            return;
+        }
+
+        RectTransform scheduleRect = _scheduleEntryButton.GetComponent<RectTransform>();
+        RectTransform quizRect = _quizEntryButton.GetComponent<RectTransform>();
+        if (scheduleRect == null || quizRect == null)
+        {
+            return;
+        }
+
+        scheduleRect.anchorMin = quizRect.anchorMin;
+        scheduleRect.anchorMax = quizRect.anchorMax;
+        scheduleRect.pivot = quizRect.pivot;
+
+        float spacing = 12f;
+        scheduleRect.anchoredPosition = new Vector2(quizRect.anchoredPosition.x - quizRect.sizeDelta.x - spacing, quizRect.anchoredPosition.y);
+    }
+
+    private void AdjustEnergyRowLayout()
+    {
+        TMP_Text energyLabel = FindText("EnergyLabel");
+        if (energyLabel != null)
+        {
+            SetLocalY(energyLabel.rectTransform, -144f);
+        }
+
+        if (_energyValueText != null)
+        {
+            SetLocalY(_energyValueText.rectTransform, -144f);
+        }
+
+        if (_energySlider != null)
+        {
+            RectTransform sliderRect = _energySlider.GetComponent<RectTransform>();
+            SetLocalY(sliderRect, -140f);
+        }
+    }
+
+    private static void SetLocalY(RectTransform rectTransform, float y)
+    {
+        if (rectTransform == null)
+        {
+            return;
+        }
+
+        Vector3 local = rectTransform.localPosition;
+        if (!Mathf.Approximately(local.y, y))
+        {
+            rectTransform.localPosition = new Vector3(local.x, y, local.z);
+        }
+    }
+
+    private static void ApplyEntryButtonVisualState(Button button, bool interactable)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        // Keep button clickable so users always get feedback from click handlers.
+        button.interactable = true;
+
+        Graphic target = button.targetGraphic;
+        if (target != null)
+        {
+            Color graphicColor = target.color;
+            graphicColor.a = interactable ? 1f : 0.6f;
+            target.color = graphicColor;
+        }
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            Color labelColor = label.color;
+            labelColor.a = interactable ? 1f : 0.7f;
+            label.color = labelColor;
         }
     }
 

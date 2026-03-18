@@ -70,6 +70,7 @@ Assets/
 - Use DOTween for UI animations (panel slide-in, stat bar changes, text fade)
 - Use TextMesh Pro for all text rendering
 - **UI中文字体规范**：所有UI组件（TextMesh Pro/UGUI）中涉及中文显示的部分，必须将字体设置为指定的宋体资源：`E:\Unity\unityProjects\GrowthofPM\Assets\Fonts\SIMSUN SDF.asset`；若为动态生成的TextMesh Pro文本，需在代码中显式指定该字体资源，禁止使用默认字体。
+- **静态UI修改规范**：静态 UI 应优先在 Hierarchy / Inspector 中修改。对于固定存在的界面元素（如按钮位置、文本内容、图片引用、层级关系、默认显隐、RectTransform 参数等），优先直接在 Unity 场景层级或 Inspector 中调整；不要为了调整静态 UI 而编写额外脚本去动态修改其结构或布局。
 
 ## Core Game Loop
 

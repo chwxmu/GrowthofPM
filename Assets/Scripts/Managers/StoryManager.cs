@@ -85,6 +85,7 @@ public class StoryManager : Singleton<StoryManager>
         if (topStatusBar != null)
         {
             topStatusBar.SetQuizEntryInteractable(false);
+            topStatusBar.SetScheduleEntryInteractable(false);
             topStatusBar.UpdateDisplay(GameManager.Instance.CurrentPlayerData);
         }
 
@@ -162,6 +163,7 @@ public class StoryManager : Singleton<StoryManager>
         if (topStatusBar != null)
         {
             topStatusBar.SetQuizEntryInteractable(false);
+            topStatusBar.SetScheduleEntryInteractable(false);
         }
 
         List<DailyTaskData> taskList = selectedTasks ?? new List<DailyTaskData>();
@@ -225,6 +227,23 @@ public class StoryManager : Singleton<StoryManager>
         return _currentFlowStage == StoryFlowStage.Schedule || _currentFlowStage == StoryFlowStage.Quiz;
     }
 
+
+    public bool CanOpenSchedule()
+    {
+        return _currentFlowStage == StoryFlowStage.Schedule || _currentFlowStage == StoryFlowStage.Quiz;
+    }
+
+    public void OpenScheduleFromTopBar()
+    {
+        if (!CanOpenSchedule())
+        {
+            return;
+        }
+
+        _quizOpenRequestedFromSchedule = false;
+        UIManager.Instance.HidePanel(QuizPanelName);
+        ShowSchedulePanel(false);
+    }
     public void OpenQuizFromSchedule()
     {
         if (!CanOpenQuiz())
@@ -251,7 +270,7 @@ public class StoryManager : Singleton<StoryManager>
         if (_quizOpenRequestedFromSchedule)
         {
             _quizOpenRequestedFromSchedule = false;
-            ShowSchedulePanel();
+            ShowSchedulePanel(false);
         }
     }
 
@@ -288,15 +307,26 @@ public class StoryManager : Singleton<StoryManager>
 
     private void ShowNextDecisionOrSchedule()
     {
-        DecisionEventData decision = GetDecisionByIndex(_decisionStepIndex);
-        if (decision == null)
+        while (true)
         {
-            RunPostDecisionContentOrSchedule();
+            DecisionEventData decision = GetDecisionByIndex(_decisionStepIndex);
+            if (decision == null)
+            {
+                RunPostDecisionContentOrSchedule();
+                return;
+            }
+
+            if (!HasSelectableOptions(decision))
+            {
+                Debug.LogWarning("[StoryManager] 跳过无可用选项的决策事件。");
+                _decisionStepIndex += 1;
+                continue;
+            }
+
+            SetFlowStage(StoryFlowStage.Decision);
+            ShowDecision(decision);
             return;
         }
-
-        SetFlowStage(StoryFlowStage.Decision);
-        ShowDecision(decision);
     }
 
     private void RunPostDecisionContentOrSchedule()
@@ -321,7 +351,7 @@ public class StoryManager : Singleton<StoryManager>
         ShowSchedulePanel();
     }
 
-    private void ShowSchedulePanel()
+    private void ShowSchedulePanel(bool resetData = true)
     {
         SetFlowStage(StoryFlowStage.Schedule);
 
@@ -329,11 +359,18 @@ public class StoryManager : Singleton<StoryManager>
         if (topStatusBar != null)
         {
             topStatusBar.SetQuizEntryInteractable(true);
+            topStatusBar.SetScheduleEntryInteractable(true);
         }
 
         SchedulePanel schedulePanel = FindObjectOfType<SchedulePanel>(true);
         if (schedulePanel != null)
         {
+            if (!resetData && schedulePanel.HasCachedSchedule)
+            {
+                schedulePanel.ReopenSchedule();
+                return;
+            }
+
             schedulePanel.ShowSchedule(DataManager.Instance.LoadDailyTasks(), GameConstants.BASE_ENERGY_PER_WEEK, OnScheduleComplete);
             return;
         }
@@ -459,12 +496,12 @@ public class StoryManager : Singleton<StoryManager>
     private int GetDecisionCount()
     {
         int count = 0;
-        if (_currentWeekEvent != null && _currentWeekEvent.decisionEvent != null)
+        if (_currentWeekEvent != null && HasSelectableOptions(_currentWeekEvent.decisionEvent))
         {
             count += 1;
         }
 
-        if (_currentWeekEvent != null && _currentWeekEvent.secondDecisionEvent != null)
+        if (_currentWeekEvent != null && HasSelectableOptions(_currentWeekEvent.secondDecisionEvent))
         {
             count += 1;
         }
@@ -492,6 +529,23 @@ public class StoryManager : Singleton<StoryManager>
         return null;
     }
 
+    private static bool HasSelectableOptions(DecisionEventData decision)
+    {
+        if (decision == null || decision.options == null || decision.options.Count == 0)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < decision.options.Count; i += 1)
+        {
+            if (decision.options[i] != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     private static bool HasDialogues(List<DialogueLine> dialogues)
     {
         return dialogues != null && dialogues.Count > 0;

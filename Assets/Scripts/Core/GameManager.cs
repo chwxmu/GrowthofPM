@@ -1,10 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    private const string TechPowerStatKey = "techPower";
+    private const string CommPowerStatKey = "commPower";
+    private const string ManagePowerStatKey = "managePower";
+    private const string StressPowerStatKey = "stressPower";
+
     [SerializeField] private GameState _currentState = GameState.Menu;
     [SerializeField] private PlayerData _currentPlayerData;
 
@@ -308,18 +313,37 @@ public class GameManager : Singleton<GameManager>
             return projectEnding.fail;
         }
 
-        int totalStats = GetTotalStats();
-        if (totalStats >= projectEnding.excellentThreshold)
+        if (MeetsEndingRequirements(projectEnding.excellentThreshold, projectEnding.excellentStatThresholds))
         {
             return projectEnding.excellent;
         }
 
-        if (totalStats >= projectEnding.passThreshold)
+        if (MeetsEndingRequirements(projectEnding.passThreshold, projectEnding.passStatThresholds))
         {
             return projectEnding.pass;
         }
 
         return projectEnding.fail;
+    }
+
+
+    private bool MeetsEndingRequirements(int totalThreshold, EndingStatThresholdData statThresholds)
+    {
+        if (statThresholds == null)
+        {
+            Debug.LogError($"[GameManager] 结局单项阈值配置缺失: project={_currentPlayerData.currentProject}");
+            return false;
+        }
+
+        if (GetTotalStats() < totalThreshold)
+        {
+            return false;
+        }
+
+        return GetStatValue(TechPowerStatKey) >= statThresholds.techPower
+            && GetStatValue(CommPowerStatKey) >= statThresholds.commPower
+            && GetStatValue(ManagePowerStatKey) >= statThresholds.managePower
+            && GetStatValue(StressPowerStatKey) >= statThresholds.stressPower;
     }
 
     public bool HasNextProject()

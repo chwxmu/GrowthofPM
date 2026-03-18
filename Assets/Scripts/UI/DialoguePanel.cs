@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,6 +73,7 @@ public class DialoguePanel : MonoBehaviour
         _currentIndex = 0;
         _lastResolvedLocation = string.Empty;
         gameObject.SetActive(true);
+        RestorePanelVisibility();
 
         if (_dialogues.Count == 0)
         {
@@ -355,7 +357,19 @@ public class DialoguePanel : MonoBehaviour
         _onComplete = null;
         callback?.Invoke();
     }
+    private void RestorePanelVisibility()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            return;
+        }
 
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
     private void EnsureLayout()
     {
         if (_locationText != null && _speakerText != null && _contentText != null && _clickButton != null)

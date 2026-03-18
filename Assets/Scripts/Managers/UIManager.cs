@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ public class UIManager : Singleton<UIManager>
         _panels[name] = panel;
     }
 
-    public void ShowPanel(string name)
+public void ShowPanel(string name)
     {
         if (!_panels.TryGetValue(name, out GameObject panel) || panel == null)
         {
@@ -31,6 +31,8 @@ public class UIManager : Singleton<UIManager>
         panel.SetActive(true);
         CanvasGroup group = EnsureCanvasGroup(panel);
         group.DOKill();
+        group.interactable = true;
+        group.blocksRaycasts = true;
         group.alpha = 0f;
         group.DOFade(1f, FadeDuration);
     }
@@ -73,7 +75,7 @@ public class UIManager : Singleton<UIManager>
 
     #region Internal Helpers
 
-    private static void HidePanelInternal(GameObject panel)
+private static void HidePanelInternal(GameObject panel)
     {
         if (panel == null)
         {
@@ -82,9 +84,12 @@ public class UIManager : Singleton<UIManager>
 
         CanvasGroup group = EnsureCanvasGroup(panel);
         group.DOKill();
+        group.interactable = false;
+        group.blocksRaycasts = false;
 
         if (!panel.activeSelf)
         {
+            group.alpha = 0f;
             return;
         }
 

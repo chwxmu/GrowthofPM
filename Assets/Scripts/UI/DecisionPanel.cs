@@ -10,7 +10,6 @@ using UnityEditor;
 
 public class DecisionPanel : MonoBehaviour
 {
-    private const float FeedbackDelaySeconds = 2f;
     private const float StatFloatMoveY = 46f;
     private const float StatFloatFadeInDuration = 0.15f;
     private const float StatFloatHoldDuration = 0.45f;
@@ -25,6 +24,7 @@ public class DecisionPanel : MonoBehaviour
     [SerializeField] private TMP_Text _feedbackText;
     [SerializeField] private VerticalLayoutGroup _optionLayout;
     [SerializeField] private TMP_Text _floatingStatText;
+    [SerializeField] private Button _closeButton;
     [SerializeField] private TMP_FontAsset _preferredChineseFont;
 
     private readonly List<Button> _optionButtons = new List<Button>();
@@ -32,33 +32,45 @@ public class DecisionPanel : MonoBehaviour
     private DecisionEventData _currentEventData;
     private bool _selectionLocked;
     private bool _hasViewedAiAdvice;
+    private bool _hasPendingSelection;
+    private int _selectedOptionIndex;
+    private bool _selectedFollowedAiAdvice;
+    private int _selectedDecisionLatencyMs;
     private float _decisionShownTime;
-    private Tween _feedbackDelayTween;
     private Tween _floatingStatTween;
 
     private void Awake()
     {
         EnsureLayout();
+        BindCloseButton();
     }
 
     private void OnDestroy()
     {
-        _feedbackDelayTween?.Kill();
         _floatingStatTween?.Kill();
+
+        if (_closeButton != null)
+        {
+            _closeButton.onClick.RemoveListener(OnClickCloseSelection);
+        }
     }
 
     public void ShowDecision(DecisionEventData eventData, Action<int, bool, bool, int> onOptionSelected)
     {
         EnsureLayout();
 
-        _feedbackDelayTween?.Kill();
         _floatingStatTween?.Kill();
         _currentEventData = eventData;
         _onOptionSelected = onOptionSelected;
         _selectionLocked = false;
+        _hasPendingSelection = false;
+        _selectedOptionIndex = -1;
+        _selectedFollowedAiAdvice = false;
+        _selectedDecisionLatencyMs = 0;
         _hasViewedAiAdvice = _currentEventData != null && !string.IsNullOrWhiteSpace(_currentEventData.aiAdvice);
         _decisionShownTime = Time.realtimeSinceStartup;
         gameObject.SetActive(true);
+        RestorePanelVisibility();
 
         if (_descriptionText != null)
         {
@@ -67,7 +79,8 @@ public class DecisionPanel : MonoBehaviour
 
         if (_aiAdviceText != null)
         {
-            _aiAdviceText.text = _hasViewedAiAdvice ? _currentEventData.aiAdvice : "暂无AI建议";
+            _aiAdviceText.gameObject.SetActive(_hasViewedAiAdvice);
+            _aiAdviceText.text = _hasViewedAiAdvice ? _currentEventData.aiAdvice : string.Empty;
         }
 
         if (_feedbackText != null)
@@ -82,9 +95,27 @@ public class DecisionPanel : MonoBehaviour
             _floatingStatText.gameObject.SetActive(false);
         }
 
+        if (_closeButton != null)
+        {
+            _closeButton.gameObject.SetActive(false);
+            _closeButton.interactable = false;
+        }
+
         BuildOptions();
     }
+    private void RestorePanelVisibility()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            return;
+        }
 
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
     private void BuildOptions()
     {
         EnsureOptionCount(_currentEventData != null && _currentEventData.options != null ? _currentEventData.options.Count : 0);
@@ -149,18 +180,38 @@ public class DecisionPanel : MonoBehaviour
         }
 
         _selectionLocked = true;
+        _hasPendingSelection = true;
+        _selectedOptionIndex = selectedIndex;
+        _selectedFollowedAiAdvice = _currentEventData.aiRecommendedOption >= 0 && selectedIndex == _currentEventData.aiRecommendedOption;
+        _selectedDecisionLatencyMs = Mathf.Max(0, Mathf.RoundToInt((Time.realtimeSinceStartup - _decisionShownTime) * 1000f));
+
         SetAllButtonsInteractable(false);
         ShowFeedback(selectedOption);
         PlayStatChangeFloatAnimation(selectedOption.effects);
 
-        bool isFollowedAiAdvice = _currentEventData.aiRecommendedOption >= 0 && selectedIndex == _currentEventData.aiRecommendedOption;
-        int decisionLatencyMs = Mathf.Max(0, Mathf.RoundToInt((Time.realtimeSinceStartup - _decisionShownTime) * 1000f));
-
-        _feedbackDelayTween?.Kill();
-        _feedbackDelayTween = DOVirtual.DelayedCall(FeedbackDelaySeconds, () =>
+        if (_closeButton != null)
         {
-            _onOptionSelected?.Invoke(selectedIndex, _hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs);
-        });
+            _closeButton.gameObject.SetActive(true);
+            _closeButton.interactable = true;
+        }
+    }
+
+    private void OnClickCloseSelection()
+    {
+        if (!_hasPendingSelection || _selectedOptionIndex < 0)
+        {
+            return;
+        }
+
+        if (_closeButton != null)
+        {
+            _closeButton.interactable = false;
+            _closeButton.gameObject.SetActive(false);
+        }
+
+        gameObject.SetActive(false);
+        _hasPendingSelection = false;
+        _onOptionSelected?.Invoke(_selectedOptionIndex, _hasViewedAiAdvice, _selectedFollowedAiAdvice, _selectedDecisionLatencyMs);
     }
 
     private void ShowFeedback(OptionData option)
@@ -304,12 +355,27 @@ public class DecisionPanel : MonoBehaviour
         }
 
         string optionText = string.IsNullOrWhiteSpace(option.text) ? "未命名选项" : option.text;
+        string effectPreviewText = BuildOptionEffectPreview(option);
+
         if (!isLocked)
         {
-            return optionText;
+            return optionText + "\n<size=24><color=#9ED0FF>" + effectPreviewText + "</color></size>";
         }
 
-        return optionText + "\n<size=24><color=#B0B0B0>锁定：" + GetLockReason(option) + "</color></size>";
+        return optionText
+            + "\n<size=24><color=#9ED0FF>" + effectPreviewText + "</color></size>"
+            + "\n<size=24><color=#B0B0B0>锁定：" + GetLockReason(option) + "</color></size>";
+    }
+
+    private static string BuildOptionEffectPreview(OptionData option)
+    {
+        string statChangeText = BuildStatChangeText(option != null ? option.effects : null);
+        if (string.IsNullOrWhiteSpace(statChangeText))
+        {
+            return "效果：无属性变化";
+        }
+
+        return "效果：" + statChangeText;
     }
 
     private static string GetLockReason(OptionData option)
@@ -445,7 +511,7 @@ public class DecisionPanel : MonoBehaviour
 
     private void EnsureLayout()
     {
-        if (_descriptionText != null && _aiAdviceText != null && _feedbackText != null && _optionLayout != null)
+        if (_descriptionText != null && _aiAdviceText != null && _feedbackText != null && _optionLayout != null && _closeButton != null)
         {
             return;
         }
@@ -518,6 +584,11 @@ public class DecisionPanel : MonoBehaviour
         _optionLayout.childControlHeight = false;
         _optionLayout.childForceExpandWidth = true;
         _optionLayout.childForceExpandHeight = false;
+
+        _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
+        _closeButton.gameObject.SetActive(false);
+        _closeButton.interactable = false;
+        BindCloseButton();
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float minHeight)
@@ -581,6 +652,70 @@ public class DecisionPanel : MonoBehaviour
         return rectTransform;
     }
 
+    private void BindCloseButton()
+    {
+        if (_closeButton == null)
+        {
+            return;
+        }
+
+        _closeButton.onClick.RemoveListener(OnClickCloseSelection);
+        _closeButton.onClick.AddListener(OnClickCloseSelection);
+    }
+
+    private static Button EnsureCornerButton(Transform parent, string name, TMP_FontAsset font, string buttonText)
+    {
+        Transform existing = parent.Find(name);
+        GameObject buttonObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+        if (existing == null)
+        {
+            buttonObject.transform.SetParent(parent, false);
+        }
+
+        RectTransform rect = EnsureRectTransform(buttonObject);
+        rect.anchorMin = new Vector2(1f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.sizeDelta = new Vector2(96f, 44f);
+        rect.anchoredPosition = new Vector2(-10f, -10f);
+
+        Image image = buttonObject.GetComponent<Image>();
+        image.color = new Color32(114, 62, 62, 255);
+
+        LayoutElement layoutElement = buttonObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = buttonObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.ignoreLayout = true;
+
+        Button button = buttonObject.GetComponent<Button>();
+
+        GameObject labelObject = FindOrCreateChild(buttonObject, "Label");
+        RectTransform labelRect = EnsureRectTransform(labelObject);
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = Vector2.zero;
+        labelRect.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
+        if (label == null)
+        {
+            label = labelObject.AddComponent<TextMeshProUGUI>();
+        }
+
+        if (font != null)
+        {
+            label.font = font;
+        }
+
+        label.fontSize = 24f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = Color.white;
+        label.text = buttonText;
+        return button;
+    }
+
     private TMP_FontAsset ResolveUIFont()
     {
         if (_preferredChineseFont != null)
@@ -626,10 +761,3 @@ public class DecisionPanel : MonoBehaviour
     }
 #endif
 }
-
-
-
-
-
-
-

@@ -1,17 +1,29 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class QuizPanel : MonoBehaviour
 {
+    private const string SimsunFontName = "SIMSUN SDF";
+#if UNITY_EDITOR
+    private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
+#endif
+
     [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _questionText;
     [SerializeField] private TMP_Text _feedbackText;
     [SerializeField] private VerticalLayoutGroup _optionLayout;
     [SerializeField] private Button _continueButton;
-    [SerializeField] private Button _backButton;
+    [SerializeField] private Button _closeButton;
+    [SerializeField] private TMP_FontAsset _preferredChineseFont;
 
     private readonly List<Button> _optionButtons = new List<Button>();
     private readonly List<Image> _optionButtonImages = new List<Image>();
@@ -33,16 +45,18 @@ public class QuizPanel : MonoBehaviour
             _continueButton.onClick.RemoveListener(OnClickContinue);
         }
 
-        if (_backButton != null)
+        if (_closeButton != null)
         {
-            _backButton.onClick.RemoveListener(OnClickBack);
+            _closeButton.onClick.RemoveListener(OnClickClose);
         }
     }
 
-    public void ShowQuiz()
+public void ShowQuiz()
     {
         EnsureLayout();
+        ApplyAllFonts();
         gameObject.SetActive(true);
+        RestorePanelVisibility();
 
         List<QuizQuestionData> questions = DataManager.Instance != null ? DataManager.Instance.LoadQuizQuestions() : null;
         _currentQuestion = PickRandomQuestion(questions);
@@ -69,12 +83,27 @@ public class QuizPanel : MonoBehaviour
             _continueButton.gameObject.SetActive(false);
         }
 
-        if (_backButton != null)
+        if (_closeButton != null)
         {
-            _backButton.gameObject.SetActive(true);
+            _closeButton.gameObject.SetActive(true);
+            _closeButton.interactable = true;
         }
 
         BuildOptions();
+    }
+
+    private void RestorePanelVisibility()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            return;
+        }
+
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 
     private void BindButtons()
@@ -85,10 +114,10 @@ public class QuizPanel : MonoBehaviour
             _continueButton.onClick.AddListener(OnClickContinue);
         }
 
-        if (_backButton != null)
+        if (_closeButton != null)
         {
-            _backButton.onClick.RemoveListener(OnClickBack);
-            _backButton.onClick.AddListener(OnClickBack);
+            _closeButton.onClick.RemoveListener(OnClickClose);
+            _closeButton.onClick.AddListener(OnClickClose);
         }
     }
 
@@ -96,6 +125,7 @@ public class QuizPanel : MonoBehaviour
     {
         int optionCount = _currentQuestion != null && _currentQuestion.options != null ? _currentQuestion.options.Count : 0;
         EnsureOptionCount(optionCount);
+        TMP_FontAsset taskFont = ResolveUIFont();
 
         for (int i = 0; i < _optionButtons.Count; i += 1)
         {
@@ -119,6 +149,11 @@ public class QuizPanel : MonoBehaviour
 
             if (label != null)
             {
+                if (taskFont != null)
+                {
+                    label.font = taskFont;
+                }
+
                 label.text = _currentQuestion.options[i];
             }
 
@@ -199,7 +234,7 @@ public class QuizPanel : MonoBehaviour
         ShowQuiz();
     }
 
-    private void OnClickBack()
+    private void OnClickClose()
     {
         if (StoryManager.Instance != null)
         {
@@ -269,7 +304,7 @@ public class QuizPanel : MonoBehaviour
         labelRect.offsetMax = new Vector2(-20f, -12f);
 
         TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
-        label.font = FindSharedFont();
+        label.font = ResolveUIFont();
         label.fontSize = 26f;
         label.alignment = TextAlignmentOptions.Left;
         label.enableWordWrapping = true;
@@ -280,14 +315,21 @@ public class QuizPanel : MonoBehaviour
         _optionLabels.Add(label);
     }
 
+    private bool IsLayoutReady()
+    {
+        return _titleText != null && _questionText != null && _feedbackText != null && _optionLayout != null && _continueButton != null && _closeButton != null;
+    }
+
     private void EnsureLayout()
     {
-        if (_titleText != null && _questionText != null && _feedbackText != null && _optionLayout != null && _continueButton != null && _backButton != null)
+        if (IsLayoutReady())
         {
+            HideLegacyBackButton();
+            ApplyAllFonts();
             return;
         }
 
-        TMP_FontAsset sharedFont = FindSharedFont();
+        TMP_FontAsset sharedFont = ResolveUIFont();
         RectTransform root = transform as RectTransform;
         if (root != null)
         {
@@ -335,12 +377,10 @@ public class QuizPanel : MonoBehaviour
         _questionText = EnsureText(contentRoot.transform, "QuestionText", sharedFont, 28f, FontStyles.Bold, TextAlignmentOptions.TopLeft, 120f);
         _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 72f);
 
-        Image feedbackImage = _feedbackText.GetComponent<Image>();
-        if (feedbackImage == null)
+        if (_feedbackText != null)
         {
-            feedbackImage = _feedbackText.gameObject.AddComponent<Image>();
+            _feedbackText.color = new Color32(210, 240, 220, 255);
         }
-        feedbackImage.color = new Color32(36, 64, 48, 220);
 
         _optionLayout = EnsureList(contentRoot.transform, "OptionList");
 
@@ -366,8 +406,70 @@ public class QuizPanel : MonoBehaviour
         actionLayoutElement.minHeight = 64f;
 
         _continueButton = EnsureButton(actionRoot.transform, "ContinueButton", sharedFont, "继续答题");
-        _backButton = EnsureButton(actionRoot.transform, "BackButton", sharedFont, "返回日程");
+        LayoutElement continueLayout = _continueButton.GetComponent<LayoutElement>();
+        if (continueLayout != null)
+        {
+            continueLayout.flexibleWidth = 0f;
+            continueLayout.minWidth = 220f;
+            continueLayout.preferredWidth = 220f;
+        }
+
+        _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
+
+        HideLegacyBackButton();
+        ApplyAllFonts();
         BindButtons();
+    }
+
+    private void HideLegacyBackButton()
+    {
+        Transform actionRoot = transform.Find("PanelContent/ActionRow");
+        if (actionRoot == null)
+        {
+            return;
+        }
+
+        Transform legacyBackButton = actionRoot.Find("BackButton");
+        if (legacyBackButton != null)
+        {
+            legacyBackButton.gameObject.SetActive(false);
+        }
+    }
+
+    private void ApplyAllFonts()
+    {
+        TMP_FontAsset sharedFont = ResolveUIFont();
+        if (sharedFont == null)
+        {
+            return;
+        }
+
+        if (_titleText != null)
+        {
+            _titleText.font = sharedFont;
+        }
+
+        if (_questionText != null)
+        {
+            _questionText.font = sharedFont;
+        }
+
+        if (_feedbackText != null)
+        {
+            _feedbackText.font = sharedFont;
+        }
+
+        for (int i = 0; i < _optionLabels.Count; i += 1)
+        {
+            TMP_Text optionLabel = _optionLabels[i];
+            if (optionLabel != null)
+            {
+                optionLabel.font = sharedFont;
+            }
+        }
+
+        ApplyButtonLabelFont(_continueButton, sharedFont);
+        ApplyButtonLabelFont(_closeButton, sharedFont);
     }
 
     private static QuizQuestionData PickRandomQuestion(List<QuizQuestionData> questions)
@@ -509,11 +611,78 @@ public class QuizPanel : MonoBehaviour
         {
             label.font = font;
         }
+
         label.fontSize = 26f;
         label.alignment = TextAlignmentOptions.Center;
         label.color = Color.white;
         label.text = buttonText;
         return button;
+    }
+
+    private static Button EnsureCornerButton(Transform parent, string name, TMP_FontAsset font, string labelText)
+    {
+        Transform existing = parent.Find(name);
+        GameObject buttonObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+        if (existing == null)
+        {
+            buttonObject.transform.SetParent(parent, false);
+        }
+
+        RectTransform rect = EnsureRectTransform(buttonObject);
+        rect.anchorMin = new Vector2(1f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.sizeDelta = new Vector2(96f, 44f);
+        rect.anchoredPosition = new Vector2(-10f, -10f);
+
+        LayoutElement layoutElement = buttonObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = buttonObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.ignoreLayout = true;
+
+        Image image = buttonObject.GetComponent<Image>();
+        image.color = new Color32(114, 62, 62, 255);
+
+        Button button = buttonObject.GetComponent<Button>();
+
+        GameObject labelObject = FindOrCreateChild(buttonObject, "Label");
+        RectTransform labelRect = EnsureRectTransform(labelObject);
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = Vector2.zero;
+        labelRect.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
+        if (label == null)
+        {
+            label = labelObject.AddComponent<TextMeshProUGUI>();
+        }
+        if (font != null)
+        {
+            label.font = font;
+        }
+
+        label.fontSize = 24f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = Color.white;
+        label.text = labelText;
+        return button;
+    }
+
+    private static void ApplyButtonLabelFont(Button button, TMP_FontAsset font)
+    {
+        if (button == null || font == null)
+        {
+            return;
+        }
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            label.font = font;
+        }
     }
 
     private static GameObject FindOrCreateChild(GameObject parent, string childName)
@@ -540,9 +709,48 @@ public class QuizPanel : MonoBehaviour
         return rectTransform;
     }
 
-    private static TMP_FontAsset FindSharedFont()
+    private TMP_FontAsset ResolveUIFont()
     {
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+
+#if UNITY_EDITOR
+        _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+#endif
+
+        TMP_FontAsset[] loadedFonts = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
+        for (int i = 0; i < loadedFonts.Length; i += 1)
+        {
+            TMP_FontAsset font = loadedFonts[i];
+            if (font != null && font.name == SimsunFontName)
+            {
+                _preferredChineseFont = font;
+                return _preferredChineseFont;
+            }
+        }
+
         TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        return existingText != null ? existingText.font : TMP_Settings.defaultFontAsset;
+        if (existingText != null && existingText.font != null)
+        {
+            return existingText.font;
+        }
+
+        return TMP_Settings.defaultFontAsset;
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (_preferredChineseFont == null)
+        {
+            _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        }
+    }
+#endif
 }

@@ -12,7 +12,23 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (_isShuttingDown)
             {
-                return null;
+                T existingInstance = FindObjectOfType<T>();
+                if (existingInstance != null)
+                {
+                    _instance = existingInstance;
+                    _isShuttingDown = false;
+                }
+#if UNITY_EDITOR
+                else if (!Application.isPlaying)
+                {
+                    _isShuttingDown = false;
+                }
+#endif
+
+                if (_isShuttingDown)
+                {
+                    return null;
+                }
             }
 
             lock (_lock)
@@ -39,6 +55,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     protected virtual void Awake()
     {
+        _isShuttingDown = false;
+
         if (_instance == null)
         {
             _instance = this as T;
