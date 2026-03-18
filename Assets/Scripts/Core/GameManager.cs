@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class GameManager : Singleton<GameManager>
 
     public GameState CurrentState => _currentState;
     public PlayerData CurrentPlayerData => _currentPlayerData;
+    public ProjectStoryData CurrentProjectStory => _currentProjectStory;
 
     #region Unity Lifecycle
 
@@ -26,6 +28,12 @@ public class GameManager : Singleton<GameManager>
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    private void Start()
+    {
+        TryBootstrapGameSceneWhenDirectPlay();
+    }
+
 
     protected override void OnDestroy()
     {
@@ -99,6 +107,17 @@ public class GameManager : Singleton<GameManager>
         NotifyDataChanged();
     }
 
+    public void SetEnergy(int amount)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        _currentPlayerData.energy = Mathf.Max(0, amount);
+        NotifyDataChanged();
+    }
+
     public int GetTotalStats()
     {
         if (_currentPlayerData == null)
@@ -148,6 +167,198 @@ public class GameManager : Singleton<GameManager>
 
         SaveProgress();
         NotifyDataChanged();
+    }
+
+    public void StartProject(int projectNumber)
+    {
+        if (_currentPlayerData == null)
+        {
+            _currentPlayerData = new PlayerData();
+        }
+
+        _currentPlayerData.currentProject = Mathf.Clamp(projectNumber, 1, 3);
+        _currentPlayerData.currentWeek = 1;
+        _currentPlayerData.energy = GameConstants.BASE_ENERGY_PER_WEEK;
+        _currentProjectStory = DataManager.Instance.LoadProjectStory(_currentPlayerData.currentProject);
+        _currentState = GameState.Playing;
+        NotifyDataChanged();
+    }
+
+    public void SetCurrentWeek(int weekNumber)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        _currentPlayerData.currentWeek = Mathf.Max(1, weekNumber);
+        NotifyDataChanged();
+    }
+
+    public void ReloadCurrentProjectStory()
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        _currentProjectStory = DataManager.Instance.LoadProjectStory(_currentPlayerData.currentProject);
+    }
+
+    public void RecordAIAdviceAdoption(string eventId, bool adoptedAIAdvice)
+    {
+        RecordAIDecision(eventId, false, adoptedAIAdvice, 0);
+    }
+
+    public void RecordAIDecision(string eventId, bool hasViewed, bool isFollowed, int decisionLatencyMs)
+    {
+        if (_currentPlayerData == null || string.IsNullOrWhiteSpace(eventId))
+        {
+            return;
+        }
+
+        if (_currentPlayerData.aiTrustRecords == null)
+        {
+            _currentPlayerData.aiTrustRecords = new List<AITrustRecord>();
+        }
+
+        AITrustRecord existingRecord = _currentPlayerData.aiTrustRecords.Find(record => record != null && record.eventId == eventId);
+        if (existingRecord == null)
+        {
+            existingRecord = new AITrustRecord
+            {
+                eventId = eventId
+            };
+            _currentPlayerData.aiTrustRecords.Add(existingRecord);
+        }
+
+        existingRecord.adoptedAIAdvice = isFollowed;
+        existingRecord.hasViewed = hasViewed;
+        existingRecord.isFollowed = isFollowed;
+        existingRecord.decisionLatencyMs = Mathf.Max(0, decisionLatencyMs);
+
+        NotifyDataChanged();
+    }
+
+    public void ApplyRiskChange(int riskChange)
+    {
+        if (_currentPlayerData == null || riskChange == 0)
+        {
+            return;
+        }
+
+        _currentPlayerData.hiddenRisk = Mathf.Max(0, _currentPlayerData.hiddenRisk + riskChange);
+        NotifyDataChanged();
+    }
+
+    public float GetAIAdoptionRate()
+    {
+        if (_currentPlayerData == null || _currentPlayerData.aiTrustRecords == null || _currentPlayerData.aiTrustRecords.Count == 0)
+        {
+            return 0f;
+        }
+
+        int adoptedCount = 0;
+        int totalCount = 0;
+        foreach (AITrustRecord record in _currentPlayerData.aiTrustRecords)
+        {
+            if (record == null)
+            {
+                continue;
+            }
+
+            bool isFollowed = record.isFollowed || record.adoptedAIAdvice;
+            if (isFollowed)
+            {
+                adoptedCount += 1;
+            }
+
+            totalCount += 1;
+        }
+
+        if (totalCount <= 0)
+        {
+            return 0f;
+        }
+
+        return (float)adoptedCount / totalCount;
+    }
+
+    public EndingResultData EvaluateCurrentProjectEnding()
+    {
+        if (_currentPlayerData == null)
+        {
+            return null;
+        }
+
+        EndingsData endingsData = DataManager.Instance.LoadEndings();
+        if (endingsData == null || endingsData.projects == null)
+        {
+            return null;
+        }
+
+        ProjectEndingData projectEnding = endingsData.projects.Find(item => item != null && item.projectNumber == _currentPlayerData.currentProject);
+        if (projectEnding == null)
+        {
+            return null;
+        }
+
+        if (projectEnding.riskFailThreshold >= 0 && _currentPlayerData.hiddenRisk >= projectEnding.riskFailThreshold)
+        {
+            return projectEnding.fail;
+        }
+
+        int totalStats = GetTotalStats();
+        if (totalStats >= projectEnding.excellentThreshold)
+        {
+            return projectEnding.excellent;
+        }
+
+        if (totalStats >= projectEnding.passThreshold)
+        {
+            return projectEnding.pass;
+        }
+
+        return projectEnding.fail;
+    }
+
+    public bool HasNextProject()
+    {
+        return _currentPlayerData != null && _currentPlayerData.currentProject < 3;
+    }
+
+    public bool AdvanceToNextProject()
+    {
+        if (!HasNextProject())
+        {
+            return false;
+        }
+
+        StartProject(_currentPlayerData.currentProject + 1);
+        SaveProgress();
+        return true;
+    }
+
+    public int GetStatValue(string statKey)
+    {
+        if (_currentPlayerData == null || string.IsNullOrWhiteSpace(statKey))
+        {
+            return 0;
+        }
+
+        switch (statKey.Trim())
+        {
+            case "techPower":
+                return _currentPlayerData.techPower;
+            case "commPower":
+                return _currentPlayerData.commPower;
+            case "managePower":
+                return _currentPlayerData.managePower;
+            case "stressPower":
+                return _currentPlayerData.stressPower;
+            default:
+                return 0;
+        }
     }
 
     public string GetCurrentProjectName()
@@ -224,6 +435,24 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
+        InitializeGameSceneRuntime();
+    }
+
+    private void TryBootstrapGameSceneWhenDirectPlay()
+    {
+        Scene activeScene = SceneManager.GetActiveScene();
+        if (activeScene.name != "GameScene" || _currentState == GameState.Playing)
+        {
+            return;
+        }
+
+        Debug.Log("[GameManager] 检测到直接在 GameScene 运行，自动初始化主流程。");
+        _currentState = GameState.Playing;
+        InitializeGameSceneRuntime();
+    }
+
+    private void InitializeGameSceneRuntime()
+    {
         if (_currentPlayerData == null)
         {
             _currentPlayerData = new PlayerData();
@@ -237,7 +466,10 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.RebuildPanelRegistry();
         UIManager.Instance.HideAllPanels();
         NotifyDataChanged();
+        StoryManager.Instance.HandleGameSceneLoaded();
     }
+
+
 
     private void NotifyDataChanged()
     {
@@ -272,3 +504,5 @@ public class GameManager : Singleton<GameManager>
 
     #endregion
 }
+
+

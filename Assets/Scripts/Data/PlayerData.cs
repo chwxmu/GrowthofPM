@@ -20,4 +20,7 @@ public class AITrustRecord
 {
     public string eventId;
     public bool adoptedAIAdvice;
+    public bool hasViewed;
+    public bool isFollowed;
+    public int decisionLatencyMs;
 }

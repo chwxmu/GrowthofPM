@@ -19,6 +19,7 @@
 UserSettings/
 *.log
 Assets/AssetStoreTools*
+Assets/Docs/
 
 # 系统文件
 .DS_Store
@@ -26,4 +27,5 @@ Assets/AssetStoreTools*
 *.swo
 
 .codex
+.claude/
 *.lfs

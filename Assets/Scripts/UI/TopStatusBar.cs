@@ -97,7 +97,27 @@ public class TopStatusBar : MonoBehaviour
 
     private void OnClickQuizEntry()
     {
+        if (StoryManager.Instance != null && !StoryManager.Instance.CanOpenQuiz())
+        {
+            Debug.Log("[TopStatusBar] 当前阶段暂不可进入答题。\n");
+            return;
+        }
+
+        if (StoryManager.Instance != null)
+        {
+            StoryManager.Instance.OpenQuizFromSchedule();
+            return;
+        }
+
         UIManager.Instance.ShowPanel("QuizPanel");
+    }
+
+    public void SetQuizEntryInteractable(bool interactable)
+    {
+        if (_quizEntryButton != null)
+        {
+            _quizEntryButton.interactable = interactable;
+        }
     }
 
     private void AutoBindIfNeeded()

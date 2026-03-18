@@ -100,6 +100,32 @@ Key data structures (see `Assets/Resources/Data/` for JSON schemas):
 - AI advisor personalities differ per project: P1 (TBD), P2 "Alpha" (aggressive), P3 "Chaos" (unpredictable with good/neutral/bad quality labels).
 - Record whether the player follows AI advice for each decision — this data is shown in the final stats screen.
 
+## 核心开发执行准则 (Core Implementation Guidelines)
+
+### A. 编程规范与文件编码 (Coding & Encoding Standards)
+- **强制编码**：所有脚本和 JSON 文件必须使用 **UTF-8 with BOM** 编码，以防止 Unity 中文乱码。
+- **命名与注释**：变量/方法使用英文；每个管理器类需添加类注释，说明核心功能；每个公共方法需添加注释，说明参数、返回值、作用。
+- **类型安全**：严禁使用魔术字符串。所有状态（项目阶段、AI 质量、属性类型）必须引用 `GameEnums.cs`；所有路径必须引用 `GameConstants.cs`。
+- **数据契约**：修改 C# 数据模型（如 `PlayerData`）时，必须同步更新对应的 JSON 模板。JSON 字段用 `camelCase`，C# 字段用 `PascalCase`。
+
+### B. 架构解耦与 UI 驱动 (Architecture & UI Decoupling)
+- **逻辑隔离 (MVVM 思想)**：UI 脚本仅负责显示，严禁在 UI 类中处理逻辑计算。所有数值变动必须通过 `StatManager` 或 `StoryManager` 处理。
+- **事件驱动**：跨模块通信（如：属性变动触发 TopStatusBar 刷新）优先使用 `System.Action` 或 C# 事件，严禁模块间强耦合。
+- **资源访问**：所有配置数据必须存放在 `Assets/Resources/Data/` 目录下。加载资源时需进行 `null` 检查。
+- **UI 管理**：同一时间只能有一个核心面板处于 `Active` 状态。打开新面板前必须通过 `UIManager` 关闭当前面板。
+
+### C. 周循环状态机与持久化 (State Machine & Persistence)
+- **周循环顺序**：`StoryManager` 必须严格遵守流程：`周初剧情 -> 决策事件 -> 精力安排 -> 数值结算 -> 自动保存`。严禁跳步。
+- **结算即保存**：在每周结算（Settlement）完成时，必须立即调用 `DataManager.SaveProgress()`。实验数据（AI 采纳情况）必须实时写入 `aiTrustRecords`。
+- **单例安全性**：所有单例必须在 `Awake` 中实现自毁逻辑，确保场景切换时不产生重复实例。
+
+### D. 学术埋点与调试 (Research Logging & Debugging)
+- **实验数据追踪**：
+    - **信任度**：必须记录玩家是否查看 AI 建议（`hasViewed`）以及最终决策是否与建议一致（`isFollowed`）。
+    - **决策耗时**：记录从显示决策面板到玩家点击选项的 `DecisionLatency`。
+- **防御性编程**：关键逻辑（如项目切换、大事件加载）必须包含 `try-catch` 或异常 Log。
+- **日志标准**：使用 `Debug.Log($"[模块名] : 描述")` 格式。报错必须使用 `Debug.LogError` 并附带关键参数（如当前周数、项目编号）。
+
 ## 任务报告存储规范
 ### 1. 根文件夹命名
 `Assets/Docs/TaskReports`（任务报告存储，与其他文档隔离）

@@ -18,6 +18,12 @@ public class WeekEventData
     public List<DialogueLine> prologueDialogues;
     public List<DialogueLine> dailyIntroDialogues;
     public DecisionEventData decisionEvent;
+    public DecisionEventData secondDecisionEvent;
+    public ConditionalEventData conditionalEvent;
+    public List<DialogueLine> postDecisionDialogues;
+    public StatEffects postDecisionStatChanges;
+    public RiskBasedDialogueData riskBasedDialogue;
+    public int riskAutoChange;
     public StatEffects fixedStatChanges;
 }
 
@@ -39,7 +45,27 @@ public class DecisionEventData
     public int aiRecommendedOption;
     public string conditionStat;
     public int conditionThreshold;
+    public bool isMiniGame;
+    public string miniGameType;
     public List<OptionData> options;
+}
+
+[Serializable]
+public class ConditionalEventData
+{
+    public string conditionFlag;
+    public bool conditionValue;
+    public List<DialogueLine> dialogues;
+    public StatEffects statPenalty;
+    public int riskPenalty;
+}
+
+[Serializable]
+public class RiskBasedDialogueData
+{
+    public List<DialogueLine> low;
+    public List<DialogueLine> medium;
+    public List<DialogueLine> high;
 }
 
 [Serializable]
@@ -49,6 +75,9 @@ public class OptionData
     public string narrative;
     public StatEffects effects;
     public int riskChange;
+    public string conditionStat;
+    public int conditionThreshold;
+    public string conditionDescription;
 }
 
 [Serializable]

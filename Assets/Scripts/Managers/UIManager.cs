@@ -57,10 +57,10 @@ public class UIManager : Singleton<UIManager>
     {
         _panels.Clear();
 
-        UIPanelMarker[] markers = Resources.FindObjectsOfTypeAll<UIPanelMarker>();
+        UIPanelMarker[] markers = FindObjectsOfType<UIPanelMarker>(true);
         foreach (UIPanelMarker marker in markers)
         {
-            if (marker == null || !marker.gameObject.scene.IsValid() || !marker.gameObject.scene.isLoaded)
+            if (marker == null)
             {
                 continue;
             }

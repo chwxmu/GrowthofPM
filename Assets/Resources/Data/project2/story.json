@@ -37,6 +37,8 @@
           },
           {
             "text": "据理力争（需要沟通力≥300）",
+            "conditionStat": "commPower",
+            "conditionThreshold": 300,
             "narrative": "你详细分析了每项需求的工时和风险，说服王总砍掉了部分非核心需求。小赵和老周松了口气。",
             "effects": { "techPower": 0, "commPower": 10, "managePower": 5, "stressPower": 0 },
             "riskChange": -5
@@ -218,6 +220,8 @@
           },
           {
             "text": "亲自上手（需要技术力≥100）",
+            "conditionStat": "techPower",
+            "conditionThreshold": 100,
             "narrative": "你通宵写代码，替小李分担了最重的模块。小赵送来夜宵，老周默默优化了监控。小李感动地留下了。",
             "effects": { "techPower": 15, "commPower": 0, "managePower": 0, "stressPower": 6 },
             "riskChange": -5
@@ -263,6 +267,8 @@
         "options": [
           {
             "text": "推倒重构（需要技术力≥150）",
+            "conditionStat": "techPower",
+            "conditionThreshold": 150,
             "narrative": "你决定重构关键模块。虽然耗时，但彻底消除了风险。小赵支持，老周担心时间不够。",
             "effects": { "techPower": -10, "commPower": 0, "managePower": 0, "stressPower": 12 },
             "riskChange": -20
@@ -332,6 +338,8 @@
           },
           {
             "text": "动用储备金（需要管理力≥100）",
+            "conditionStat": "managePower",
+            "conditionThreshold": 100,
             "narrative": "你动用项目管理储备金支付了服务器费用。老周长舒一口气，小赵继续测试。",
             "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 5 },
             "riskChange": -5
@@ -386,5 +394,7 @@
     }
   ]
 }
+
+
 
 
