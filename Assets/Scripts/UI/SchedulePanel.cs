@@ -32,9 +32,11 @@ public class SchedulePanel : MonoBehaviour
     private Action<List<DailyTaskData>> _onConfirm;
     private int _maxEnergy;
     private int _remainingEnergy;
+    private int _cachedProjectNumber = -1;
+    private int _cachedWeekNumber = -1;
     private Tween _energyTween;
 
-    public bool HasCachedSchedule => _onConfirm != null && _availableTasks.Count > 0;
+    public bool HasCachedSchedule => _onConfirm != null && _availableTasks.Count > 0 && IsCacheValidForCurrentWeek();
 
     private void Awake()
     {
@@ -57,7 +59,7 @@ public class SchedulePanel : MonoBehaviour
         }
     }
 
-public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<List<DailyTaskData>> onConfirm)
+    public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<List<DailyTaskData>> onConfirm)
     {
         EnsureLayout();
 
@@ -71,6 +73,7 @@ public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<
         _onConfirm = onConfirm;
         _maxEnergy = Mathf.Max(0, availableEnergy);
         _remainingEnergy = _maxEnergy;
+        CacheCurrentWeekContext();
         gameObject.SetActive(true);
         RestorePanelVisibility();
 
@@ -85,7 +88,7 @@ public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<
         RefreshEnergyDisplay(true);
     }
 
-public void ReopenSchedule()
+    public void ReopenSchedule()
     {
         if (!HasCachedSchedule)
         {
@@ -100,6 +103,26 @@ public void ReopenSchedule()
         {
             _closeButton.gameObject.SetActive(true);
             _closeButton.interactable = true;
+        }
+
+        RebuildAvailableList();
+        RebuildSelectedList();
+        RefreshEnergyDisplay(true);
+    }
+
+    public void ClearCachedSchedule()
+    {
+        _availableTasks.Clear();
+        _selectedTasks.Clear();
+        _onConfirm = null;
+        _maxEnergy = 0;
+        _remainingEnergy = 0;
+        _cachedProjectNumber = -1;
+        _cachedWeekNumber = -1;
+
+        if (!IsLayoutReady())
+        {
+            return;
         }
 
         RebuildAvailableList();
@@ -348,6 +371,36 @@ public void ReopenSchedule()
 
         string sign = value > 0 ? "+" : string.Empty;
         entries.Add(name + sign + value);
+    }
+
+    private void CacheCurrentWeekContext()
+    {
+        PlayerData playerData = GameManager.Instance != null ? GameManager.Instance.CurrentPlayerData : null;
+        if (playerData == null)
+        {
+            _cachedProjectNumber = -1;
+            _cachedWeekNumber = -1;
+            return;
+        }
+
+        _cachedProjectNumber = playerData.currentProject;
+        _cachedWeekNumber = playerData.currentWeek;
+    }
+
+    private bool IsCacheValidForCurrentWeek()
+    {
+        PlayerData playerData = GameManager.Instance != null ? GameManager.Instance.CurrentPlayerData : null;
+        if (playerData == null)
+        {
+            return true;
+        }
+
+        if (_cachedProjectNumber <= 0 || _cachedWeekNumber <= 0)
+        {
+            return false;
+        }
+
+        return _cachedProjectNumber == playerData.currentProject && _cachedWeekNumber == playerData.currentWeek;
     }
 
     private void EnsureAvailableItemCount(int targetCount)

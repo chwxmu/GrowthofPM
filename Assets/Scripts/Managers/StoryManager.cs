@@ -11,6 +11,7 @@ public class StoryManager : Singleton<StoryManager>
     private const string EndingPanelName = "EndingPanel";
     private const string TransitionPanelName = "TransitionPanel";
     private const string CpmCorrectFlag = "cpmCorrect";
+    private const KeyCode SkipMainStoryKey = KeyCode.P;
 
     private readonly Dictionary<string, bool> _runtimeFlags = new Dictionary<string, bool>();
 
@@ -34,6 +35,16 @@ public class StoryManager : Singleton<StoryManager>
         {
             return;
         }
+    }
+
+    private void Update()
+    {
+        if (!Input.GetKeyDown(SkipMainStoryKey))
+        {
+            return;
+        }
+
+        TrySkipWeekMainStoryToDecision();
     }
 
     public void HandleGameSceneLoaded()
@@ -74,6 +85,13 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         ResetWeekState();
+
+        SchedulePanel schedulePanel = FindObjectOfType<SchedulePanel>(true);
+        if (schedulePanel != null)
+        {
+            schedulePanel.ClearCachedSchedule();
+        }
+
         _currentWeekEvent = GameManager.Instance.GetCurrentWeekEvent();
         if (_currentWeekEvent == null)
         {
@@ -120,6 +138,25 @@ public class StoryManager : Singleton<StoryManager>
 
     public void OnDailyIntroComplete()
     {
+        _decisionStepIndex = 0;
+        ShowNextDecisionOrSchedule();
+    }
+
+    public void TrySkipWeekMainStoryToDecision()
+    {
+        if (!CanSkipWeekMainStory())
+        {
+            return;
+        }
+
+        Debug.Log("[StoryManager] : 玩家按下P，跳过本周主剧情并进入决策阶段。");
+
+        DialoguePanel dialoguePanel = FindObjectOfType<DialoguePanel>(true);
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.ForceCloseWithoutCallback();
+        }
+
         _decisionStepIndex = 0;
         ShowNextDecisionOrSchedule();
     }
@@ -327,6 +364,16 @@ public class StoryManager : Singleton<StoryManager>
             ShowDecision(decision);
             return;
         }
+    }
+
+    private bool CanSkipWeekMainStory()
+    {
+        if (_currentWeekEvent == null)
+        {
+            return false;
+        }
+
+        return _currentFlowStage == StoryFlowStage.Prologue || _currentFlowStage == StoryFlowStage.DailyIntro;
     }
 
     private void RunPostDecisionContentOrSchedule()

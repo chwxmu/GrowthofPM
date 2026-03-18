@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +11,11 @@ using UnityEditor;
 public class QuizPanel : MonoBehaviour
 {
     private const string SimsunFontName = "SIMSUN SDF";
+    private const float ContentSpacing = 10f;
+    private const float QuestionBlockHeight = 98f;
+    private const float FeedbackBlockHeight = 52f;
+    private const float ActionRowHeight = 56f;
+    private const float ContinueButtonWidth = 196f;
 #if UNITY_EDITOR
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
@@ -51,9 +54,10 @@ public class QuizPanel : MonoBehaviour
         }
     }
 
-public void ShowQuiz()
+    public void ShowQuiz()
     {
         EnsureLayout();
+        ApplyLayoutTuning();
         ApplyAllFonts();
         gameObject.SetActive(true);
         RestorePanelVisibility();
@@ -325,6 +329,7 @@ public void ShowQuiz()
         if (IsLayoutReady())
         {
             HideLegacyBackButton();
+            ApplyLayoutTuning();
             ApplyAllFonts();
             return;
         }
@@ -366,7 +371,7 @@ public void ShowQuiz()
             layout = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
         layout.padding = new RectOffset(28, 28, 28, 28);
-        layout.spacing = 18f;
+        layout.spacing = ContentSpacing;
         layout.childAlignment = TextAnchor.UpperLeft;
         layout.childControlWidth = true;
         layout.childControlHeight = false;
@@ -374,8 +379,8 @@ public void ShowQuiz()
         layout.childForceExpandHeight = false;
 
         _titleText = EnsureText(contentRoot.transform, "TitleText", sharedFont, 32f, FontStyles.Bold, TextAlignmentOptions.Center, 56f);
-        _questionText = EnsureText(contentRoot.transform, "QuestionText", sharedFont, 28f, FontStyles.Bold, TextAlignmentOptions.TopLeft, 120f);
-        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 72f);
+        _questionText = EnsureText(contentRoot.transform, "QuestionText", sharedFont, 28f, FontStyles.Bold, TextAlignmentOptions.TopLeft, QuestionBlockHeight);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackBlockHeight);
 
         if (_feedbackText != null)
         {
@@ -390,11 +395,11 @@ public void ShowQuiz()
         {
             actionLayout = actionRoot.AddComponent<HorizontalLayoutGroup>();
         }
-        actionLayout.spacing = 16f;
-        actionLayout.childAlignment = TextAnchor.MiddleCenter;
+        actionLayout.spacing = 0f;
+        actionLayout.childAlignment = TextAnchor.MiddleRight;
         actionLayout.childControlWidth = true;
         actionLayout.childControlHeight = false;
-        actionLayout.childForceExpandWidth = true;
+        actionLayout.childForceExpandWidth = false;
         actionLayout.childForceExpandHeight = false;
 
         LayoutElement actionLayoutElement = actionRoot.GetComponent<LayoutElement>();
@@ -402,23 +407,105 @@ public void ShowQuiz()
         {
             actionLayoutElement = actionRoot.AddComponent<LayoutElement>();
         }
-        actionLayoutElement.preferredHeight = 64f;
-        actionLayoutElement.minHeight = 64f;
+        actionLayoutElement.preferredHeight = ActionRowHeight;
+        actionLayoutElement.minHeight = ActionRowHeight;
 
         _continueButton = EnsureButton(actionRoot.transform, "ContinueButton", sharedFont, "继续答题");
         LayoutElement continueLayout = _continueButton.GetComponent<LayoutElement>();
         if (continueLayout != null)
         {
             continueLayout.flexibleWidth = 0f;
-            continueLayout.minWidth = 220f;
-            continueLayout.preferredWidth = 220f;
+            continueLayout.minWidth = ContinueButtonWidth;
+            continueLayout.preferredWidth = ContinueButtonWidth;
         }
 
         _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
 
         HideLegacyBackButton();
+        ApplyLayoutTuning();
         ApplyAllFonts();
         BindButtons();
+    }
+
+    private void ApplyLayoutTuning()
+    {
+        Transform contentRoot = transform.Find("PanelContent");
+        if (contentRoot == null)
+        {
+            return;
+        }
+
+        VerticalLayoutGroup contentLayout = contentRoot.GetComponent<VerticalLayoutGroup>();
+        if (contentLayout != null)
+        {
+            contentLayout.spacing = ContentSpacing;
+        }
+
+        ApplyTextBlockHeight(_questionText, QuestionBlockHeight);
+        ApplyTextBlockHeight(_feedbackText, FeedbackBlockHeight);
+
+        if (_questionText != null)
+        {
+            _questionText.margin = new Vector4(16f, 8f, 16f, 8f);
+        }
+
+        if (_feedbackText != null)
+        {
+            _feedbackText.margin = new Vector4(16f, 6f, 16f, 6f);
+        }
+
+        if (_optionLayout != null)
+        {
+            _optionLayout.spacing = 10f;
+        }
+
+        Transform actionRoot = contentRoot.Find("ActionRow");
+        if (actionRoot != null)
+        {
+            HorizontalLayoutGroup actionLayout = actionRoot.GetComponent<HorizontalLayoutGroup>();
+            if (actionLayout != null)
+            {
+                actionLayout.spacing = 0f;
+                actionLayout.childAlignment = TextAnchor.MiddleRight;
+                actionLayout.childControlWidth = true;
+                actionLayout.childForceExpandWidth = false;
+            }
+
+            LayoutElement actionLayoutElement = actionRoot.GetComponent<LayoutElement>();
+            if (actionLayoutElement != null)
+            {
+                actionLayoutElement.preferredHeight = ActionRowHeight;
+                actionLayoutElement.minHeight = ActionRowHeight;
+            }
+        }
+
+        if (_continueButton != null)
+        {
+            LayoutElement continueLayout = _continueButton.GetComponent<LayoutElement>();
+            if (continueLayout != null)
+            {
+                continueLayout.flexibleWidth = 0f;
+                continueLayout.minWidth = ContinueButtonWidth;
+                continueLayout.preferredWidth = ContinueButtonWidth;
+            }
+        }
+    }
+
+    private static void ApplyTextBlockHeight(TMP_Text text, float blockHeight)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        LayoutElement layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            return;
+        }
+
+        layoutElement.preferredHeight = blockHeight;
+        layoutElement.minHeight = blockHeight;
     }
 
     private void HideLegacyBackButton()
@@ -556,14 +643,14 @@ public void ShowQuiz()
             layoutElement = listObject.AddComponent<LayoutElement>();
         }
         layoutElement.flexibleHeight = 1f;
-        layoutElement.minHeight = 240f;
+        layoutElement.minHeight = 220f;
 
         VerticalLayoutGroup layout = listObject.GetComponent<VerticalLayoutGroup>();
         if (layout == null)
         {
             layout = listObject.AddComponent<VerticalLayoutGroup>();
         }
-        layout.spacing = 12f;
+        layout.spacing = 10f;
         layout.childAlignment = TextAnchor.UpperLeft;
         layout.childControlWidth = true;
         layout.childControlHeight = false;

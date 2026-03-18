@@ -84,6 +84,22 @@ public class DialoguePanel : MonoBehaviour
         ShowCurrentDialogue();
     }
 
+    public void ForceCloseWithoutCallback()
+    {
+        if (_typingCoroutine != null)
+        {
+            StopCoroutine(_typingCoroutine);
+            _typingCoroutine = null;
+        }
+
+        _isTyping = false;
+        _fullText = string.Empty;
+        _currentIndex = 0;
+        _dialogues.Clear();
+        _onComplete = null;
+        gameObject.SetActive(false);
+    }
+
     private void OnClickNext()
     {
         if (_dialogues.Count == 0)
