@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class EndingPanel : MonoBehaviour
     [SerializeField] private TMP_Text _descriptionText;
     [SerializeField] private TMP_Text _statsText;
     [SerializeField] private TMP_Text _aiRateText;
+    [SerializeField] private ScrollRect _detailsScrollRect;
     [SerializeField] private Button _nextProjectButton;
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _menuButton;
@@ -44,6 +46,7 @@ public class EndingPanel : MonoBehaviour
         EnsureLayout();
         _currentResult = result;
         gameObject.SetActive(true);
+        RestorePanelVisibility();
 
         if (_titleText != null)
         {
@@ -69,6 +72,10 @@ public class EndingPanel : MonoBehaviour
         {
             _nextProjectButton.gameObject.SetActive(ShouldShowNextProjectButton());
         }
+
+        RefreshTextLayout();
+
+        LogPanelVisibility("ShowEnding restored visibility");
     }
 
     private void BindButtons()
@@ -128,6 +135,60 @@ public class EndingPanel : MonoBehaviour
         return _currentResult == null || !string.Equals(_currentResult.grade, "fail", System.StringComparison.OrdinalIgnoreCase);
     }
 
+    private void RestorePanelVisibility()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    private void LogPanelVisibility(string context)
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        Debug.Log($"[EndingPanel] : {context}. active={gameObject.activeSelf} alpha={(canvasGroup != null ? canvasGroup.alpha : -1f)} interactable={(canvasGroup != null && canvasGroup.interactable)} blocksRaycasts={(canvasGroup != null && canvasGroup.blocksRaycasts)}");
+    }
+
+    private void RefreshTextLayout()
+    {
+        UpdateTextHeight(_titleText, 72f);
+        UpdateTextHeight(_descriptionText, 220f);
+        UpdateTextHeight(_statsText, 132f);
+        UpdateTextHeight(_aiRateText, 56f);
+
+        if (_detailsScrollRect != null && _detailsScrollRect.content != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_detailsScrollRect.content);
+            _detailsScrollRect.verticalNormalizedPosition = 1f;
+        }
+    }
+
+    private static void UpdateTextHeight(TMP_Text text, float minHeight)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        LayoutElement layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
+
+        float width = text.rectTransform.rect.width > 0f ? text.rectTransform.rect.width : 720f;
+        Vector2 preferred = text.GetPreferredValues(text.text, width, 0f);
+        float preferredHeight = Mathf.Ceil(preferred.y + text.margin.y + text.margin.w + 20f);
+        layoutElement.minHeight = minHeight;
+        layoutElement.preferredHeight = Mathf.Max(minHeight, preferredHeight);
+    }
+
     private static string BuildStatsText()
     {
         if (GameManager.Instance == null || GameManager.Instance.CurrentPlayerData == null)
@@ -150,7 +211,7 @@ public class EndingPanel : MonoBehaviour
 
     private void EnsureLayout()
     {
-        if (_titleText != null && _descriptionText != null && _statsText != null && _aiRateText != null && _nextProjectButton != null && _restartButton != null && _menuButton != null)
+        if (_titleText != null && _descriptionText != null && _statsText != null && _aiRateText != null && _detailsScrollRect != null && _nextProjectButton != null && _restartButton != null && _menuButton != null)
         {
             return;
         }
@@ -195,14 +256,17 @@ public class EndingPanel : MonoBehaviour
         layout.spacing = 18f;
         layout.childAlignment = TextAnchor.UpperCenter;
         layout.childControlWidth = true;
-        layout.childControlHeight = false;
+        layout.childControlHeight = true;
         layout.childForceExpandWidth = true;
         layout.childForceExpandHeight = false;
 
-        _titleText = EnsureText(contentRoot.transform, "TitleText", sharedFont, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 64f);
-        _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 180f);
-        _statsText = EnsureText(contentRoot.transform, "StatsText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 140f);
-        _aiRateText = EnsureText(contentRoot.transform, "AIRateText", sharedFont, 26f, FontStyles.Bold, TextAlignmentOptions.Left, 56f);
+        _titleText = EnsureText(contentRoot.transform, "TitleText", sharedFont, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 72f);
+
+        _detailsScrollRect = EnsureDetailsScrollRect(contentRoot.transform, "DetailsScroll");
+        Transform detailsContent = _detailsScrollRect.content;
+        _descriptionText = EnsureText(detailsContent, "DescriptionText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 220f);
+        _statsText = EnsureText(detailsContent, "StatsText", sharedFont, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 132f);
+        _aiRateText = EnsureText(detailsContent, "AIRateText", sharedFont, 24f, FontStyles.Bold, TextAlignmentOptions.Left, 56f);
 
         GameObject buttonRow = FindOrCreateChild(contentRoot, "ButtonRow");
         HorizontalLayoutGroup buttonLayout = buttonRow.GetComponent<HorizontalLayoutGroup>();
@@ -213,7 +277,7 @@ public class EndingPanel : MonoBehaviour
         buttonLayout.spacing = 16f;
         buttonLayout.childAlignment = TextAnchor.MiddleCenter;
         buttonLayout.childControlWidth = true;
-        buttonLayout.childControlHeight = false;
+        buttonLayout.childControlHeight = true;
         buttonLayout.childForceExpandWidth = true;
         buttonLayout.childForceExpandHeight = false;
 
@@ -229,6 +293,95 @@ public class EndingPanel : MonoBehaviour
         _restartButton = EnsureButton(buttonRow.transform, "RestartButton", sharedFont, "重新开始");
         _menuButton = EnsureButton(buttonRow.transform, "MenuButton", sharedFont, "返回主菜单");
         BindButtons();
+    }
+
+    private static ScrollRect EnsureDetailsScrollRect(Transform parent, string name)
+    {
+        Transform existing = parent.Find(name);
+        GameObject scrollObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(Image), typeof(ScrollRect), typeof(LayoutElement));
+        if (existing == null)
+        {
+            scrollObject.transform.SetParent(parent, false);
+        }
+
+        LayoutElement layoutElement = scrollObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = scrollObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.flexibleHeight = 1f;
+        layoutElement.minHeight = 280f;
+        layoutElement.preferredHeight = 360f;
+
+        Image background = scrollObject.GetComponent<Image>();
+        if (background == null)
+        {
+            background = scrollObject.AddComponent<Image>();
+        }
+        background.color = new Color32(18, 25, 40, 160);
+
+        ScrollRect scrollRect = scrollObject.GetComponent<ScrollRect>();
+        if (scrollRect == null)
+        {
+            scrollRect = scrollObject.AddComponent<ScrollRect>();
+        }
+
+        GameObject viewport = FindOrCreateChild(scrollObject, "Viewport");
+        RectTransform viewportRect = EnsureRectTransform(viewport);
+        viewportRect.anchorMin = Vector2.zero;
+        viewportRect.anchorMax = Vector2.one;
+        viewportRect.offsetMin = Vector2.zero;
+        viewportRect.offsetMax = Vector2.zero;
+
+        Image viewportImage = viewport.GetComponent<Image>();
+        if (viewportImage == null)
+        {
+            viewportImage = viewport.AddComponent<Image>();
+        }
+        viewportImage.color = new Color(0f, 0f, 0f, 0.02f);
+
+        if (viewport.GetComponent<RectMask2D>() == null)
+        {
+            viewport.AddComponent<RectMask2D>();
+        }
+
+        GameObject content = FindOrCreateChild(viewport, "Content");
+        RectTransform contentRect = EnsureRectTransform(content);
+        contentRect.anchorMin = new Vector2(0f, 1f);
+        contentRect.anchorMax = new Vector2(1f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.offsetMin = new Vector2(8f, 0f);
+        contentRect.offsetMax = new Vector2(-8f, 0f);
+
+        VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
+        if (contentLayout == null)
+        {
+            contentLayout = content.AddComponent<VerticalLayoutGroup>();
+        }
+        contentLayout.padding = new RectOffset(8, 8, 8, 8);
+        contentLayout.spacing = 14f;
+        contentLayout.childAlignment = TextAnchor.UpperLeft;
+        contentLayout.childControlWidth = true;
+        contentLayout.childControlHeight = true;
+        contentLayout.childForceExpandWidth = true;
+        contentLayout.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter = content.GetComponent<ContentSizeFitter>();
+        if (fitter == null)
+        {
+            fitter = content.AddComponent<ContentSizeFitter>();
+        }
+        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        scrollRect.viewport = viewportRect;
+        scrollRect.content = contentRect;
+        scrollRect.horizontal = false;
+        scrollRect.vertical = true;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+        scrollRect.scrollSensitivity = 28f;
+
+        return scrollRect;
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float preferredHeight)
@@ -263,6 +416,7 @@ public class EndingPanel : MonoBehaviour
         text.fontStyle = fontStyle;
         text.alignment = alignment;
         text.enableWordWrapping = true;
+        text.overflowMode = TextOverflowModes.Overflow;
         text.color = Color.white;
         text.margin = new Vector4(16f, 12f, 16f, 12f);
         return text;

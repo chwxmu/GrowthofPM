@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,7 @@ public class TransitionPanel : MonoBehaviour
     {
         EnsureLayout();
         gameObject.SetActive(true);
+        RestorePanelVisibility();
 
         if (_titleText != null)
         {
@@ -48,6 +50,8 @@ public class TransitionPanel : MonoBehaviour
         {
             _inheritanceText.text = BuildInheritanceText();
         }
+
+        LogPanelVisibility("ShowTransition restored visibility");
     }
 
     private void OnClickStart()
@@ -86,6 +90,26 @@ public class TransitionPanel : MonoBehaviour
             + "沟通力：" + data.commPower + "\n"
             + "管理力：" + data.managePower + "\n"
             + "抗压力：" + data.stressPower;
+    }
+
+    private void RestorePanelVisibility()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    private void LogPanelVisibility(string context)
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        Debug.Log($"[TransitionPanel] : {context}. active={gameObject.activeSelf} alpha={(canvasGroup != null ? canvasGroup.alpha : -1f)} interactable={(canvasGroup != null && canvasGroup.interactable)} blocksRaycasts={(canvasGroup != null && canvasGroup.blocksRaycasts)}");
     }
 
     private void EnsureLayout()

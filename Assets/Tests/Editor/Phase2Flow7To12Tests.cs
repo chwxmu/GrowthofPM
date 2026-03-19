@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using TMPro;
@@ -442,6 +443,42 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
+    public void StoryManager_AdvanceWeekShouldRestoreEndingPanelVisibilityAtFinalWeek()
+    {
+        CreateComponent<DataManager>("DataManager");
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 1,
+            currentWeek = GameConstants.PROJECT1_WEEKS,
+            techPower = 100,
+            commPower = 100,
+            managePower = 100,
+            stressPower = 100,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        UIManager uiManager = CreateComponent<UIManager>("UIManager");
+        EndingPanel endingPanel = CreateComponent<EndingPanel>("EndingPanel");
+        uiManager.RegisterPanel("EndingPanel", endingPanel.gameObject);
+
+        CanvasGroup group = endingPanel.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
+        endingPanel.gameObject.SetActive(true);
+
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        storyManager.AdvanceWeek();
+
+        Assert.AreEqual(StoryFlowStage.Ending, storyManager.CurrentFlowStage);
+        Assert.IsTrue(endingPanel.gameObject.activeSelf);
+        Assert.AreEqual(1f, group.alpha);
+        Assert.IsTrue(group.interactable);
+        Assert.IsTrue(group.blocksRaycasts);
+    }
+
+    [Test]
     public void GameManager_EvaluateEndingShouldUseRiskFailThresholdForProject2()
     {
         CreateComponent<DataManager>("DataManager");
@@ -504,6 +541,39 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
+    public void EndingPanel_ShowEndingShouldPlaceLongDescriptionInsideScrollableArea()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 1,
+            techPower = 120,
+            commPower = 118,
+            managePower = 115,
+            stressPower = 110,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        EndingPanel panel = CreateComponent<EndingPanel>("EndingPanel");
+        string longDescription = string.Join(string.Empty, new string[10].Select(_ => "这是一个很长的结局描述，用于验证结局界面的文本不会再和其他内容重叠。"));
+
+        panel.ShowEnding(new EndingResultData
+        {
+            title = "结局标题",
+            description = longDescription,
+            grade = "pass"
+        });
+
+        ScrollRect detailsScrollRect = GetPrivateField<ScrollRect>(panel, "_detailsScrollRect");
+        TMP_Text descriptionText = GetPrivateField<TMP_Text>(panel, "_descriptionText");
+        LayoutElement descriptionLayout = descriptionText.GetComponent<LayoutElement>();
+
+        Assert.NotNull(detailsScrollRect);
+        Assert.AreSame(detailsScrollRect.content, descriptionText.transform.parent);
+        Assert.Greater(descriptionLayout.preferredHeight, 220f);
+    }
+
+    [Test]
     public void GameManager_AdvanceToNextProjectShouldKeepStatsAndResetWeekState()
     {
         CreateComponent<DataManager>("DataManager");
@@ -532,6 +602,44 @@ public class Phase2Flow7To12Tests
         Assert.AreEqual(66, data.commPower);
         Assert.AreEqual(55, data.managePower);
         Assert.AreEqual(44, data.stressPower);
+    }
+
+    [Test]
+    public void StoryManager_ContinueToNextProjectShouldRestoreTransitionPanelVisibility()
+    {
+        CreateComponent<DataManager>("DataManager");
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 1,
+            currentWeek = GameConstants.PROJECT1_WEEKS,
+            techPower = 90,
+            commPower = 92,
+            managePower = 95,
+            stressPower = 88,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        UIManager uiManager = CreateComponent<UIManager>("UIManager");
+        TransitionPanel transitionPanel = CreateComponent<TransitionPanel>("TransitionPanel");
+        uiManager.RegisterPanel("TransitionPanel", transitionPanel.gameObject);
+
+        CanvasGroup group = transitionPanel.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
+        transitionPanel.gameObject.SetActive(true);
+
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        storyManager.ContinueToNextProjectFromEnding();
+
+        Assert.AreEqual(StoryFlowStage.Transition, storyManager.CurrentFlowStage);
+        Assert.AreEqual(2, gameManager.CurrentPlayerData.currentProject);
+        Assert.AreEqual(1, gameManager.CurrentPlayerData.currentWeek);
+        Assert.IsTrue(transitionPanel.gameObject.activeSelf);
+        Assert.AreEqual(1f, group.alpha);
+        Assert.IsTrue(group.interactable);
+        Assert.IsTrue(group.blocksRaycasts);
     }
 
     [Test]

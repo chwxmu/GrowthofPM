@@ -206,6 +206,13 @@ public class StoryManager : Singleton<StoryManager>
         List<DailyTaskData> taskList = selectedTasks ?? new List<DailyTaskData>();
         StatEffects totalEffects = SumTaskEffects(taskList);
         int spentEnergy = SumTaskEnergy(taskList);
+        bool isFinalWeek = IsCurrentWeekFinalWeek();
+
+        if (isFinalWeek)
+        {
+            PlayerData playerData = GameManager.Instance.CurrentPlayerData;
+            Debug.Log($"[StoryManager] : Final week schedule complete. project={playerData.currentProject} week={playerData.currentWeek}/{GameManager.Instance.GetCurrentProjectTotalWeeks()} selectedTasks={taskList.Count} spentEnergy={spentEnergy} remainingEnergy={Mathf.Max(0, GameConstants.BASE_ENERGY_PER_WEEK - spentEnergy)}");
+        }
 
         GameManager.Instance.SetEnergy(Mathf.Max(0, GameConstants.BASE_ENERGY_PER_WEEK - spentEnergy));
         GameManager.Instance.ApplyStatChanges(totalEffects);
@@ -223,8 +230,11 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
+        Debug.Log($"[StoryManager] : AdvanceWeek requested. project={GameManager.Instance.CurrentPlayerData.currentProject} week={GameManager.Instance.CurrentPlayerData.currentWeek}/{GameManager.Instance.GetCurrentProjectTotalWeeks()} flowStage={_currentFlowStage}");
+
         if (GameManager.Instance.CurrentPlayerData.currentWeek >= GameManager.Instance.GetCurrentProjectTotalWeeks())
         {
+            Debug.Log($"[StoryManager] : Current week reached project ending threshold. project={GameManager.Instance.CurrentPlayerData.currentProject} week={GameManager.Instance.CurrentPlayerData.currentWeek}");
             EndProject();
             return;
         }
@@ -243,10 +253,25 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
+        PlayerData playerData = GameManager.Instance.CurrentPlayerData;
+        if (playerData != null)
+        {
+            Debug.Log($"[StoryManager] : Ending flow triggered. project={playerData.currentProject} week={playerData.currentWeek} totalWeeks={GameManager.Instance.GetCurrentProjectTotalWeeks()} stats=({playerData.techPower},{playerData.commPower},{playerData.managePower},{playerData.stressPower}) hiddenRisk={playerData.hiddenRisk}");
+        }
+
         UIManager.Instance.HideAllPanels();
         SetFlowStage(StoryFlowStage.Ending);
 
         EndingResultData result = GameManager.Instance.EvaluateCurrentProjectEnding();
+        if (result != null)
+        {
+            Debug.Log($"[StoryManager] : Ending result ready. endingId={result.endingId} grade={result.grade} title={result.title}");
+        }
+        else
+        {
+            Debug.LogError("[StoryManager] Ending evaluation returned null result.");
+        }
+
         ProjectEnded?.Invoke(result);
 
         EndingPanel endingPanel = FindObjectOfType<EndingPanel>(true);
@@ -318,8 +343,15 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
+        PlayerData playerData = GameManager.Instance.CurrentPlayerData;
+        if (playerData != null)
+        {
+            Debug.Log($"[StoryManager] : Continue to next project requested. currentProject={playerData.currentProject} hasNextProject={GameManager.Instance.HasNextProject()}");
+        }
+
         if (!GameManager.Instance.AdvanceToNextProject())
         {
+            Debug.LogWarning("[StoryManager] 无法继续到下一个项目，AdvanceToNextProject 返回 false。");
             return;
         }
 
@@ -338,6 +370,11 @@ public class StoryManager : Singleton<StoryManager>
 
     public void StartCurrentProjectFromTransition()
     {
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayerData != null)
+        {
+            Debug.Log($"[StoryManager] : Starting project from transition. project={GameManager.Instance.CurrentPlayerData.currentProject} week={GameManager.Instance.CurrentPlayerData.currentWeek}");
+        }
+
         UIManager.Instance.HidePanel(TransitionPanelName);
         StartWeek();
     }
@@ -423,6 +460,13 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         UIManager.Instance.ShowPanel(SchedulePanelName);
+    }
+
+    private bool IsCurrentWeekFinalWeek()
+    {
+        return GameManager.Instance != null
+            && GameManager.Instance.CurrentPlayerData != null
+            && GameManager.Instance.CurrentPlayerData.currentWeek >= GameManager.Instance.GetCurrentProjectTotalWeeks();
     }
 
     private void ShowDialogue(List<DialogueLine> dialogues, Action onComplete)
