@@ -672,6 +672,45 @@ public class Phase2Flow7To12Tests
         StringAssert.Contains("抗压力：49", inheritanceText.text);
     }
 
+    [Test]
+    public void TransitionPanel_ShowTransitionShouldKeepInheritanceTextAboveStartButton()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            techPower = 166,
+            commPower = 158,
+            managePower = 162,
+            stressPower = 149,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        TransitionPanel panel = CreateComponent<TransitionPanel>("TransitionPanel");
+        panel.ShowTransition(new ProjectStoryData
+        {
+            projectName = string.Join(string.Empty, Enumerable.Repeat("凤凰重构", 6)),
+            totalWeeks = 12
+        });
+
+        RectTransform contentRoot = GetPrivateField<RectTransform>(panel, "_contentRoot");
+        TMP_Text inheritanceText = GetPrivateField<TMP_Text>(panel, "_inheritanceText");
+        LayoutElement bottomSpacer = GetPrivateField<LayoutElement>(panel, "_bottomSpacer");
+        Button startButton = GetPrivateField<Button>(panel, "_startButton");
+
+        inheritanceText.text = "继承属性\n" + string.Join("\n", Enumerable.Range(0, 12).Select(index => $"属性{index + 1}：用于验证过渡界面长文本不会被按钮遮挡"));
+        InvokePrivate(panel, "RefreshTextLayout");
+
+        LayoutElement inheritanceLayout = inheritanceText.GetComponent<LayoutElement>();
+
+        Assert.NotNull(contentRoot);
+        Assert.AreSame(contentRoot, inheritanceText.transform.parent);
+        Assert.AreSame(contentRoot, startButton.transform.parent);
+        Assert.Less(inheritanceText.transform.GetSiblingIndex(), bottomSpacer.transform.GetSiblingIndex());
+        Assert.Less(bottomSpacer.transform.GetSiblingIndex(), startButton.transform.GetSiblingIndex());
+        Assert.Greater(bottomSpacer.flexibleHeight, 0f);
+        Assert.Greater(inheritanceLayout.preferredHeight, 180f);
+    }
+
     private T CreateComponent<T>(string name) where T : Component
     {
         GameObject gameObject = new GameObject(name);

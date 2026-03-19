@@ -5,19 +5,17 @@ using UnityEngine.UI;
 
 public class TransitionPanel : MonoBehaviour
 {
+    [SerializeField] private RectTransform _contentRoot;
     [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _descriptionText;
     [SerializeField] private TMP_Text _inheritanceText;
+    [SerializeField] private LayoutElement _bottomSpacer;
     [SerializeField] private Button _startButton;
 
     private void Awake()
     {
         EnsureLayout();
-        if (_startButton != null)
-        {
-            _startButton.onClick.RemoveListener(OnClickStart);
-            _startButton.onClick.AddListener(OnClickStart);
-        }
+        BindStartButton();
     }
 
     private void OnDestroy()
@@ -51,6 +49,7 @@ public class TransitionPanel : MonoBehaviour
             _inheritanceText.text = BuildInheritanceText();
         }
 
+        RefreshTextLayout();
         LogPanelVisibility("ShowTransition restored visibility");
     }
 
@@ -112,22 +111,51 @@ public class TransitionPanel : MonoBehaviour
         Debug.Log($"[TransitionPanel] : {context}. active={gameObject.activeSelf} alpha={(canvasGroup != null ? canvasGroup.alpha : -1f)} interactable={(canvasGroup != null && canvasGroup.interactable)} blocksRaycasts={(canvasGroup != null && canvasGroup.blocksRaycasts)}");
     }
 
+    private void RefreshTextLayout()
+    {
+        UpdateTextHeight(_titleText, 72f);
+        UpdateTextHeight(_descriptionText, 108f);
+        UpdateTextHeight(_inheritanceText, 168f);
+
+        if (_contentRoot != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_contentRoot);
+        }
+    }
+
+    private static void UpdateTextHeight(TMP_Text text, float minHeight)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        LayoutElement layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
+
+        float width = text.rectTransform.rect.width > 0f ? text.rectTransform.rect.width : 680f;
+        Vector2 preferred = text.GetPreferredValues(text.text, width, 0f);
+        float preferredHeight = Mathf.Ceil(preferred.y + text.margin.y + text.margin.w + 20f);
+        layoutElement.minHeight = minHeight;
+        layoutElement.preferredHeight = Mathf.Max(minHeight, preferredHeight);
+    }
+
     private void EnsureLayout()
     {
-        if (_titleText != null && _descriptionText != null && _inheritanceText != null && _startButton != null)
+        if (_contentRoot != null && _titleText != null && _descriptionText != null && _inheritanceText != null && _bottomSpacer != null && _startButton != null)
         {
             return;
         }
 
         TMP_FontAsset sharedFont = FindSharedFont();
-        RectTransform root = transform as RectTransform;
-        if (root != null)
-        {
-            root.anchorMin = Vector2.zero;
-            root.anchorMax = Vector2.one;
-            root.offsetMin = Vector2.zero;
-            root.offsetMax = Vector2.zero;
-        }
+        RectTransform root = EnsureRectTransform(gameObject);
+        root.anchorMin = Vector2.zero;
+        root.anchorMax = Vector2.one;
+        root.offsetMin = Vector2.zero;
+        root.offsetMax = Vector2.zero;
 
         Image background = GetComponent<Image>();
         if (background == null)
@@ -136,37 +164,57 @@ public class TransitionPanel : MonoBehaviour
         }
         background.color = new Color32(10, 18, 28, 225);
 
-        GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
-        RectTransform contentRect = EnsureRectTransform(contentRoot);
-        contentRect.anchorMin = new Vector2(0.22f, 0.18f);
-        contentRect.anchorMax = new Vector2(0.78f, 0.82f);
-        contentRect.offsetMin = Vector2.zero;
-        contentRect.offsetMax = Vector2.zero;
+        GameObject contentObject = FindOrCreateChild(gameObject, "PanelContent");
+        _contentRoot = EnsureRectTransform(contentObject);
+        _contentRoot.anchorMin = new Vector2(0.22f, 0.14f);
+        _contentRoot.anchorMax = new Vector2(0.78f, 0.88f);
+        _contentRoot.offsetMin = Vector2.zero;
+        _contentRoot.offsetMax = Vector2.zero;
 
-        Image contentImage = contentRoot.GetComponent<Image>();
+        Image contentImage = contentObject.GetComponent<Image>();
         if (contentImage == null)
         {
-            contentImage = contentRoot.AddComponent<Image>();
+            contentImage = contentObject.AddComponent<Image>();
         }
         contentImage.color = new Color32(26, 34, 54, 245);
 
-        VerticalLayoutGroup layout = contentRoot.GetComponent<VerticalLayoutGroup>();
+        VerticalLayoutGroup layout = contentObject.GetComponent<VerticalLayoutGroup>();
         if (layout == null)
         {
-            layout = contentRoot.AddComponent<VerticalLayoutGroup>();
+            layout = contentObject.AddComponent<VerticalLayoutGroup>();
         }
         layout.padding = new RectOffset(32, 32, 32, 32);
         layout.spacing = 18f;
         layout.childAlignment = TextAnchor.UpperCenter;
         layout.childControlWidth = true;
-        layout.childControlHeight = false;
+        layout.childControlHeight = true;
         layout.childForceExpandWidth = true;
         layout.childForceExpandHeight = false;
 
-        _titleText = EnsureText(contentRoot.transform, "TitleText", sharedFont, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 64f);
-        _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 120f);
-        _inheritanceText = EnsureText(contentRoot.transform, "InheritanceText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 180f);
-        _startButton = EnsureButton(contentRoot.transform, "StartButton", sharedFont, "开始新项目");
+        _titleText = EnsureText(contentObject.transform, "TitleText", sharedFont, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 72f);
+        _descriptionText = EnsureText(contentObject.transform, "DescriptionText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 108f);
+        _inheritanceText = EnsureText(contentObject.transform, "InheritanceText", sharedFont, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 168f);
+        _bottomSpacer = EnsureSpacer(contentObject.transform, "BottomSpacer");
+        _startButton = EnsureButton(contentObject.transform, "StartButton", sharedFont, "开始新项目");
+
+        _titleText.transform.SetSiblingIndex(0);
+        _descriptionText.transform.SetSiblingIndex(1);
+        _inheritanceText.transform.SetSiblingIndex(2);
+        _bottomSpacer.transform.SetSiblingIndex(3);
+        _startButton.transform.SetSiblingIndex(4);
+
+        BindStartButton();
+    }
+
+    private void BindStartButton()
+    {
+        if (_startButton == null)
+        {
+            return;
+        }
+
+        _startButton.onClick.RemoveListener(OnClickStart);
+        _startButton.onClick.AddListener(OnClickStart);
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float preferredHeight)
@@ -201,9 +249,30 @@ public class TransitionPanel : MonoBehaviour
         text.fontStyle = fontStyle;
         text.alignment = alignment;
         text.enableWordWrapping = true;
+        text.overflowMode = TextOverflowModes.Overflow;
         text.color = Color.white;
         text.margin = new Vector4(16f, 12f, 16f, 12f);
         return text;
+    }
+
+    private static LayoutElement EnsureSpacer(Transform parent, string name)
+    {
+        Transform existing = parent.Find(name);
+        GameObject spacerObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(LayoutElement));
+        if (existing == null)
+        {
+            spacerObject.transform.SetParent(parent, false);
+        }
+
+        LayoutElement layoutElement = spacerObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = spacerObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.minHeight = 12f;
+        layoutElement.preferredHeight = 12f;
+        layoutElement.flexibleHeight = 1f;
+        return layoutElement;
     }
 
     private static Button EnsureButton(Transform parent, string name, TMP_FontAsset font, string labelText)
@@ -223,8 +292,8 @@ public class TransitionPanel : MonoBehaviour
         {
             layoutElement = buttonObject.AddComponent<LayoutElement>();
         }
-        layoutElement.minHeight = 56f;
-        layoutElement.preferredHeight = 56f;
+        layoutElement.minHeight = 60f;
+        layoutElement.preferredHeight = 60f;
 
         Button button = buttonObject.GetComponent<Button>();
 
