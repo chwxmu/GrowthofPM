@@ -125,6 +125,7 @@ public class SchedulePanel : MonoBehaviour
             return;
         }
 
+        SyncDynamicItemCaches();
         RebuildAvailableList();
         RebuildSelectedList();
         RefreshEnergyDisplay(true);
@@ -540,6 +541,7 @@ public class SchedulePanel : MonoBehaviour
     {
         if (IsLayoutReady())
         {
+            SyncDynamicItemCaches();
             return;
         }
 
@@ -669,7 +671,65 @@ public class SchedulePanel : MonoBehaviour
         _closeButton.gameObject.SetActive(true);
         _closeButton.interactable = true;
 
+        SyncDynamicItemCaches();
         BindButtons();
+    }
+
+    private void SyncDynamicItemCaches()
+    {
+        SyncAvailableButtonCache();
+        SyncSelectedItemCache();
+    }
+
+    private void SyncAvailableButtonCache()
+    {
+        _availableButtons.Clear();
+        if (_availableTaskLayout == null)
+        {
+            return;
+        }
+
+        Transform layoutTransform = _availableTaskLayout.transform;
+        for (int i = 0; i < layoutTransform.childCount; i += 1)
+        {
+            Button button = layoutTransform.GetChild(i).GetComponent<Button>();
+            if (button != null)
+            {
+                _availableButtons.Add(button);
+            }
+        }
+    }
+
+    private void SyncSelectedItemCache()
+    {
+        _selectedTaskTexts.Clear();
+        _removeButtons.Clear();
+        if (_selectedTaskLayout == null)
+        {
+            return;
+        }
+
+        Transform layoutTransform = _selectedTaskLayout.transform;
+        for (int i = 0; i < layoutTransform.childCount; i += 1)
+        {
+            Transform itemTransform = layoutTransform.GetChild(i);
+            Transform labelTransform = itemTransform.Find("Label");
+            Transform removeButtonTransform = itemTransform.Find("RemoveButton");
+            if (labelTransform == null || removeButtonTransform == null)
+            {
+                continue;
+            }
+
+            TMP_Text label = labelTransform.GetComponent<TMP_Text>();
+            Button removeButton = removeButtonTransform.GetComponent<Button>();
+            if (label == null || removeButton == null)
+            {
+                continue;
+            }
+
+            _selectedTaskTexts.Add(label);
+            _removeButtons.Add(removeButton);
+        }
     }
 
     private static void ConfigureColumn(GameObject column, float flexibleWidth)

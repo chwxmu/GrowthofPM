@@ -122,6 +122,41 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
+    public void SchedulePanel_ShowScheduleShouldReuseExistingTaskWidgetsAfterCacheLoss()
+    {
+        SchedulePanel panel = CreateComponent<SchedulePanel>("SchedulePanel");
+        List<DailyTaskData> tasks = new List<DailyTaskData>
+        {
+            new DailyTaskData
+            {
+                name = "开会",
+                energyCost = 40,
+                effects = new StatEffects { managePower = 1 }
+            },
+            new DailyTaskData
+            {
+                name = "写周报",
+                energyCost = 30,
+                effects = new StatEffects { commPower = 1 }
+            }
+        };
+
+        panel.ShowSchedule(tasks, 100, _ => { });
+
+        VerticalLayoutGroup availableLayout = GetPrivateField<VerticalLayoutGroup>(panel, "_availableTaskLayout");
+        Assert.AreEqual(tasks.Count, availableLayout.transform.childCount);
+
+        GetPrivateField<List<Button>>(panel, "_availableButtons").Clear();
+        panel.ShowSchedule(tasks, 100, _ => { });
+
+        GetPrivateField<List<Button>>(panel, "_availableButtons").Clear();
+        panel.ShowSchedule(tasks, 100, _ => { });
+
+        Assert.AreEqual(tasks.Count, availableLayout.transform.childCount);
+        Assert.AreEqual(tasks.Count, CountActiveChildren(availableLayout.transform));
+    }
+
+    [Test]
     public void StoryManager_CanOpenQuizShouldMatchFlowStage()
     {
         StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
@@ -576,6 +611,20 @@ public class Phase2Flow7To12Tests
         FieldInfo field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
         Assert.IsNotNull(field, $"Field not found: {fieldName}");
         field.SetValue(target, value);
+    }
+
+    private static int CountActiveChildren(Transform parent)
+    {
+        int count = 0;
+        for (int i = 0; i < parent.childCount; i += 1)
+        {
+            if (parent.GetChild(i).gameObject.activeSelf)
+            {
+                count += 1;
+            }
+        }
+
+        return count;
     }
 
     private static object InvokePrivate(object target, string methodName, params object[] args)
