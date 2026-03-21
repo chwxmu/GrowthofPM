@@ -95,6 +95,11 @@ public class DataManager : Singleton<DataManager>
             loaded.aiTrustRecords = new List<AITrustRecord>();
         }
 
+        if (loaded.eventFlags == null)
+        {
+            loaded.eventFlags = new List<EventFlagRecord>();
+        }
+
         return loaded;
     }
 

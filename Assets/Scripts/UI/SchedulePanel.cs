@@ -10,7 +10,6 @@ using UnityEditor;
 
 public class SchedulePanel : MonoBehaviour
 {
-    private const string SimsunFontName = "SIMSUN SDF";
 #if UNITY_EDITOR
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
@@ -103,6 +102,21 @@ public class SchedulePanel : MonoBehaviour
         {
             _closeButton.gameObject.SetActive(true);
             _closeButton.interactable = true;
+        }
+
+        RebuildAvailableList();
+        RebuildSelectedList();
+        RefreshEnergyDisplay(true);
+    }
+
+    public void SyncAvailableEnergy(int availableEnergy)
+    {
+        _maxEnergy = Mathf.Max(0, availableEnergy);
+        _remainingEnergy = Mathf.Clamp(_maxEnergy - SumSelectedTaskEnergy(), 0, _maxEnergy);
+
+        if (!IsLayoutReady())
+        {
+            return;
         }
 
         RebuildAvailableList();
@@ -1091,24 +1105,26 @@ public class SchedulePanel : MonoBehaviour
         }
 #endif
 
-        TMP_FontAsset[] loadedFonts = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
-        for (int i = 0; i < loadedFonts.Length; i += 1)
-        {
-            TMP_FontAsset font = loadedFonts[i];
-            if (font != null && font.name == SimsunFontName)
-            {
-                _preferredChineseFont = font;
-                return _preferredChineseFont;
-            }
-        }
-
-        TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        if (existingText != null && existingText.font != null)
-        {
-            return existingText.font;
-        }
+        Debug.LogError("[SchedulePanel] : Missing required TMP Chinese font reference: Assets/Fonts/SIMSUN SDF.asset");
 
         return TMP_Settings.defaultFontAsset;
+    }
+
+    private int SumSelectedTaskEnergy()
+    {
+        int total = 0;
+        for (int i = 0; i < _selectedTasks.Count; i += 1)
+        {
+            DailyTaskData task = _selectedTasks[i];
+            if (task == null)
+            {
+                continue;
+            }
+
+            total += Mathf.Max(0, task.energyCost);
+        }
+
+        return total;
     }
 
 #if UNITY_EDITOR

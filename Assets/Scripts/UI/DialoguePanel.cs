@@ -5,6 +5,9 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class DialoguePanel : MonoBehaviour
 {
@@ -16,6 +19,9 @@ public class DialoguePanel : MonoBehaviour
     }
 
     private const float CharactersPerSecond = 30f;
+#if UNITY_EDITOR
+    private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
+#endif
 
     private static readonly string[] BackgroundResourceRoots =
     {
@@ -32,6 +38,7 @@ public class DialoguePanel : MonoBehaviour
     [SerializeField] private TMP_Text _contentText;
     [SerializeField] private TMP_Text _hintText;
     [SerializeField] private Button _clickButton;
+    [SerializeField] private TMP_FontAsset _preferredChineseFont;
 
     private readonly List<DialogueLine> _dialogues = new List<DialogueLine>();
     private readonly Dictionary<string, Sprite> _runtimeBackgroundCache = new Dictionary<string, Sprite>();
@@ -390,10 +397,11 @@ public class DialoguePanel : MonoBehaviour
     {
         if (_locationText != null && _speakerText != null && _contentText != null && _clickButton != null)
         {
+            ApplyAllFonts();
             return;
         }
 
-        TMP_FontAsset sharedFont = FindSharedFont();
+        TMP_FontAsset sharedFont = ResolveUIFont();
         RectTransform root = transform as RectTransform;
 
         if (root != null)
@@ -479,6 +487,8 @@ public class DialoguePanel : MonoBehaviour
             colors.disabledColor = Color.white;
             _clickButton.colors = colors;
         }
+
+        ApplyAllFonts();
     }
 
     private static GameObject FindOrCreateChild(GameObject parent, string childName)
@@ -537,15 +547,61 @@ public class DialoguePanel : MonoBehaviour
         return text;
     }
 
-    private static TMP_FontAsset FindSharedFont()
+    private void ApplyAllFonts()
     {
-        TMP_FontAsset simsun = Resources.Load<TMP_FontAsset>("Fonts/SIMSUN SDF");
-        if (simsun != null)
+        TMP_FontAsset sharedFont = ResolveUIFont();
+        if (sharedFont == null)
         {
-            return simsun;
+            return;
         }
 
-        TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        return existingText != null ? existingText.font : TMP_Settings.defaultFontAsset;
+        if (_locationText != null)
+        {
+            _locationText.font = sharedFont;
+        }
+
+        if (_speakerText != null)
+        {
+            _speakerText.font = sharedFont;
+        }
+
+        if (_contentText != null)
+        {
+            _contentText.font = sharedFont;
+        }
+
+        if (_hintText != null)
+        {
+            _hintText.font = sharedFont;
+        }
     }
+
+    private TMP_FontAsset ResolveUIFont()
+    {
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+
+#if UNITY_EDITOR
+        _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+#endif
+
+        Debug.LogError("[DialoguePanel] : Missing required TMP Chinese font reference: Assets/Fonts/SIMSUN SDF.asset");
+        return TMP_Settings.defaultFontAsset;
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (_preferredChineseFont == null)
+        {
+            _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        }
+    }
+#endif
 }

@@ -2,15 +2,23 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class TransitionPanel : MonoBehaviour
 {
+#if UNITY_EDITOR
+    private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
+#endif
+
     [SerializeField] private RectTransform _contentRoot;
     [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _descriptionText;
     [SerializeField] private TMP_Text _inheritanceText;
     [SerializeField] private LayoutElement _bottomSpacer;
     [SerializeField] private Button _startButton;
+    [SerializeField] private TMP_FontAsset _preferredChineseFont;
 
     private void Awake()
     {
@@ -147,10 +155,11 @@ public class TransitionPanel : MonoBehaviour
     {
         if (_contentRoot != null && _titleText != null && _descriptionText != null && _inheritanceText != null && _bottomSpacer != null && _startButton != null)
         {
+            ApplyAllFonts();
             return;
         }
 
-        TMP_FontAsset sharedFont = FindSharedFont();
+        TMP_FontAsset sharedFont = ResolveUIFont();
         RectTransform root = EnsureRectTransform(gameObject);
         root.anchorMin = Vector2.zero;
         root.anchorMax = Vector2.one;
@@ -203,6 +212,7 @@ public class TransitionPanel : MonoBehaviour
         _bottomSpacer.transform.SetSiblingIndex(3);
         _startButton.transform.SetSiblingIndex(4);
 
+        ApplyAllFonts();
         BindStartButton();
     }
 
@@ -344,9 +354,72 @@ public class TransitionPanel : MonoBehaviour
         return rectTransform;
     }
 
-    private static TMP_FontAsset FindSharedFont()
+    private void ApplyAllFonts()
     {
-        TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        return existingText != null ? existingText.font : TMP_Settings.defaultFontAsset;
+        TMP_FontAsset sharedFont = ResolveUIFont();
+        if (sharedFont == null)
+        {
+            return;
+        }
+
+        if (_titleText != null)
+        {
+            _titleText.font = sharedFont;
+        }
+
+        if (_descriptionText != null)
+        {
+            _descriptionText.font = sharedFont;
+        }
+
+        if (_inheritanceText != null)
+        {
+            _inheritanceText.font = sharedFont;
+        }
+
+        ApplyButtonLabelFont(_startButton, sharedFont);
     }
+
+    private TMP_FontAsset ResolveUIFont()
+    {
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+
+#if UNITY_EDITOR
+        _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        if (_preferredChineseFont != null)
+        {
+            return _preferredChineseFont;
+        }
+#endif
+
+        Debug.LogError("[TransitionPanel] : Missing required TMP Chinese font reference: Assets/Fonts/SIMSUN SDF.asset");
+        return TMP_Settings.defaultFontAsset;
+    }
+
+    private static void ApplyButtonLabelFont(Button button, TMP_FontAsset font)
+    {
+        if (button == null || font == null)
+        {
+            return;
+        }
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            label.font = font;
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (_preferredChineseFont == null)
+        {
+            _preferredChineseFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(SimsunFontAssetPath);
+        }
+    }
+#endif
 }

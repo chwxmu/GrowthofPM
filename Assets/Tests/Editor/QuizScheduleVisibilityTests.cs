@@ -120,6 +120,62 @@ public class QuizScheduleVisibilityTests
         Assert.IsFalse(quizGroup.blocksRaycasts);
         Assert.AreEqual(StoryFlowStage.Schedule, storyManager.CurrentFlowStage);
     }
+
+    [Test]
+    public void CloseQuizAndReturn_ShouldSyncScheduleEnergyWithQuizReward()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 1,
+            currentWeek = 1,
+            energy = GameConstants.BASE_ENERGY_PER_WEEK,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        UIManager uiManager = CreateComponent<UIManager>("UIManager");
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        SchedulePanel schedulePanel = CreateComponent<SchedulePanel>("SchedulePanel");
+        QuizPanel quizPanel = CreateComponent<QuizPanel>("QuizPanel");
+
+        uiManager.RegisterPanel("SchedulePanel", schedulePanel.gameObject);
+        uiManager.RegisterPanel("QuizPanel", quizPanel.gameObject);
+
+        schedulePanel.ShowSchedule(new List<DailyTaskData>
+        {
+            new DailyTaskData
+            {
+                name = "开会",
+                energyCost = 40,
+                effects = new StatEffects { managePower = 1 }
+            }
+        }, GameConstants.BASE_ENERGY_PER_WEEK, _ => { });
+
+        InvokePrivate(schedulePanel, "OnClickAddTask", 0);
+        gameManager.AddEnergy(GameConstants.QUIZ_ENERGY_REWARD);
+
+        CanvasGroup scheduleGroup = schedulePanel.gameObject.AddComponent<CanvasGroup>();
+        scheduleGroup.alpha = 0f;
+        scheduleGroup.interactable = false;
+        scheduleGroup.blocksRaycasts = false;
+        schedulePanel.gameObject.SetActive(false);
+
+        CanvasGroup quizGroup = quizPanel.gameObject.AddComponent<CanvasGroup>();
+        quizGroup.alpha = 1f;
+        quizGroup.interactable = true;
+        quizGroup.blocksRaycasts = true;
+        quizPanel.gameObject.SetActive(true);
+
+        SetPrivateField(storyManager, "_quizOpenRequestedFromSchedule", true);
+        SetPrivateField(storyManager, "_currentFlowStage", StoryFlowStage.Quiz);
+
+        storyManager.CloseQuizAndReturn();
+
+        Assert.IsTrue(schedulePanel.gameObject.activeSelf);
+        Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK + GameConstants.QUIZ_ENERGY_REWARD, GetPrivateField<int>(schedulePanel, "_maxEnergy"));
+        Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK + GameConstants.QUIZ_ENERGY_REWARD - 40, GetPrivateField<int>(schedulePanel, "_remainingEnergy"));
+    }
+
     [Test]
     public void ShowDialogues_ShouldRestoreDialoguePanelVisibility()
     {
@@ -216,5 +272,19 @@ public class QuizScheduleVisibilityTests
         FieldInfo field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
         Assert.IsNotNull(field, $"Field not found: {fieldName}");
         field.SetValue(target, value);
+    }
+
+    private static T GetPrivateField<T>(object target, string fieldName)
+    {
+        FieldInfo field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(field, $"Field not found: {fieldName}");
+        return (T)field.GetValue(target);
+    }
+
+    private static object InvokePrivate(object target, string methodName, params object[] args)
+    {
+        MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(method, $"Method not found: {methodName}");
+        return method.Invoke(target, args);
     }
 }

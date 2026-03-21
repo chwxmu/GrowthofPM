@@ -14,7 +14,6 @@ public class DecisionPanel : MonoBehaviour
     private const float StatFloatFadeInDuration = 0.15f;
     private const float StatFloatHoldDuration = 0.45f;
     private const float StatFloatFadeOutDuration = 0.25f;
-    private const string SimsunFontName = "SIMSUN SDF";
 #if UNITY_EDITOR
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
@@ -731,22 +730,7 @@ public class DecisionPanel : MonoBehaviour
         }
 #endif
 
-        TMP_FontAsset[] loadedFonts = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
-        for (int i = 0; i < loadedFonts.Length; i += 1)
-        {
-            TMP_FontAsset font = loadedFonts[i];
-            if (font != null && font.name == SimsunFontName)
-            {
-                _preferredChineseFont = font;
-                return _preferredChineseFont;
-            }
-        }
-
-        TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        if (existingText != null && existingText.font != null)
-        {
-            return existingText.font;
-        }
+        Debug.LogError("[DecisionPanel] : Missing required TMP Chinese font reference: Assets/Fonts/SIMSUN SDF.asset");
 
         return TMP_Settings.defaultFontAsset;
     }

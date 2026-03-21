@@ -13,14 +13,26 @@ public class PlayerData
     public int currentWeek = 1;
     public int hiddenRisk = 0;
     public List<AITrustRecord> aiTrustRecords = new List<AITrustRecord>();
+    public List<EventFlagRecord> eventFlags = new List<EventFlagRecord>();
 }
 
 [Serializable]
 public class AITrustRecord
 {
     public string eventId;
+    public int projectNumber;
+    public int weekNumber;
     public bool adoptedAIAdvice;
+    public string aiQuality;
     public bool hasViewed;
     public bool isFollowed;
     public int decisionLatencyMs;
+}
+
+[Serializable]
+public class EventFlagRecord
+{
+    public string flagId;
+    public int projectNumber;
+    public bool value;
 }

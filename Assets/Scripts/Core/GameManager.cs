@@ -215,7 +215,7 @@ public class GameManager : Singleton<GameManager>
         RecordAIDecision(eventId, false, adoptedAIAdvice, 0);
     }
 
-    public void RecordAIDecision(string eventId, bool hasViewed, bool isFollowed, int decisionLatencyMs)
+    public void RecordAIDecision(string eventId, bool hasViewed, bool isFollowed, int decisionLatencyMs, string aiQuality = "")
     {
         if (_currentPlayerData == null || string.IsNullOrWhiteSpace(eventId))
         {
@@ -227,7 +227,10 @@ public class GameManager : Singleton<GameManager>
             _currentPlayerData.aiTrustRecords = new List<AITrustRecord>();
         }
 
-        AITrustRecord existingRecord = _currentPlayerData.aiTrustRecords.Find(record => record != null && record.eventId == eventId);
+        int currentProjectNumber = GetCurrentProjectNumber();
+        AITrustRecord existingRecord = _currentPlayerData.aiTrustRecords.Find(record => record != null
+            && string.Equals(record.eventId, eventId, StringComparison.Ordinal)
+            && (record.projectNumber == currentProjectNumber || record.projectNumber <= 0));
         if (existingRecord == null)
         {
             existingRecord = new AITrustRecord
@@ -237,12 +240,63 @@ public class GameManager : Singleton<GameManager>
             _currentPlayerData.aiTrustRecords.Add(existingRecord);
         }
 
+        existingRecord.projectNumber = currentProjectNumber;
+        existingRecord.weekNumber = _currentPlayerData.currentWeek;
         existingRecord.adoptedAIAdvice = isFollowed;
+        existingRecord.aiQuality = NormalizeAIQuality(aiQuality);
         existingRecord.hasViewed = hasViewed;
         existingRecord.isFollowed = isFollowed;
         existingRecord.decisionLatencyMs = Mathf.Max(0, decisionLatencyMs);
 
+        SaveProgress();
         NotifyDataChanged();
+    }
+
+    public void SetEventFlag(string flagId, bool value)
+    {
+        if (_currentPlayerData == null || string.IsNullOrWhiteSpace(flagId))
+        {
+            return;
+        }
+
+        if (_currentPlayerData.eventFlags == null)
+        {
+            _currentPlayerData.eventFlags = new List<EventFlagRecord>();
+        }
+
+        string normalizedFlagId = NormalizeEventFlagId(flagId);
+        int currentProjectNumber = GetCurrentProjectNumber();
+        EventFlagRecord existingRecord = FindEventFlagRecord(normalizedFlagId, currentProjectNumber);
+        if (existingRecord == null)
+        {
+            existingRecord = new EventFlagRecord
+            {
+                flagId = normalizedFlagId,
+                projectNumber = currentProjectNumber
+            };
+            _currentPlayerData.eventFlags.Add(existingRecord);
+        }
+
+        existingRecord.value = value;
+        SaveProgress();
+    }
+
+    public bool TryGetEventFlag(string flagId, out bool value)
+    {
+        value = false;
+        if (_currentPlayerData == null || _currentPlayerData.eventFlags == null || string.IsNullOrWhiteSpace(flagId))
+        {
+            return false;
+        }
+
+        EventFlagRecord existingRecord = FindEventFlagRecord(NormalizeEventFlagId(flagId), GetCurrentProjectNumber());
+        if (existingRecord == null)
+        {
+            return false;
+        }
+
+        value = existingRecord.value;
+        return true;
     }
 
     public void ApplyRiskChange(int riskChange)
@@ -509,6 +563,33 @@ public class GameManager : Singleton<GameManager>
     private static int ClampStat(int value)
     {
         return Mathf.Max(0, value);
+    }
+
+    private int GetCurrentProjectNumber()
+    {
+        return _currentPlayerData != null ? _currentPlayerData.currentProject : 0;
+    }
+
+    private EventFlagRecord FindEventFlagRecord(string flagId, int projectNumber)
+    {
+        if (_currentPlayerData == null || _currentPlayerData.eventFlags == null || string.IsNullOrWhiteSpace(flagId))
+        {
+            return null;
+        }
+
+        return _currentPlayerData.eventFlags.Find(record => record != null
+            && string.Equals(record.flagId, flagId, StringComparison.Ordinal)
+            && record.projectNumber == projectNumber);
+    }
+
+    private static string NormalizeAIQuality(string aiQuality)
+    {
+        return string.IsNullOrWhiteSpace(aiQuality) ? string.Empty : aiQuality.Trim().ToLowerInvariant();
+    }
+
+    private static string NormalizeEventFlagId(string flagId)
+    {
+        return string.IsNullOrWhiteSpace(flagId) ? string.Empty : flagId.Trim();
     }
 
     private static int GetWeeksForProject(int projectNumber)

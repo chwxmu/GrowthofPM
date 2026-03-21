@@ -342,6 +342,58 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
+    public void GameManager_RecordAIDecisionShouldImmediatelySaveTrustRecord()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 3,
+            currentWeek = 2,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        gameManager.RecordAIDecision("p3_w2_d1", true, true, 1234, "Good");
+
+        PlayerData saved = dataManager.LoadGame();
+        Assert.NotNull(saved);
+        Assert.NotNull(saved.aiTrustRecords);
+        Assert.AreEqual(1, saved.aiTrustRecords.Count);
+        Assert.AreEqual(3, saved.aiTrustRecords[0].projectNumber);
+        Assert.AreEqual(2, saved.aiTrustRecords[0].weekNumber);
+        Assert.AreEqual("good", saved.aiTrustRecords[0].aiQuality);
+        Assert.IsTrue(saved.aiTrustRecords[0].hasViewed);
+        Assert.IsTrue(saved.aiTrustRecords[0].isFollowed);
+        Assert.AreEqual(1234, saved.aiTrustRecords[0].decisionLatencyMs);
+    }
+
+    [Test]
+    public void GameManager_SetEventFlagShouldImmediatelyPersistValue()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 2,
+            eventFlags = new List<EventFlagRecord>()
+        });
+
+        gameManager.SetEventFlag("cpmCorrect", false);
+
+        PlayerData saved = dataManager.LoadGame();
+        Assert.NotNull(saved);
+        Assert.NotNull(saved.eventFlags);
+        Assert.AreEqual(1, saved.eventFlags.Count);
+        Assert.AreEqual("cpmCorrect", saved.eventFlags[0].flagId);
+        Assert.AreEqual(2, saved.eventFlags[0].projectNumber);
+        Assert.IsFalse(saved.eventFlags[0].value);
+    }
+
+    [Test]
     public void StoryManager_OnScheduleCompleteShouldApplySettlementAndSave()
     {
         DataManager dataManager = CreateComponent<DataManager>("DataManager");
@@ -400,6 +452,52 @@ public class Phase2Flow7To12Tests
         Assert.NotNull(saved);
         Assert.AreEqual(15, saved.techPower);
         Assert.AreEqual(180, saved.energy);
+    }
+
+    [Test]
+    public void StoryManager_OnScheduleCompleteShouldUseCurrentEnergyBudget()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            techPower = 10,
+            commPower = 10,
+            managePower = 10,
+            stressPower = 10,
+            hiddenRisk = 0,
+            energy = GameConstants.BASE_ENERGY_PER_WEEK + GameConstants.QUIZ_ENERGY_REWARD,
+            currentProject = 1,
+            currentWeek = GameConstants.PROJECT1_WEEKS,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        SetPrivateField(storyManager, "_currentWeekEvent", new WeekEventData
+        {
+            fixedStatChanges = new StatEffects(),
+            riskAutoChange = 0
+        });
+
+        List<DailyTaskData> selectedTasks = new List<DailyTaskData>
+        {
+            new DailyTaskData
+            {
+                name = "任务A",
+                energyCost = 120,
+                effects = new StatEffects()
+            }
+        };
+
+        storyManager.OnScheduleComplete(selectedTasks);
+
+        Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK + GameConstants.QUIZ_ENERGY_REWARD - 120, gameManager.CurrentPlayerData.energy);
+
+        PlayerData saved = dataManager.LoadGame();
+        Assert.NotNull(saved);
+        Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK + GameConstants.QUIZ_ENERGY_REWARD - 120, saved.energy);
     }
 
     [Test]

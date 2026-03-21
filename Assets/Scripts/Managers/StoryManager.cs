@@ -13,8 +13,6 @@ public class StoryManager : Singleton<StoryManager>
     private const string CpmCorrectFlag = "cpmCorrect";
     private const KeyCode SkipMainStoryKey = KeyCode.P;
 
-    private readonly Dictionary<string, bool> _runtimeFlags = new Dictionary<string, bool>();
-
     private WeekEventData _currentWeekEvent;
     private int _decisionStepIndex;
     private bool _isHandlingGameScene;
@@ -206,15 +204,18 @@ public class StoryManager : Singleton<StoryManager>
         List<DailyTaskData> taskList = selectedTasks ?? new List<DailyTaskData>();
         StatEffects totalEffects = SumTaskEffects(taskList);
         int spentEnergy = SumTaskEnergy(taskList);
+        int availableEnergy = GameManager.Instance.CurrentPlayerData != null
+            ? Mathf.Max(0, GameManager.Instance.CurrentPlayerData.energy)
+            : GameConstants.BASE_ENERGY_PER_WEEK;
         bool isFinalWeek = IsCurrentWeekFinalWeek();
 
         if (isFinalWeek)
         {
             PlayerData playerData = GameManager.Instance.CurrentPlayerData;
-            Debug.Log($"[StoryManager] : Final week schedule complete. project={playerData.currentProject} week={playerData.currentWeek}/{GameManager.Instance.GetCurrentProjectTotalWeeks()} selectedTasks={taskList.Count} spentEnergy={spentEnergy} remainingEnergy={Mathf.Max(0, GameConstants.BASE_ENERGY_PER_WEEK - spentEnergy)}");
+            Debug.Log($"[StoryManager] : Final week schedule complete. project={playerData.currentProject} week={playerData.currentWeek}/{GameManager.Instance.GetCurrentProjectTotalWeeks()} selectedTasks={taskList.Count} spentEnergy={spentEnergy} remainingEnergy={Mathf.Max(0, availableEnergy - spentEnergy)}");
         }
 
-        GameManager.Instance.SetEnergy(Mathf.Max(0, GameConstants.BASE_ENERGY_PER_WEEK - spentEnergy));
+        GameManager.Instance.SetEnergy(Mathf.Max(0, availableEnergy - spentEnergy));
         GameManager.Instance.ApplyStatChanges(totalEffects);
         ApplyWeekFixedChanges();
         ApplyWeekRiskChanges();
@@ -449,13 +450,17 @@ public class StoryManager : Singleton<StoryManager>
         SchedulePanel schedulePanel = FindObjectOfType<SchedulePanel>(true);
         if (schedulePanel != null)
         {
+            PlayerData currentPlayerData = GameManager.Instance != null ? GameManager.Instance.CurrentPlayerData : null;
+            int currentAvailableEnergy = currentPlayerData != null ? currentPlayerData.energy : GameConstants.BASE_ENERGY_PER_WEEK;
+
             if (!resetData && schedulePanel.HasCachedSchedule)
             {
+                schedulePanel.SyncAvailableEnergy(currentAvailableEnergy);
                 schedulePanel.ReopenSchedule();
                 return;
             }
 
-            schedulePanel.ShowSchedule(DataManager.Instance.LoadDailyTasks(), GameConstants.BASE_ENERGY_PER_WEEK, OnScheduleComplete);
+            schedulePanel.ShowSchedule(DataManager.Instance.LoadDailyTasks(), currentAvailableEnergy, OnScheduleComplete);
             return;
         }
 
@@ -508,7 +513,7 @@ public class StoryManager : Singleton<StoryManager>
         OptionData option = decision.options[selectedIndex];
         GameManager.Instance.ApplyStatChanges(option.effects);
         GameManager.Instance.ApplyRiskChange(option.riskChange);
-        GameManager.Instance.RecordAIDecision(decision.eventId, hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs);
+        GameManager.Instance.RecordAIDecision(decision.eventId, hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs, decision.aiQuality);
         OnDecisionComplete();
     }
 
@@ -562,13 +567,19 @@ public class StoryManager : Singleton<StoryManager>
 
         if (decision.miniGameType == "cpm")
         {
-            _runtimeFlags[CpmCorrectFlag] = false;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetEventFlag(CpmCorrectFlag, false);
+            }
             return;
         }
 
         if (decision.miniGameType == "risk_dashboard")
         {
-            _runtimeFlags[decision.eventId] = false;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetEventFlag(decision.eventId, false);
+            }
         }
     }
 
@@ -579,9 +590,14 @@ public class StoryManager : Singleton<StoryManager>
             return false;
         }
 
+        if (GameManager.Instance == null)
+        {
+            return false;
+        }
+
         bool currentValue = false;
-        _runtimeFlags.TryGetValue(conditionalEvent.conditionFlag, out currentValue);
-        return currentValue == conditionalEvent.conditionValue;
+        return GameManager.Instance.TryGetEventFlag(conditionalEvent.conditionFlag, out currentValue)
+            && currentValue == conditionalEvent.conditionValue;
     }
 
     private int GetDecisionCount()
@@ -689,7 +705,6 @@ public class StoryManager : Singleton<StoryManager>
 
     private void ResetRuntimeState()
     {
-        _runtimeFlags.Clear();
         ResetWeekState();
     }
 

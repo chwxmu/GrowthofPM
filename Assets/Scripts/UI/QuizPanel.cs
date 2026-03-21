@@ -10,7 +10,6 @@ using UnityEditor;
 
 public class QuizPanel : MonoBehaviour
 {
-    private const string SimsunFontName = "SIMSUN SDF";
     private const float ContentSpacing = 10f;
     private const float QuestionBlockHeight = 98f;
     private const float FeedbackBlockHeight = 52f;
@@ -811,22 +810,7 @@ public class QuizPanel : MonoBehaviour
         }
 #endif
 
-        TMP_FontAsset[] loadedFonts = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
-        for (int i = 0; i < loadedFonts.Length; i += 1)
-        {
-            TMP_FontAsset font = loadedFonts[i];
-            if (font != null && font.name == SimsunFontName)
-            {
-                _preferredChineseFont = font;
-                return _preferredChineseFont;
-            }
-        }
-
-        TextMeshProUGUI existingText = FindObjectOfType<TextMeshProUGUI>(true);
-        if (existingText != null && existingText.font != null)
-        {
-            return existingText.font;
-        }
+        Debug.LogError("[QuizPanel] : Missing required TMP Chinese font reference: Assets/Fonts/SIMSUN SDF.asset");
 
         return TMP_Settings.defaultFontAsset;
     }
