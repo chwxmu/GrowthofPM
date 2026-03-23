@@ -19,7 +19,10 @@
 UserSettings/
 *.log
 Assets/AssetStoreTools*
-Assets/Docs/
+Assets/Docs/*
+!Assets/Docs/TaskReports/
+!Assets/Docs/TaskReports.meta
+!Assets/Docs/TaskReports/**
 
 # 系统文件
 .DS_Store
