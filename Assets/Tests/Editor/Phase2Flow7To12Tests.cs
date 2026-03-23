@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -703,7 +703,7 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
-    public void StoryManager_ContinueToNextProjectShouldRestoreTransitionPanelVisibility()
+    public void StoryManager_ContinueToNextProjectShouldRestoreTransitionPanelVisibilityWithoutAdvancingProjectImmediately()
     {
         CreateComponent<DataManager>("DataManager");
         GameManager gameManager = CreateComponent<GameManager>("GameManager");
@@ -732,8 +732,10 @@ public class Phase2Flow7To12Tests
         storyManager.ContinueToNextProjectFromEnding();
 
         Assert.AreEqual(StoryFlowStage.Transition, storyManager.CurrentFlowStage);
-        Assert.AreEqual(2, gameManager.CurrentPlayerData.currentProject);
-        Assert.AreEqual(1, gameManager.CurrentPlayerData.currentWeek);
+        Assert.AreEqual(1, gameManager.CurrentPlayerData.currentProject);
+        Assert.AreEqual(GameConstants.PROJECT1_WEEKS, gameManager.CurrentPlayerData.currentWeek);
+        Assert.AreEqual(2, gameManager.CurrentPlayerData.pendingProjectNumber);
+        Assert.AreEqual(StoryFlowStage.Transition, gameManager.CurrentPlayerData.savedFlowStage);
         Assert.IsTrue(transitionPanel.gameObject.activeSelf);
         Assert.AreEqual(1f, group.alpha);
         Assert.IsTrue(group.interactable);

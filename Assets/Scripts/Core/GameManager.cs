@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -174,7 +174,7 @@ public class GameManager : Singleton<GameManager>
         NotifyDataChanged();
     }
 
-    public void StartProject(int projectNumber)
+    public void StartProject(int projectNumber, bool resetHiddenRisk = false)
     {
         if (_currentPlayerData == null)
         {
@@ -184,6 +184,12 @@ public class GameManager : Singleton<GameManager>
         _currentPlayerData.currentProject = Mathf.Clamp(projectNumber, 1, 3);
         _currentPlayerData.currentWeek = 1;
         _currentPlayerData.energy = GameConstants.BASE_ENERGY_PER_WEEK;
+        if (resetHiddenRisk)
+        {
+            _currentPlayerData.hiddenRisk = 0;
+        }
+
+        ClearFlowCheckpoint();
         _currentProjectStory = DataManager.Instance.LoadProjectStory(_currentPlayerData.currentProject);
         _currentState = GameState.Playing;
         NotifyDataChanged();
@@ -250,6 +256,25 @@ public class GameManager : Singleton<GameManager>
 
         SaveProgress();
         NotifyDataChanged();
+    }
+
+    public void UpdateFlowCheckpoint(StoryFlowStage stage, int decisionStepIndex = 0, int pendingProjectNumber = 0)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        _currentPlayerData.savedFlowStage = stage;
+        _currentPlayerData.savedDecisionStepIndex = Mathf.Max(0, decisionStepIndex);
+        _currentPlayerData.pendingProjectNumber = pendingProjectNumber > 0
+            ? Mathf.Clamp(pendingProjectNumber, 1, 3)
+            : 0;
+    }
+
+    public void ClearFlowCheckpoint()
+    {
+        UpdateFlowCheckpoint(StoryFlowStage.None);
     }
 
     public void SetEventFlag(string flagId, bool value)
@@ -412,7 +437,8 @@ public class GameManager : Singleton<GameManager>
             return false;
         }
 
-        StartProject(_currentPlayerData.currentProject + 1);
+        int nextProjectNumber = _currentPlayerData.currentProject + 1;
+        StartProject(nextProjectNumber, nextProjectNumber == 2);
         SaveProgress();
         return true;
     }

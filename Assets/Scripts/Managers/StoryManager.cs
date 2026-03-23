@@ -59,7 +59,10 @@ public class StoryManager : Singleton<StoryManager>
 
         _isHandlingGameScene = true;
         TryAutoBindPanels();
-        StartWeek();
+        if (!TryRestoreSavedFlow())
+        {
+            StartWeek();
+        }
         _isHandlingGameScene = false;
     }
 
@@ -83,29 +86,10 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         ResetWeekState();
-
-        SchedulePanel schedulePanel = FindObjectOfType<SchedulePanel>(true);
-        if (schedulePanel != null)
+        if (!PrepareCurrentWeekContext())
         {
-            schedulePanel.ClearCachedSchedule();
-        }
-
-        _currentWeekEvent = GameManager.Instance.GetCurrentWeekEvent();
-        if (_currentWeekEvent == null)
-        {
-            Debug.LogWarning("[StoryManager] 当前周剧情数据为空，无法开始周流程。");
             return;
         }
-
-        TopStatusBar topStatusBar = FindObjectOfType<TopStatusBar>(true);
-        if (topStatusBar != null)
-        {
-            topStatusBar.SetQuizEntryInteractable(false);
-            topStatusBar.SetScheduleEntryInteractable(false);
-            topStatusBar.UpdateDisplay(GameManager.Instance.CurrentPlayerData);
-        }
-
-        WeekStarted?.Invoke(_currentWeekEvent);
 
         if (HasDialogues(_currentWeekEvent.prologueDialogues))
         {
@@ -219,6 +203,7 @@ public class StoryManager : Singleton<StoryManager>
         GameManager.Instance.ApplyStatChanges(totalEffects);
         ApplyWeekFixedChanges();
         ApplyWeekRiskChanges();
+        GameManager.Instance.ClearFlowCheckpoint();
         GameManager.Instance.SaveProgress();
 
         AdvanceWeek();
@@ -273,16 +258,9 @@ public class StoryManager : Singleton<StoryManager>
             Debug.LogError("[StoryManager] Ending evaluation returned null result.");
         }
 
-        ProjectEnded?.Invoke(result);
-
-        EndingPanel endingPanel = FindObjectOfType<EndingPanel>(true);
-        if (endingPanel != null)
-        {
-            endingPanel.ShowEnding(result);
-            return;
-        }
-
-        UIManager.Instance.ShowPanel(EndingPanelName);
+        GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Ending);
+        GameManager.Instance.SaveProgress();
+        ShowEndingResult(result);
     }
 
     public bool CanOpenQuiz()
@@ -350,33 +328,62 @@ public class StoryManager : Singleton<StoryManager>
             Debug.Log($"[StoryManager] : Continue to next project requested. currentProject={playerData.currentProject} hasNextProject={GameManager.Instance.HasNextProject()}");
         }
 
-        if (!GameManager.Instance.AdvanceToNextProject())
+        EndingResultData currentResult = GameManager.Instance.EvaluateCurrentProjectEnding();
+        if (currentResult == null)
         {
-            Debug.LogWarning("[StoryManager] 无法继续到下一个项目，AdvanceToNextProject 返回 false。");
+            Debug.LogWarning("[StoryManager] 当前结局为空，无法继续到下一个项目。");
             return;
         }
+
+        if (string.Equals(currentResult.grade, "fail", StringComparison.OrdinalIgnoreCase))
+        {
+            Debug.LogWarning("[StoryManager] 当前为失败结局，已阻止进入下一个项目。");
+            return;
+        }
+
+        if (!GameManager.Instance.HasNextProject())
+        {
+            Debug.LogWarning("[StoryManager] 无法继续到下一个项目，没有可用的后续项目。");
+            return;
+        }
+
+        int nextProjectNumber = GameManager.Instance.CurrentPlayerData.currentProject + 1;
+        ProjectStoryData nextProjectStory = DataManager.Instance.LoadProjectStory(nextProjectNumber);
+        if (nextProjectStory == null)
+        {
+            Debug.LogError($"[StoryManager] 无法加载下一项目剧情数据。project={nextProjectNumber}");
+            return;
+        }
+
+        GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Transition, 0, nextProjectNumber);
+        GameManager.Instance.SaveProgress();
 
         UIManager.Instance.HidePanel(EndingPanelName);
         SetFlowStage(StoryFlowStage.Transition);
-
-        TransitionPanel transitionPanel = FindObjectOfType<TransitionPanel>(true);
-        if (transitionPanel != null)
-        {
-            transitionPanel.ShowTransition(GameManager.Instance.CurrentProjectStory);
-            return;
-        }
-
-        UIManager.Instance.ShowPanel(TransitionPanelName);
+        ShowTransitionResult(nextProjectStory);
     }
 
     public void StartCurrentProjectFromTransition()
     {
-        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayerData != null)
+        if (GameManager.Instance == null || GameManager.Instance.CurrentPlayerData == null)
         {
-            Debug.Log($"[StoryManager] : Starting project from transition. project={GameManager.Instance.CurrentPlayerData.currentProject} week={GameManager.Instance.CurrentPlayerData.currentWeek}");
+            return;
         }
 
+        int currentProjectNumber = GameManager.Instance.CurrentPlayerData.currentProject;
+        int pendingProjectNumber = GameManager.Instance.CurrentPlayerData.pendingProjectNumber;
+        int targetProjectNumber = pendingProjectNumber > 0 ? pendingProjectNumber : currentProjectNumber + 1;
+        if (targetProjectNumber <= currentProjectNumber)
+        {
+            Debug.LogWarning($"[StoryManager] 无法从转场开始新项目，pendingProject={pendingProjectNumber} currentProject={currentProjectNumber}");
+            return;
+        }
+
+        Debug.Log($"[StoryManager] : Starting project from transition. project={targetProjectNumber} previousProject={currentProjectNumber}");
+
         UIManager.Instance.HidePanel(TransitionPanelName);
+        GameManager.Instance.StartProject(targetProjectNumber, targetProjectNumber == 2);
+        GameManager.Instance.SaveProgress();
         StartWeek();
     }
 
@@ -511,8 +518,12 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         OptionData option = decision.options[selectedIndex];
+        StoryFlowStage checkpointStage;
+        int checkpointDecisionIndex;
+        GetCheckpointAfterDecision(out checkpointStage, out checkpointDecisionIndex);
         GameManager.Instance.ApplyStatChanges(option.effects);
         GameManager.Instance.ApplyRiskChange(option.riskChange);
+        GameManager.Instance.UpdateFlowCheckpoint(checkpointStage, checkpointDecisionIndex);
         GameManager.Instance.RecordAIDecision(decision.eventId, hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs, decision.aiQuality);
         OnDecisionComplete();
     }
@@ -556,6 +567,174 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         GameManager.Instance.ApplyRiskChange(_currentWeekEvent.riskAutoChange);
+    }
+
+    private bool PrepareCurrentWeekContext(bool clearScheduleCache = true)
+    {
+        if (GameManager.Instance == null)
+        {
+            return false;
+        }
+
+        if (clearScheduleCache)
+        {
+            SchedulePanel schedulePanel = FindObjectOfType<SchedulePanel>(true);
+            if (schedulePanel != null)
+            {
+                schedulePanel.ClearCachedSchedule();
+            }
+        }
+
+        _currentWeekEvent = GameManager.Instance.GetCurrentWeekEvent();
+        if (_currentWeekEvent == null)
+        {
+            Debug.LogWarning("[StoryManager] 当前周剧情数据为空，无法开始周流程。");
+            return false;
+        }
+
+        TopStatusBar topStatusBar = FindObjectOfType<TopStatusBar>(true);
+        if (topStatusBar != null)
+        {
+            topStatusBar.SetQuizEntryInteractable(false);
+            topStatusBar.SetScheduleEntryInteractable(false);
+            topStatusBar.UpdateDisplay(GameManager.Instance.CurrentPlayerData);
+        }
+
+        WeekStarted?.Invoke(_currentWeekEvent);
+        return true;
+    }
+
+    private bool TryRestoreSavedFlow()
+    {
+        if (GameManager.Instance == null || GameManager.Instance.CurrentPlayerData == null)
+        {
+            return false;
+        }
+
+        PlayerData playerData = GameManager.Instance.CurrentPlayerData;
+        switch (playerData.savedFlowStage)
+        {
+            case StoryFlowStage.Decision:
+                _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                ShowNextDecisionOrSchedule();
+                return true;
+
+            case StoryFlowStage.Conditional:
+                _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                ConditionalEventData conditionalEvent = _currentWeekEvent != null ? _currentWeekEvent.conditionalEvent : null;
+                if (ShouldRunConditionalEvent(conditionalEvent))
+                {
+                    ApplyConditionalEvent(conditionalEvent);
+                    return true;
+                }
+
+                ShowNextDecisionOrSchedule();
+                return true;
+
+            case StoryFlowStage.PostDecision:
+                _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                RunPostDecisionContentOrSchedule();
+                return true;
+
+            case StoryFlowStage.Schedule:
+                _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                ShowSchedulePanel();
+                return true;
+
+            case StoryFlowStage.Ending:
+                UIManager.Instance.HideAllPanels();
+                SetFlowStage(StoryFlowStage.Ending);
+                ShowEndingResult(GameManager.Instance.EvaluateCurrentProjectEnding());
+                return true;
+
+            case StoryFlowStage.Transition:
+                int targetProjectNumber = playerData.pendingProjectNumber > 0 ? playerData.pendingProjectNumber : playerData.currentProject + 1;
+                ProjectStoryData nextProjectStory = DataManager.Instance.LoadProjectStory(targetProjectNumber);
+                if (nextProjectStory == null)
+                {
+                    return false;
+                }
+
+                UIManager.Instance.HideAllPanels();
+                SetFlowStage(StoryFlowStage.Transition);
+                ShowTransitionResult(nextProjectStory);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private void ShowEndingResult(EndingResultData result)
+    {
+        ProjectEnded?.Invoke(result);
+
+        EndingPanel endingPanel = FindObjectOfType<EndingPanel>(true);
+        if (endingPanel != null)
+        {
+            endingPanel.ShowEnding(result);
+            return;
+        }
+
+        UIManager.Instance.ShowPanel(EndingPanelName);
+    }
+
+    private void ShowTransitionResult(ProjectStoryData projectStory)
+    {
+        TransitionPanel transitionPanel = FindObjectOfType<TransitionPanel>(true);
+        if (transitionPanel != null)
+        {
+            transitionPanel.ShowTransition(projectStory);
+            return;
+        }
+
+        UIManager.Instance.ShowPanel(TransitionPanelName);
+    }
+
+    private void GetCheckpointAfterDecision(out StoryFlowStage checkpointStage, out int checkpointDecisionIndex)
+    {
+        checkpointDecisionIndex = _decisionStepIndex + 1;
+        DecisionEventData completedDecision = GetDecisionByIndex(_decisionStepIndex);
+        ConditionalEventData conditionalEvent = _currentWeekEvent != null ? _currentWeekEvent.conditionalEvent : null;
+        if (completedDecision != null && checkpointDecisionIndex == 1 && ShouldRunConditionalEvent(conditionalEvent))
+        {
+            checkpointStage = StoryFlowStage.Conditional;
+            return;
+        }
+
+        if (checkpointDecisionIndex < GetDecisionCount())
+        {
+            checkpointStage = StoryFlowStage.Decision;
+            return;
+        }
+
+        checkpointStage = HasPostDecisionContent() ? StoryFlowStage.PostDecision : StoryFlowStage.Schedule;
+    }
+
+    private bool HasPostDecisionContent()
+    {
+        return _currentWeekEvent != null
+            && (HasDialogues(_currentWeekEvent.postDecisionDialogues) || _currentWeekEvent.postDecisionStatChanges != null);
     }
 
     private void ResolveMiniGamePlaceholder(DecisionEventData decision)

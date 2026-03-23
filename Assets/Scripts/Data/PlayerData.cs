@@ -12,6 +12,9 @@ public class PlayerData
     public int currentProject = 1;
     public int currentWeek = 1;
     public int hiddenRisk = 0;
+    public StoryFlowStage savedFlowStage = StoryFlowStage.None;
+    public int savedDecisionStepIndex = 0;
+    public int pendingProjectNumber = 0;
     public List<AITrustRecord> aiTrustRecords = new List<AITrustRecord>();
     public List<EventFlagRecord> eventFlags = new List<EventFlagRecord>();
 }
