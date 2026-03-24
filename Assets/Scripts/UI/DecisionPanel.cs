@@ -10,18 +10,33 @@ using UnityEditor;
 
 public class DecisionPanel : MonoBehaviour
 {
+    private const float DescriptionMinHeight = 90f;
+    private const float AdviceButtonHeight = 52f;
+    private const float AdviceRowMinHeight = 56f;
+    private const float AdviceButtonWidth = 208f;
+    private const float AdviceTextMinHeight = 96f;
+    private const float AdviceHintMinHeight = 40f;
+    private const float FeedbackMinHeight = 120f;
+    private const float TextLayoutPadding = 20f;
     private const float StatFloatMoveY = 46f;
     private const float StatFloatFadeInDuration = 0.15f;
     private const float StatFloatHoldDuration = 0.45f;
     private const float StatFloatFadeOutDuration = 0.25f;
+    private static readonly Color32 DefaultOptionColor = new Color32(42, 56, 84, 220);
+    private static readonly Color32 FollowedAIOptionColor = new Color32(50, 99, 71, 235);
+    private static readonly Color32 IgnoredAIOptionColor = new Color32(109, 73, 46, 235);
 #if UNITY_EDITOR
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
 
     [SerializeField] private TMP_Text _descriptionText;
+    [SerializeField] private HorizontalLayoutGroup _aiAdviceRow;
+    [SerializeField] private Button _aiAdviceButton;
+    [SerializeField] private TMP_Text _aiAdviceHintText;
     [SerializeField] private TMP_Text _aiAdviceText;
     [SerializeField] private TMP_Text _feedbackText;
     [SerializeField] private VerticalLayoutGroup _optionLayout;
+    [SerializeField] private LayoutElement _optionLayoutElement;
     [SerializeField] private TMP_Text _floatingStatText;
     [SerializeField] private Button _closeButton;
     [SerializeField] private TMP_FontAsset _preferredChineseFont;
@@ -37,10 +52,12 @@ public class DecisionPanel : MonoBehaviour
     private int _selectedDecisionLatencyMs;
     private float _decisionShownTime;
     private Tween _floatingStatTween;
+    private string _currentAdviceText = string.Empty;
 
     private void Awake()
     {
         EnsureLayout();
+        BindAIAdviceButton();
         BindCloseButton();
     }
 
@@ -52,8 +69,18 @@ public class DecisionPanel : MonoBehaviour
         {
             _closeButton.onClick.RemoveListener(OnClickCloseSelection);
         }
+
+        if (_aiAdviceButton != null)
+        {
+            _aiAdviceButton.onClick.RemoveListener(OnClickAIAdvice);
+        }
     }
 
+    /// <summary>
+    /// Displays a decision event and waits for the player to confirm one option.
+    /// </summary>
+    /// <param name="eventData">Decision data to render.</param>
+    /// <param name="onOptionSelected">Callback invoked after the player closes the feedback view.</param>
     public void ShowDecision(DecisionEventData eventData, Action<int, bool, bool, int> onOptionSelected)
     {
         EnsureLayout();
@@ -66,7 +93,9 @@ public class DecisionPanel : MonoBehaviour
         _selectedOptionIndex = -1;
         _selectedFollowedAiAdvice = false;
         _selectedDecisionLatencyMs = 0;
-        _hasViewedAiAdvice = _currentEventData != null && !string.IsNullOrWhiteSpace(_currentEventData.aiAdvice);
+        _currentAdviceText = AIAdvisor.Instance != null ? AIAdvisor.Instance.GetAdviceDisplayText(_currentEventData) : string.Empty;
+        bool hasAdvice = !string.IsNullOrWhiteSpace(_currentAdviceText);
+        _hasViewedAiAdvice = false;
         _decisionShownTime = Time.realtimeSinceStartup;
         gameObject.SetActive(true);
         RestorePanelVisibility();
@@ -74,18 +103,39 @@ public class DecisionPanel : MonoBehaviour
         if (_descriptionText != null)
         {
             _descriptionText.text = _currentEventData != null ? _currentEventData.description : string.Empty;
+            RefreshTextLayout(_descriptionText, DescriptionMinHeight);
+        }
+
+        if (_aiAdviceRow != null)
+        {
+            _aiAdviceRow.gameObject.SetActive(hasAdvice);
+        }
+
+        if (_aiAdviceButton != null)
+        {
+            _aiAdviceButton.interactable = hasAdvice;
+            SetButtonLabel(_aiAdviceButton, "查看AI建议");
+            UpdateAIAdviceButtonVisual(false);
+        }
+
+        if (_aiAdviceHintText != null)
+        {
+            _aiAdviceHintText.gameObject.SetActive(hasAdvice);
+            _aiAdviceHintText.text = hasAdvice ? BuildAIAdviceHintText(false) : string.Empty;
         }
 
         if (_aiAdviceText != null)
         {
-            _aiAdviceText.gameObject.SetActive(_hasViewedAiAdvice);
-            _aiAdviceText.text = _hasViewedAiAdvice ? _currentEventData.aiAdvice : string.Empty;
+            _aiAdviceText.text = _currentAdviceText;
+            _aiAdviceText.gameObject.SetActive(false);
+            RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
         }
 
         if (_feedbackText != null)
         {
             _feedbackText.text = string.Empty;
             _feedbackText.gameObject.SetActive(false);
+            RefreshTextLayout(_feedbackText, FeedbackMinHeight);
         }
 
         if (_floatingStatText != null)
@@ -101,6 +151,7 @@ public class DecisionPanel : MonoBehaviour
         }
 
         BuildOptions();
+        RefreshPanelLayout();
     }
     private void RestorePanelVisibility()
     {
@@ -143,6 +194,11 @@ public class DecisionPanel : MonoBehaviour
             OptionData option = _currentEventData.options[i];
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
             bool isLocked = IsOptionLocked(option);
+            Image image = button.GetComponent<Image>();
+            if (image != null)
+            {
+                image.color = DefaultOptionColor;
+            }
 
             if (label != null)
             {
@@ -163,6 +219,35 @@ public class DecisionPanel : MonoBehaviour
                 button.onClick.AddListener(() => OnClickOption(capturedIndex));
             }
         }
+
+        UpdateOptionLayoutHeight();
+    }
+
+    private void OnClickAIAdvice()
+    {
+        if (string.IsNullOrWhiteSpace(_currentAdviceText) || _aiAdviceText == null)
+        {
+            return;
+        }
+
+        _hasViewedAiAdvice = true;
+        _aiAdviceText.text = _currentAdviceText;
+        _aiAdviceText.gameObject.SetActive(true);
+        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
+
+        if (_aiAdviceButton != null)
+        {
+            _aiAdviceButton.interactable = false;
+            SetButtonLabel(_aiAdviceButton, "AI建议已查看");
+            UpdateAIAdviceButtonVisual(true);
+        }
+
+        if (_aiAdviceHintText != null)
+        {
+            _aiAdviceHintText.text = BuildAIAdviceHintText(true);
+        }
+
+        RefreshPanelLayout();
     }
 
     private void OnClickOption(int selectedIndex)
@@ -181,8 +266,17 @@ public class DecisionPanel : MonoBehaviour
         _selectionLocked = true;
         _hasPendingSelection = true;
         _selectedOptionIndex = selectedIndex;
-        _selectedFollowedAiAdvice = _currentEventData.aiRecommendedOption >= 0 && selectedIndex == _currentEventData.aiRecommendedOption;
+        int recommendedOption = AIAdvisor.Instance != null ? AIAdvisor.Instance.GetRecommendedOption(_currentEventData) : -1;
+        _selectedFollowedAiAdvice = recommendedOption >= 0 && selectedIndex == recommendedOption;
         _selectedDecisionLatencyMs = Mathf.Max(0, Mathf.RoundToInt((Time.realtimeSinceStartup - _decisionShownTime) * 1000f));
+
+        HighlightSelectedOption(selectedIndex, _selectedFollowedAiAdvice, recommendedOption >= 0);
+
+        if (_aiAdviceButton != null)
+        {
+            _aiAdviceButton.interactable = false;
+            UpdateAIAdviceButtonVisual(_hasViewedAiAdvice);
+        }
 
         SetAllButtonsInteractable(false);
         ShowFeedback(selectedOption);
@@ -222,6 +316,24 @@ public class DecisionPanel : MonoBehaviour
 
         _feedbackText.gameObject.SetActive(true);
         _feedbackText.text = BuildFeedbackText(option);
+        RefreshTextLayout(_feedbackText, FeedbackMinHeight);
+        RefreshPanelLayout();
+    }
+
+    private void HighlightSelectedOption(int selectedIndex, bool followedAiAdvice, bool hasRecommendation)
+    {
+        if (!hasRecommendation || selectedIndex < 0 || selectedIndex >= _optionButtons.Count)
+        {
+            return;
+        }
+
+        Image selectedImage = _optionButtons[selectedIndex] != null ? _optionButtons[selectedIndex].GetComponent<Image>() : null;
+        if (selectedImage == null)
+        {
+            return;
+        }
+
+        selectedImage.color = followedAiAdvice ? FollowedAIOptionColor : IgnoredAIOptionColor;
     }
 
     private void PlayStatChangeFloatAnimation(StatEffects effects)
@@ -398,18 +510,53 @@ public class DecisionPanel : MonoBehaviour
 
         string narrative = string.IsNullOrWhiteSpace(option.narrative) ? string.Empty : option.narrative;
         string statChangeText = BuildStatChangeText(option.effects);
+        string adoptionFeedback = BuildAIAdoptionFeedback();
 
         if (string.IsNullOrWhiteSpace(narrative))
         {
-            return statChangeText;
+            if (string.IsNullOrWhiteSpace(statChangeText))
+            {
+                return adoptionFeedback;
+            }
+
+            if (string.IsNullOrWhiteSpace(adoptionFeedback))
+            {
+                return statChangeText;
+            }
+
+            return statChangeText + "\n\n" + adoptionFeedback;
         }
 
         if (string.IsNullOrWhiteSpace(statChangeText))
         {
-            return narrative;
+            if (string.IsNullOrWhiteSpace(adoptionFeedback))
+            {
+                return narrative;
+            }
+
+            return narrative + "\n\n" + adoptionFeedback;
         }
 
-        return narrative + "\n\n" + statChangeText;
+        if (string.IsNullOrWhiteSpace(adoptionFeedback))
+        {
+            return narrative + "\n\n" + statChangeText;
+        }
+
+        return narrative + "\n\n" + statChangeText + "\n\n" + adoptionFeedback;
+    }
+
+    private string BuildAIAdoptionFeedback()
+    {
+        int recommendedOption = AIAdvisor.Instance != null ? AIAdvisor.Instance.GetRecommendedOption(_currentEventData) : -1;
+        if (recommendedOption < 0 || !_hasViewedAiAdvice)
+        {
+            return string.Empty;
+        }
+
+        string aiName = AIAdvisor.Instance != null ? AIAdvisor.Instance.CurrentAIName : "AI";
+        return _selectedFollowedAiAdvice
+            ? "<color=#7CFF8A>你采纳了" + aiName + "的建议。</color>"
+            : "<color=#FFD08A>你没有采纳" + aiName + "的建议。</color>";
     }
 
     private static string BuildStatChangeText(StatEffects effects)
@@ -475,7 +622,7 @@ public class DecisionPanel : MonoBehaviour
         buttonObject.transform.SetParent(_optionLayout.transform, false);
 
         Image image = buttonObject.GetComponent<Image>();
-        image.color = new Color32(42, 56, 84, 220);
+        image.color = DefaultOptionColor;
 
         Button button = buttonObject.GetComponent<Button>();
         ColorBlock colors = button.colors;
@@ -510,7 +657,7 @@ public class DecisionPanel : MonoBehaviour
 
     private void EnsureLayout()
     {
-        if (_descriptionText != null && _aiAdviceText != null && _feedbackText != null && _optionLayout != null && _closeButton != null)
+        if (_descriptionText != null && _aiAdviceRow != null && _aiAdviceButton != null && _aiAdviceHintText != null && _aiAdviceText != null && _feedbackText != null && _optionLayout != null && _optionLayoutElement != null && _closeButton != null)
         {
             return;
         }
@@ -559,18 +706,42 @@ public class DecisionPanel : MonoBehaviour
         layout.childForceExpandWidth = true;
         layout.childForceExpandHeight = false;
 
-        _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 30f, FontStyles.Bold, TextAlignmentOptions.TopLeft, 90f);
-        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 120f);
-        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 120f);
+        _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 30f, FontStyles.Bold, TextAlignmentOptions.TopLeft, DescriptionMinHeight);
+
+        GameObject aiAdviceRowObject = FindOrCreateChild(contentRoot, "AIAdviceRow");
+        LayoutElement aiAdviceRowLayout = aiAdviceRowObject.GetComponent<LayoutElement>();
+        if (aiAdviceRowLayout == null)
+        {
+            aiAdviceRowLayout = aiAdviceRowObject.AddComponent<LayoutElement>();
+        }
+        aiAdviceRowLayout.minHeight = AdviceRowMinHeight;
+        aiAdviceRowLayout.preferredHeight = AdviceRowMinHeight;
+
+        _aiAdviceRow = aiAdviceRowObject.GetComponent<HorizontalLayoutGroup>();
+        if (_aiAdviceRow == null)
+        {
+            _aiAdviceRow = aiAdviceRowObject.AddComponent<HorizontalLayoutGroup>();
+        }
+        _aiAdviceRow.spacing = 14f;
+        _aiAdviceRow.childAlignment = TextAnchor.MiddleLeft;
+        _aiAdviceRow.childControlWidth = false;
+        _aiAdviceRow.childControlHeight = true;
+        _aiAdviceRow.childForceExpandWidth = false;
+        _aiAdviceRow.childForceExpandHeight = false;
+
+        _aiAdviceButton = EnsureInlineButton(aiAdviceRowObject.transform, "AIAdviceButton", sharedFont, "查看AI建议");
+        _aiAdviceHintText = EnsureHintText(aiAdviceRowObject.transform, "AIAdviceHintText", sharedFont, AdviceHintMinHeight);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceTextMinHeight);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackMinHeight);
 
         GameObject optionsRoot = FindOrCreateChild(contentRoot, "OptionsRoot");
-        LayoutElement optionsLayoutElement = optionsRoot.GetComponent<LayoutElement>();
-        if (optionsLayoutElement == null)
+        _optionLayoutElement = optionsRoot.GetComponent<LayoutElement>();
+        if (_optionLayoutElement == null)
         {
-            optionsLayoutElement = optionsRoot.AddComponent<LayoutElement>();
+            _optionLayoutElement = optionsRoot.AddComponent<LayoutElement>();
         }
-        optionsLayoutElement.minHeight = 240f;
-        optionsLayoutElement.preferredHeight = 420f;
+        _optionLayoutElement.minHeight = 180f;
+        _optionLayoutElement.preferredHeight = 360f;
 
         _optionLayout = optionsRoot.GetComponent<VerticalLayoutGroup>();
         if (_optionLayout == null)
@@ -587,7 +758,113 @@ public class DecisionPanel : MonoBehaviour
         _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
         _closeButton.gameObject.SetActive(false);
         _closeButton.interactable = false;
+        BindAIAdviceButton();
         BindCloseButton();
+    }
+
+    private void RefreshPanelLayout()
+    {
+        RefreshTextLayout(_descriptionText, DescriptionMinHeight);
+        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
+        RefreshTextLayout(_feedbackText, FeedbackMinHeight);
+        UpdateOptionLayoutHeight();
+
+        RectTransform contentRect = transform.Find("PanelContent") as RectTransform;
+        if (contentRect != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        }
+    }
+
+    private void RefreshTextLayout(TMP_Text text, float minHeight)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        LayoutElement layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
+
+        if (!text.gameObject.activeSelf)
+        {
+            layoutElement.minHeight = 0f;
+            layoutElement.preferredHeight = 0f;
+            return;
+        }
+
+        text.ForceMeshUpdate();
+        float preferredHeight = Mathf.Max(minHeight, text.preferredHeight + TextLayoutPadding);
+        layoutElement.minHeight = minHeight;
+        layoutElement.preferredHeight = preferredHeight;
+    }
+
+    private void UpdateOptionLayoutHeight()
+    {
+        if (_optionLayout == null || _optionLayoutElement == null)
+        {
+            return;
+        }
+
+        int activeOptionCount = 0;
+        for (int i = 0; i < _optionButtons.Count; i += 1)
+        {
+            if (_optionButtons[i] != null && _optionButtons[i].gameObject.activeSelf)
+            {
+                activeOptionCount += 1;
+            }
+        }
+
+        if (activeOptionCount <= 0)
+        {
+            _optionLayoutElement.minHeight = 0f;
+            _optionLayoutElement.preferredHeight = 0f;
+            return;
+        }
+
+        float preferredHeight = activeOptionCount * 108f + Mathf.Max(0, activeOptionCount - 1) * _optionLayout.spacing;
+        float maxHeight = _feedbackText != null && _feedbackText.gameObject.activeSelf ? 260f : 360f;
+        preferredHeight = Mathf.Clamp(preferredHeight, 120f, maxHeight);
+        _optionLayoutElement.minHeight = preferredHeight;
+        _optionLayoutElement.preferredHeight = preferredHeight;
+    }
+
+    private void UpdateAIAdviceButtonVisual(bool hasViewedAdvice)
+    {
+        if (_aiAdviceButton == null)
+        {
+            return;
+        }
+
+        Color32 normalColor = hasViewedAdvice ? new Color32(63, 110, 85, 255) : new Color32(45, 90, 142, 255);
+        Color32 highlightedColor = hasViewedAdvice ? new Color32(82, 133, 107, 255) : new Color32(63, 108, 160, 255);
+        Color32 pressedColor = hasViewedAdvice ? new Color32(52, 91, 70, 255) : new Color32(34, 73, 121, 255);
+        Color32 disabledColor = hasViewedAdvice ? new Color32(63, 110, 85, 235) : new Color32(88, 112, 138, 210);
+
+        ColorBlock colors = _aiAdviceButton.colors;
+        colors.normalColor = normalColor;
+        colors.highlightedColor = highlightedColor;
+        colors.pressedColor = pressedColor;
+        colors.selectedColor = highlightedColor;
+        colors.disabledColor = disabledColor;
+        _aiAdviceButton.colors = colors;
+
+        Image image = _aiAdviceButton.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = _aiAdviceButton.interactable ? normalColor : disabledColor;
+        }
+    }
+
+    private string BuildAIAdviceHintText(bool hasViewedAdvice)
+    {
+        string aiName = AIAdvisor.Instance != null ? AIAdvisor.Instance.CurrentAIName : "AI";
+        return hasViewedAdvice
+            ? aiName + "建议已展开，可继续自主判断。"
+            : "如果需要，再点击查看" + aiName + "建议。";
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float minHeight)
@@ -662,6 +939,90 @@ public class DecisionPanel : MonoBehaviour
         _closeButton.onClick.AddListener(OnClickCloseSelection);
     }
 
+    private void BindAIAdviceButton()
+    {
+        if (_aiAdviceButton == null)
+        {
+            return;
+        }
+
+        _aiAdviceButton.onClick.RemoveListener(OnClickAIAdvice);
+        _aiAdviceButton.onClick.AddListener(OnClickAIAdvice);
+    }
+
+    private static Button EnsureInlineButton(Transform parent, string name, TMP_FontAsset font, string buttonText)
+    {
+        Transform existing = parent.Find(name);
+        GameObject buttonObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+        if (existing == null)
+        {
+            buttonObject.transform.SetParent(parent, false);
+        }
+
+        LayoutElement layoutElement = buttonObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = buttonObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.minHeight = AdviceButtonHeight;
+        layoutElement.preferredHeight = AdviceButtonHeight;
+        layoutElement.minWidth = AdviceButtonWidth;
+        layoutElement.preferredWidth = AdviceButtonWidth;
+        layoutElement.flexibleWidth = 0f;
+
+        Image image = buttonObject.GetComponent<Image>();
+        image.color = new Color32(45, 90, 142, 255);
+
+        Button button = buttonObject.GetComponent<Button>();
+        Outline outline = buttonObject.GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = buttonObject.AddComponent<Outline>();
+        }
+        outline.effectColor = new Color32(176, 214, 255, 110);
+        outline.effectDistance = new Vector2(1f, -1f);
+
+        SetButtonLabel(button, buttonText, font, 24f);
+        return button;
+    }
+
+    private static TMP_Text EnsureHintText(Transform parent, string name, TMP_FontAsset font, float minHeight)
+    {
+        Transform existing = parent.Find(name);
+        GameObject textObject = existing != null ? existing.gameObject : new GameObject(name, typeof(RectTransform), typeof(LayoutElement));
+        if (existing == null)
+        {
+            textObject.transform.SetParent(parent, false);
+        }
+
+        LayoutElement layoutElement = textObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = textObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.minHeight = minHeight;
+        layoutElement.preferredHeight = minHeight;
+        layoutElement.flexibleWidth = 1f;
+
+        TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
+        if (text == null)
+        {
+            text = textObject.AddComponent<TextMeshProUGUI>();
+        }
+
+        if (font != null)
+        {
+            text.font = font;
+        }
+
+        text.fontSize = 22f;
+        text.alignment = TextAlignmentOptions.Left;
+        text.enableWordWrapping = false;
+        text.color = new Color32(192, 208, 226, 255);
+        text.margin = new Vector4(6f, 8f, 8f, 8f);
+        return text;
+    }
+
     private static Button EnsureCornerButton(Transform parent, string name, TMP_FontAsset font, string buttonText)
     {
         Transform existing = parent.Find(name);
@@ -690,7 +1051,18 @@ public class DecisionPanel : MonoBehaviour
 
         Button button = buttonObject.GetComponent<Button>();
 
-        GameObject labelObject = FindOrCreateChild(buttonObject, "Label");
+        SetButtonLabel(button, buttonText, font, 24f);
+        return button;
+    }
+
+    private static void SetButtonLabel(Button button, string buttonText, TMP_FontAsset font = null, float fontSize = 24f)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        GameObject labelObject = FindOrCreateChild(button.gameObject, "Label");
         RectTransform labelRect = EnsureRectTransform(labelObject);
         labelRect.anchorMin = Vector2.zero;
         labelRect.anchorMax = Vector2.one;
@@ -708,11 +1080,10 @@ public class DecisionPanel : MonoBehaviour
             label.font = font;
         }
 
-        label.fontSize = 24f;
+        label.fontSize = fontSize;
         label.alignment = TextAlignmentOptions.Center;
         label.color = Color.white;
         label.text = buttonText;
-        return button;
     }
 
     private TMP_FontAsset ResolveUIFont()

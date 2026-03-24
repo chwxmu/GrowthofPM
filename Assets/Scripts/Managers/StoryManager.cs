@@ -6,17 +6,20 @@ public class StoryManager : Singleton<StoryManager>
 {
     private const string DialoguePanelName = "DialoguePanel";
     private const string DecisionPanelName = "DecisionPanel";
+    private const string CpmGamePanelName = "CPMGamePanel";
+    private const string RiskDashboardPanelName = "RiskDashboardPanel";
     private const string SchedulePanelName = "SchedulePanel";
     private const string QuizPanelName = "QuizPanel";
     private const string EndingPanelName = "EndingPanel";
     private const string TransitionPanelName = "TransitionPanel";
-    private const string CpmCorrectFlag = "cpmCorrect";
+    private const string CpmCorrectFlag = GameConstants.EVENT_FLAG_CPM_CORRECT;
     private const KeyCode SkipMainStoryKey = KeyCode.P;
 
     private WeekEventData _currentWeekEvent;
     private int _decisionStepIndex;
     private bool _isHandlingGameScene;
     private bool _quizOpenRequestedFromSchedule;
+    private bool _hasShownRiskBasedDialogue;
     private StoryFlowStage _currentFlowStage = StoryFlowStage.None;
 
     public event Action<WeekEventData> WeekStarted;
@@ -148,11 +151,6 @@ public class StoryManager : Singleton<StoryManager>
         DecisionEventData completedDecision = GetDecisionByIndex(_decisionStepIndex);
         _decisionStepIndex += 1;
 
-        if (completedDecision != null && completedDecision.isMiniGame)
-        {
-            ResolveMiniGamePlaceholder(completedDecision);
-        }
-
         ConditionalEventData conditionalEvent = _currentWeekEvent != null ? _currentWeekEvent.conditionalEvent : null;
         if (completedDecision != null && _decisionStepIndex == 1 && ShouldRunConditionalEvent(conditionalEvent))
         {
@@ -162,7 +160,7 @@ public class StoryManager : Singleton<StoryManager>
 
         if (_decisionStepIndex >= GetDecisionCount())
         {
-            RunPostDecisionContentOrSchedule();
+            RunRemainingWeekContentOrSchedule();
             return;
         }
 
@@ -382,7 +380,7 @@ public class StoryManager : Singleton<StoryManager>
         Debug.Log($"[StoryManager] : Starting project from transition. project={targetProjectNumber} previousProject={currentProjectNumber}");
 
         UIManager.Instance.HidePanel(TransitionPanelName);
-        GameManager.Instance.StartProject(targetProjectNumber, targetProjectNumber == 2);
+        GameManager.Instance.StartProject(targetProjectNumber, true);
         GameManager.Instance.SaveProgress();
         StartWeek();
     }
@@ -392,9 +390,27 @@ public class StoryManager : Singleton<StoryManager>
         while (true)
         {
             DecisionEventData decision = GetDecisionByIndex(_decisionStepIndex);
+            if (IsDecisionEmpty(decision))
+            {
+                decision = null;
+            }
+
             if (decision == null)
             {
-                RunPostDecisionContentOrSchedule();
+                ConditionalEventData conditionalEvent = _currentWeekEvent != null ? _currentWeekEvent.conditionalEvent : null;
+                if (_decisionStepIndex == 0 && ShouldRunConditionalEvent(conditionalEvent))
+                {
+                    ApplyConditionalEvent(conditionalEvent);
+                    return;
+                }
+
+                RunRemainingWeekContentOrSchedule();
+                return;
+            }
+
+            if (decision.isMiniGame)
+            {
+                ShowMiniGame(decision);
                 return;
             }
 
@@ -409,6 +425,54 @@ public class StoryManager : Singleton<StoryManager>
             ShowDecision(decision);
             return;
         }
+    }
+
+    private void ShowMiniGame(DecisionEventData decision)
+    {
+        if (decision == null || string.IsNullOrWhiteSpace(decision.miniGameType))
+        {
+            Debug.LogError("[StoryManager] : Mini-game decision is missing required configuration.");
+            RunRemainingWeekContentOrSchedule();
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.MiniGame, _decisionStepIndex);
+            GameManager.Instance.SaveProgress();
+        }
+
+        UIManager.Instance.HideAllPanels();
+        SetFlowStage(StoryFlowStage.MiniGame);
+
+        switch (decision.miniGameType.Trim())
+        {
+            case GameConstants.MINI_GAME_TYPE_CPM:
+                CPMGamePanel cpmGamePanel = FindObjectOfType<CPMGamePanel>(true);
+                if (cpmGamePanel != null)
+                {
+                    cpmGamePanel.ShowGame(decision, OnCPMGameCompleted);
+                    return;
+                }
+
+                Debug.LogError("[StoryManager] : Missing CPMGamePanel for CPM mini-game.");
+                break;
+            case GameConstants.MINI_GAME_TYPE_RISK_DASHBOARD:
+                RiskDashboardPanel riskDashboardPanel = FindObjectOfType<RiskDashboardPanel>(true);
+                if (riskDashboardPanel != null)
+                {
+                    riskDashboardPanel.ShowGame(decision, OnRiskDashboardCompleted);
+                    return;
+                }
+
+                Debug.LogError("[StoryManager] : Missing RiskDashboardPanel for risk dashboard mini-game.");
+                break;
+            default:
+                Debug.LogError($"[StoryManager] : Unknown mini-game type '{decision.miniGameType}'.");
+                break;
+        }
+
+        RunRemainingWeekContentOrSchedule();
     }
 
     private bool CanSkipWeekMainStory()
@@ -441,6 +505,35 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         ShowSchedulePanel();
+    }
+
+    private void RunRemainingWeekContentOrSchedule()
+    {
+        if (TryShowRiskBasedDialogue())
+        {
+            return;
+        }
+
+        RunPostDecisionContentOrSchedule();
+    }
+
+    private bool TryShowRiskBasedDialogue()
+    {
+        if (_hasShownRiskBasedDialogue)
+        {
+            return false;
+        }
+
+        List<DialogueLine> selectedDialogues = GetRiskBasedDialoguesForCurrentWeek();
+        if (!HasDialogues(selectedDialogues))
+        {
+            return false;
+        }
+
+        _hasShownRiskBasedDialogue = true;
+        SetFlowStage(StoryFlowStage.PostDecision);
+        ShowDialogue(selectedDialogues, RunPostDecisionContentOrSchedule);
+        return true;
     }
 
     private void ShowSchedulePanel(bool resetData = true)
@@ -520,11 +613,20 @@ public class StoryManager : Singleton<StoryManager>
         OptionData option = decision.options[selectedIndex];
         StoryFlowStage checkpointStage;
         int checkpointDecisionIndex;
+        int recommendedOption = AIAdvisor.Instance != null ? AIAdvisor.Instance.GetRecommendedOption(decision) : decision.aiRecommendedOption;
         GetCheckpointAfterDecision(out checkpointStage, out checkpointDecisionIndex);
         GameManager.Instance.ApplyStatChanges(option.effects);
-        GameManager.Instance.ApplyRiskChange(option.riskChange);
+        GameManager.Instance.ModifyHiddenRisk(option.riskChange);
         GameManager.Instance.UpdateFlowCheckpoint(checkpointStage, checkpointDecisionIndex);
-        GameManager.Instance.RecordAIDecision(decision.eventId, hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs, decision.aiQuality);
+        if (AIAdvisor.Instance != null)
+        {
+            AIAdvisor.Instance.RecordDecision(decision.eventId, selectedIndex, recommendedOption, hasViewedAiAdvice, decisionLatencyMs, decision.aiQuality);
+        }
+        else
+        {
+            GameManager.Instance.RecordAIDecision(decision.eventId, hasViewedAiAdvice, isFollowedAiAdvice, decisionLatencyMs, decision.aiQuality);
+        }
+
         OnDecisionComplete();
     }
 
@@ -539,11 +641,11 @@ public class StoryManager : Singleton<StoryManager>
         if (HasDialogues(conditionalEvent.dialogues))
         {
             SetFlowStage(StoryFlowStage.Conditional);
-            ShowDialogue(conditionalEvent.dialogues, RunPostDecisionContentOrSchedule);
+            ShowDialogue(conditionalEvent.dialogues, RunRemainingWeekContentOrSchedule);
             return;
         }
 
-        RunPostDecisionContentOrSchedule();
+        RunRemainingWeekContentOrSchedule();
     }
 
     private void ApplyWeekFixedChanges()
@@ -622,6 +724,22 @@ public class StoryManager : Singleton<StoryManager>
                 }
 
                 ShowNextDecisionOrSchedule();
+                return true;
+
+            case StoryFlowStage.MiniGame:
+                _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                DecisionEventData miniGameDecision = GetDecisionByIndex(_decisionStepIndex);
+                if (miniGameDecision == null || !miniGameDecision.isMiniGame)
+                {
+                    return false;
+                }
+
+                ShowMiniGame(miniGameDecision);
                 return true;
 
             case StoryFlowStage.Conditional:
@@ -737,29 +855,69 @@ public class StoryManager : Singleton<StoryManager>
             && (HasDialogues(_currentWeekEvent.postDecisionDialogues) || _currentWeekEvent.postDecisionStatChanges != null);
     }
 
-    private void ResolveMiniGamePlaceholder(DecisionEventData decision)
+    private List<DialogueLine> GetRiskBasedDialoguesForCurrentWeek()
     {
-        if (decision == null || string.IsNullOrWhiteSpace(decision.miniGameType))
+        if (_currentWeekEvent == null || _currentWeekEvent.riskBasedDialogue == null || GameManager.Instance == null || GameManager.Instance.CurrentPlayerData == null)
+        {
+            return null;
+        }
+
+        int hiddenRisk = GameManager.Instance.CurrentPlayerData.hiddenRisk;
+        if (hiddenRisk < GameConstants.PROJECT2_RISK_DIALOGUE_MEDIUM_THRESHOLD)
+        {
+            return _currentWeekEvent.riskBasedDialogue.low;
+        }
+
+        if (hiddenRisk >= GetRiskFailThreshold())
+        {
+            return _currentWeekEvent.riskBasedDialogue.high;
+        }
+
+        return _currentWeekEvent.riskBasedDialogue.medium;
+    }
+
+    private void OnCPMGameCompleted(bool isCorrect)
+    {
+        if (GameManager.Instance == null)
         {
             return;
         }
 
-        if (decision.miniGameType == "cpm")
+        GameManager.Instance.SetEventFlag(CpmCorrectFlag, isCorrect);
+        CompleteMiniGameStep();
+    }
+
+    private void OnRiskDashboardCompleted(RiskDashboardGame.SessionResult result)
+    {
+        if (GameManager.Instance == null || result == null)
         {
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.SetEventFlag(CpmCorrectFlag, false);
-            }
             return;
         }
 
-        if (decision.miniGameType == "risk_dashboard")
+        GameManager.Instance.ModifyHiddenRisk(result.TotalRiskChange);
+
+        DecisionEventData completedDecision = GetDecisionByIndex(_decisionStepIndex);
+        if (completedDecision != null && !string.IsNullOrWhiteSpace(completedDecision.eventId))
         {
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.SetEventFlag(decision.eventId, false);
-            }
+            GameManager.Instance.SetEventFlag(completedDecision.eventId, true);
         }
+
+        CompleteMiniGameStep();
+    }
+
+    private void CompleteMiniGameStep()
+    {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
+        StoryFlowStage checkpointStage;
+        int checkpointDecisionIndex;
+        GetCheckpointAfterDecision(out checkpointStage, out checkpointDecisionIndex);
+        GameManager.Instance.UpdateFlowCheckpoint(checkpointStage, checkpointDecisionIndex);
+        GameManager.Instance.SaveProgress();
+        OnDecisionComplete();
     }
 
     private bool ShouldRunConditionalEvent(ConditionalEventData conditionalEvent)
@@ -782,12 +940,12 @@ public class StoryManager : Singleton<StoryManager>
     private int GetDecisionCount()
     {
         int count = 0;
-        if (_currentWeekEvent != null && HasSelectableOptions(_currentWeekEvent.decisionEvent))
+        if (_currentWeekEvent != null && HasDecisionContent(_currentWeekEvent.decisionEvent))
         {
             count += 1;
         }
 
-        if (_currentWeekEvent != null && HasSelectableOptions(_currentWeekEvent.secondDecisionEvent))
+        if (_currentWeekEvent != null && HasDecisionContent(_currentWeekEvent.secondDecisionEvent))
         {
             count += 1;
         }
@@ -831,6 +989,37 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         return false;
+    }
+
+    private static bool HasDecisionContent(DecisionEventData decision)
+    {
+        return decision != null && (decision.isMiniGame || HasSelectableOptions(decision));
+    }
+
+    private static bool IsDecisionEmpty(DecisionEventData decision)
+    {
+        return decision != null
+            && !decision.isMiniGame
+            && string.IsNullOrWhiteSpace(decision.eventId)
+            && string.IsNullOrWhiteSpace(decision.description)
+            && string.IsNullOrWhiteSpace(decision.aiAdvice)
+            && string.IsNullOrWhiteSpace(decision.aiQuality)
+            && string.IsNullOrWhiteSpace(decision.miniGameType)
+            && string.IsNullOrWhiteSpace(decision.conditionStat)
+            && decision.conditionThreshold <= 0
+            && (decision.options == null || decision.options.Count == 0);
+    }
+
+    private int GetRiskFailThreshold()
+    {
+        EndingsData endingsData = DataManager.Instance != null ? DataManager.Instance.LoadEndings() : null;
+        if (endingsData == null || endingsData.projects == null || GameManager.Instance == null || GameManager.Instance.CurrentPlayerData == null)
+        {
+            return 60;
+        }
+
+        ProjectEndingData projectEnding = endingsData.projects.Find(item => item != null && item.projectNumber == GameManager.Instance.CurrentPlayerData.currentProject);
+        return projectEnding != null && projectEnding.riskFailThreshold >= 0 ? projectEnding.riskFailThreshold : 60;
     }
     private static bool HasDialogues(List<DialogueLine> dialogues)
     {
@@ -892,6 +1081,7 @@ public class StoryManager : Singleton<StoryManager>
         _currentWeekEvent = null;
         _decisionStepIndex = 0;
         _quizOpenRequestedFromSchedule = false;
+        _hasShownRiskBasedDialogue = false;
         SetFlowStage(StoryFlowStage.None);
     }
 
@@ -905,6 +1095,8 @@ public class StoryManager : Singleton<StoryManager>
     {
         FindObjectOfType<DialoguePanel>(true);
         FindObjectOfType<DecisionPanel>(true);
+        FindObjectOfType<CPMGamePanel>(true);
+        FindObjectOfType<RiskDashboardPanel>(true);
         FindObjectOfType<SchedulePanel>(true);
         FindObjectOfType<QuizPanel>(true);
         FindObjectOfType<EndingPanel>(true);
@@ -918,6 +1110,7 @@ public enum StoryFlowStage
     Prologue,
     DailyIntro,
     Decision,
+    MiniGame,
     Conditional,
     PostDecision,
     Schedule,

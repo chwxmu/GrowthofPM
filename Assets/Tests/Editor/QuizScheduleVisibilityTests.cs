@@ -4,6 +4,7 @@ using System.Reflection;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuizScheduleVisibilityTests
 {
@@ -16,6 +17,7 @@ public class QuizScheduleVisibilityTests
         DestroyAllOfType<DataManager>();
         DestroyAllOfType<StoryManager>();
         DestroyAllOfType<UIManager>();
+        DestroyAllOfType<AIAdvisor>();
         DestroyAllOfType<QuizPanel>();
         DestroyAllOfType<SchedulePanel>();
         DestroyAllOfType<DialoguePanel>();
@@ -40,6 +42,7 @@ public class QuizScheduleVisibilityTests
         DestroyAllOfType<DataManager>();
         DestroyAllOfType<StoryManager>();
         DestroyAllOfType<UIManager>();
+        DestroyAllOfType<AIAdvisor>();
         DestroyAllOfType<QuizPanel>();
         DestroyAllOfType<SchedulePanel>();
         DestroyAllOfType<DialoguePanel>();
@@ -233,6 +236,106 @@ public class QuizScheduleVisibilityTests
         Assert.IsTrue(group.interactable);
         Assert.IsTrue(group.blocksRaycasts);
     }
+
+    [Test]
+    public void ShowDecision_ShouldHideAIAdviceUntilPlayerClicksAdviceButton()
+    {
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        decisionPanel.ShowDecision(new DecisionEventData
+        {
+            description = "测试决策",
+            aiAdvice = "建议优先保障质量",
+            options = new List<OptionData>
+            {
+                new OptionData
+                {
+                    text = "按计划推进",
+                    effects = new StatEffects { techPower = 1 }
+                }
+            }
+        }, (_, _, _, _) => { });
+
+        Button aiAdviceButton = GetPrivateField<Button>(decisionPanel, "_aiAdviceButton");
+        TMP_Text aiAdviceText = GetPrivateField<TMP_Text>(decisionPanel, "_aiAdviceText");
+        TMP_Text aiAdviceButtonLabel = aiAdviceButton.GetComponentInChildren<TMP_Text>(true);
+
+        Assert.IsTrue(aiAdviceButton.gameObject.activeSelf);
+        Assert.IsTrue(aiAdviceButton.interactable);
+        Assert.IsFalse(aiAdviceText.gameObject.activeSelf);
+        Assert.IsFalse(GetPrivateField<bool>(decisionPanel, "_hasViewedAiAdvice"));
+        Assert.AreEqual("查看AI建议", aiAdviceButtonLabel.text);
+
+        aiAdviceButton.onClick.Invoke();
+
+        Assert.IsTrue(aiAdviceText.gameObject.activeSelf);
+        Assert.IsTrue(GetPrivateField<bool>(decisionPanel, "_hasViewedAiAdvice"));
+        Assert.AreEqual("AI建议已查看", aiAdviceButtonLabel.text);
+        StringAssert.Contains("建议优先保障质量", aiAdviceText.text);
+    }
+
+    [Test]
+    public void OnClickOption_ShouldExpandFeedbackLayoutForLongAdoptionMessage()
+    {
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        decisionPanel.ShowDecision(new DecisionEventData
+        {
+            description = "测试决策",
+            aiAdvice = "建议优先保障质量",
+            aiRecommendedOption = 0,
+            options = new List<OptionData>
+            {
+                new OptionData
+                {
+                    text = "按计划推进",
+                    narrative = "你选择了一条需要更多说明的方案。这段说明文本用于验证提示区域高度会随着内容增加而扩展，避免底部的AI采纳提示被后续选项区域遮挡。",
+                    effects = new StatEffects { techPower = 3, managePower = 2 }
+                }
+            }
+        }, (_, _, _, _) => { });
+
+        Button aiAdviceButton = GetPrivateField<Button>(decisionPanel, "_aiAdviceButton");
+        aiAdviceButton.onClick.Invoke();
+
+        InvokePrivate(decisionPanel, "OnClickOption", 0);
+
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(decisionPanel, "_feedbackText");
+        LayoutElement feedbackLayout = feedbackText.GetComponent<LayoutElement>();
+
+        Assert.IsTrue(feedbackText.gameObject.activeSelf);
+        StringAssert.Contains("你采纳了", feedbackText.text);
+        Assert.Greater(feedbackLayout.preferredHeight, 120f);
+    }
+
+    [Test]
+    public void OnClickOption_ShouldNotShowAdoptionPromptBeforeAdviceIsViewed()
+    {
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        decisionPanel.ShowDecision(new DecisionEventData
+        {
+            description = "测试决策",
+            aiAdvice = "建议优先保障质量",
+            aiRecommendedOption = 0,
+            options = new List<OptionData>
+            {
+                new OptionData
+                {
+                    text = "按计划推进",
+                    narrative = "测试结果",
+                    effects = new StatEffects { techPower = 1 }
+                }
+            }
+        }, (_, _, _, _) => { });
+
+        InvokePrivate(decisionPanel, "OnClickOption", 0);
+
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(decisionPanel, "_feedbackText");
+        StringAssert.DoesNotContain("采纳了", feedbackText.text);
+        StringAssert.DoesNotContain("没有采纳", feedbackText.text);
+    }
+
     private void EnsureTmpFontHost()
     {
         TMP_FontAsset fallback = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");

@@ -326,16 +326,35 @@ public class GameManager : Singleton<GameManager>
 
     public void ApplyRiskChange(int riskChange)
     {
-        if (_currentPlayerData == null || riskChange == 0)
+        ModifyHiddenRisk(riskChange);
+    }
+
+    /// <summary>
+    /// Adjusts the hidden risk value without exposing it to the UI.
+    /// </summary>
+    /// <param name="change">Risk delta to apply.</param>
+    public void ModifyHiddenRisk(int change)
+    {
+        if (_currentPlayerData == null || change == 0)
         {
             return;
         }
 
-        _currentPlayerData.hiddenRisk = Mathf.Max(0, _currentPlayerData.hiddenRisk + riskChange);
+        _currentPlayerData.hiddenRisk = Mathf.Max(0, _currentPlayerData.hiddenRisk + change);
         NotifyDataChanged();
     }
 
     public float GetAIAdoptionRate()
+    {
+        return GetAIAdoptionRateByProject(0);
+    }
+
+    /// <summary>
+    /// Calculates AI adoption rate for a specific project, or across all projects when 0 is passed.
+    /// </summary>
+    /// <param name="projectNumber">Target project number, or 0 for all projects.</param>
+    /// <returns>Adoption rate in the range of 0-1.</returns>
+    public float GetAIAdoptionRateByProject(int projectNumber)
     {
         if (_currentPlayerData == null || _currentPlayerData.aiTrustRecords == null || _currentPlayerData.aiTrustRecords.Count == 0)
         {
@@ -346,7 +365,7 @@ public class GameManager : Singleton<GameManager>
         int totalCount = 0;
         foreach (AITrustRecord record in _currentPlayerData.aiTrustRecords)
         {
-            if (record == null)
+            if (record == null || (projectNumber > 0 && record.projectNumber != projectNumber))
             {
                 continue;
             }
@@ -392,7 +411,10 @@ public class GameManager : Singleton<GameManager>
             return projectEnding.fail;
         }
 
-        if (MeetsEndingRequirements(projectEnding.excellentThreshold, projectEnding.excellentStatThresholds))
+        bool canReachExcellentEnding = _currentPlayerData.currentProject != 2
+            || _currentPlayerData.hiddenRisk < GameConstants.PROJECT2_EXCELLENT_RISK_THRESHOLD;
+
+        if (canReachExcellentEnding && MeetsEndingRequirements(projectEnding.excellentThreshold, projectEnding.excellentStatThresholds))
         {
             return projectEnding.excellent;
         }
@@ -438,7 +460,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         int nextProjectNumber = _currentPlayerData.currentProject + 1;
-        StartProject(nextProjectNumber, nextProjectNumber == 2);
+        StartProject(nextProjectNumber, nextProjectNumber >= 2);
         SaveProgress();
         return true;
     }
