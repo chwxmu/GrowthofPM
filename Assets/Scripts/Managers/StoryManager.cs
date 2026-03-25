@@ -531,6 +531,12 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         _hasShownRiskBasedDialogue = true;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.PostDecision, _decisionStepIndex);
+            GameManager.Instance.SaveProgress();
+        }
+
         SetFlowStage(StoryFlowStage.PostDecision);
         ShowDialogue(selectedDialogues, RunPostDecisionContentOrSchedule);
         return true;
@@ -539,6 +545,12 @@ public class StoryManager : Singleton<StoryManager>
     private void ShowSchedulePanel(bool resetData = true)
     {
         SetFlowStage(StoryFlowStage.Schedule);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Schedule, _decisionStepIndex);
+            GameManager.Instance.SaveProgress();
+        }
 
         TopStatusBar topStatusBar = FindObjectOfType<TopStatusBar>(true);
         if (topStatusBar != null)
@@ -590,6 +602,12 @@ public class StoryManager : Singleton<StoryManager>
 
     private void ShowDecision(DecisionEventData eventData)
     {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Decision, _decisionStepIndex);
+            GameManager.Instance.SaveProgress();
+        }
+
         UIManager.Instance.HideAllPanels();
 
         DecisionPanel decisionPanel = FindObjectOfType<DecisionPanel>(true);
@@ -632,20 +650,8 @@ public class StoryManager : Singleton<StoryManager>
 
     private void ApplyConditionalEvent(ConditionalEventData conditionalEvent)
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ApplyStatChanges(conditionalEvent.statPenalty);
-            GameManager.Instance.ApplyRiskChange(conditionalEvent.riskPenalty);
-        }
-
-        if (HasDialogues(conditionalEvent.dialogues))
-        {
-            SetFlowStage(StoryFlowStage.Conditional);
-            ShowDialogue(conditionalEvent.dialogues, RunRemainingWeekContentOrSchedule);
-            return;
-        }
-
-        RunRemainingWeekContentOrSchedule();
+        ApplyConditionalEventEffects(conditionalEvent);
+        ShowConditionalEventDialogueOrContinue(conditionalEvent);
     }
 
     private void ApplyWeekFixedChanges()
@@ -752,7 +758,7 @@ public class StoryManager : Singleton<StoryManager>
                 ConditionalEventData conditionalEvent = _currentWeekEvent != null ? _currentWeekEvent.conditionalEvent : null;
                 if (ShouldRunConditionalEvent(conditionalEvent))
                 {
-                    ApplyConditionalEvent(conditionalEvent);
+                    ShowConditionalEventDialogueOrContinue(conditionalEvent);
                     return true;
                 }
 
@@ -766,7 +772,7 @@ public class StoryManager : Singleton<StoryManager>
                     return false;
                 }
 
-                RunPostDecisionContentOrSchedule();
+                RunRemainingWeekContentOrSchedule();
                 return true;
 
             case StoryFlowStage.Schedule:
@@ -918,6 +924,31 @@ public class StoryManager : Singleton<StoryManager>
         GameManager.Instance.UpdateFlowCheckpoint(checkpointStage, checkpointDecisionIndex);
         GameManager.Instance.SaveProgress();
         OnDecisionComplete();
+    }
+
+    private void ApplyConditionalEventEffects(ConditionalEventData conditionalEvent)
+    {
+        if (conditionalEvent == null || GameManager.Instance == null)
+        {
+            return;
+        }
+
+        GameManager.Instance.ApplyStatChanges(conditionalEvent.statPenalty);
+        GameManager.Instance.ApplyRiskChange(conditionalEvent.riskPenalty);
+        GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Conditional, _decisionStepIndex);
+        GameManager.Instance.SaveProgress();
+    }
+
+    private void ShowConditionalEventDialogueOrContinue(ConditionalEventData conditionalEvent)
+    {
+        if (HasDialogues(conditionalEvent != null ? conditionalEvent.dialogues : null))
+        {
+            SetFlowStage(StoryFlowStage.Conditional);
+            ShowDialogue(conditionalEvent.dialogues, RunRemainingWeekContentOrSchedule);
+            return;
+        }
+
+        RunRemainingWeekContentOrSchedule();
     }
 
     private bool ShouldRunConditionalEvent(ConditionalEventData conditionalEvent)

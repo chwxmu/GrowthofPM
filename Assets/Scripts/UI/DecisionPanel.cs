@@ -657,8 +657,13 @@ public class DecisionPanel : MonoBehaviour
 
     private void EnsureLayout()
     {
+        TryBindSceneReferences();
+
         if (_descriptionText != null && _aiAdviceRow != null && _aiAdviceButton != null && _aiAdviceHintText != null && _aiAdviceText != null && _feedbackText != null && _optionLayout != null && _optionLayoutElement != null && _closeButton != null)
         {
+            ApplyBoundLayoutDefaults();
+            BindAIAdviceButton();
+            BindCloseButton();
             return;
         }
 
@@ -760,6 +765,120 @@ public class DecisionPanel : MonoBehaviour
         _closeButton.interactable = false;
         BindAIAdviceButton();
         BindCloseButton();
+    }
+
+    private void ApplyBoundLayoutDefaults()
+    {
+        TMP_FontAsset sharedFont = ResolveUIFont();
+        RectTransform root = transform as RectTransform;
+        if (root != null)
+        {
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+        }
+
+        Image background = GetComponent<Image>();
+        if (background == null)
+        {
+            background = gameObject.AddComponent<Image>();
+        }
+        background.color = new Color32(12, 18, 32, 220);
+
+        GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
+        RectTransform contentRect = EnsureRectTransform(contentRoot);
+        contentRect.anchorMin = new Vector2(0.15f, 0.12f);
+        contentRect.anchorMax = new Vector2(0.85f, 0.88f);
+        contentRect.offsetMin = Vector2.zero;
+        contentRect.offsetMax = Vector2.zero;
+
+        Image contentBackground = contentRoot.GetComponent<Image>();
+        if (contentBackground == null)
+        {
+            contentBackground = contentRoot.AddComponent<Image>();
+        }
+        contentBackground.color = new Color32(26, 34, 54, 245);
+
+        VerticalLayoutGroup layout = contentRoot.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
+        {
+            layout = contentRoot.AddComponent<VerticalLayoutGroup>();
+        }
+        layout.padding = new RectOffset(32, 32, 32, 32);
+        layout.spacing = 20f;
+        layout.childAlignment = TextAnchor.UpperLeft;
+        layout.childControlWidth = true;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 30f, FontStyles.Bold, TextAlignmentOptions.TopLeft, DescriptionMinHeight);
+
+        GameObject aiAdviceRowObject = FindOrCreateChild(contentRoot, "AIAdviceRow");
+        LayoutElement aiAdviceRowLayout = aiAdviceRowObject.GetComponent<LayoutElement>();
+        if (aiAdviceRowLayout == null)
+        {
+            aiAdviceRowLayout = aiAdviceRowObject.AddComponent<LayoutElement>();
+        }
+        aiAdviceRowLayout.minHeight = AdviceRowMinHeight;
+        aiAdviceRowLayout.preferredHeight = AdviceRowMinHeight;
+
+        _aiAdviceRow = aiAdviceRowObject.GetComponent<HorizontalLayoutGroup>();
+        if (_aiAdviceRow == null)
+        {
+            _aiAdviceRow = aiAdviceRowObject.AddComponent<HorizontalLayoutGroup>();
+        }
+        _aiAdviceRow.spacing = 14f;
+        _aiAdviceRow.childAlignment = TextAnchor.MiddleLeft;
+        _aiAdviceRow.childControlWidth = false;
+        _aiAdviceRow.childControlHeight = true;
+        _aiAdviceRow.childForceExpandWidth = false;
+        _aiAdviceRow.childForceExpandHeight = false;
+
+        _aiAdviceButton = EnsureInlineButton(aiAdviceRowObject.transform, "AIAdviceButton", sharedFont, "查看AI建议");
+        _aiAdviceHintText = EnsureHintText(aiAdviceRowObject.transform, "AIAdviceHintText", sharedFont, AdviceHintMinHeight);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceTextMinHeight);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackMinHeight);
+
+        GameObject optionsRoot = FindOrCreateChild(contentRoot, "OptionsRoot");
+        _optionLayoutElement = optionsRoot.GetComponent<LayoutElement>();
+        if (_optionLayoutElement == null)
+        {
+            _optionLayoutElement = optionsRoot.AddComponent<LayoutElement>();
+        }
+        _optionLayoutElement.minHeight = 180f;
+        _optionLayoutElement.preferredHeight = 360f;
+
+        _optionLayout = optionsRoot.GetComponent<VerticalLayoutGroup>();
+        if (_optionLayout == null)
+        {
+            _optionLayout = optionsRoot.AddComponent<VerticalLayoutGroup>();
+        }
+        _optionLayout.spacing = 16f;
+        _optionLayout.childAlignment = TextAnchor.UpperLeft;
+        _optionLayout.childControlWidth = true;
+        _optionLayout.childControlHeight = false;
+        _optionLayout.childForceExpandWidth = true;
+        _optionLayout.childForceExpandHeight = false;
+
+        _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
+    }
+
+    private void TryBindSceneReferences()
+    {
+        _descriptionText = _descriptionText != null ? _descriptionText : FindChildComponent<TMP_Text>("PanelContent/DescriptionText");
+        _aiAdviceRow = _aiAdviceRow != null ? _aiAdviceRow : FindChildComponent<HorizontalLayoutGroup>("PanelContent/AIAdviceRow");
+        _aiAdviceButton = _aiAdviceButton != null ? _aiAdviceButton : FindChildComponent<Button>("PanelContent/AIAdviceRow/AIAdviceButton");
+        _aiAdviceHintText = _aiAdviceHintText != null ? _aiAdviceHintText : FindChildComponent<TMP_Text>("PanelContent/AIAdviceRow/AIAdviceHintText");
+        _aiAdviceText = _aiAdviceText != null ? _aiAdviceText : FindChildComponent<TMP_Text>("PanelContent/AIAdviceText");
+        _feedbackText = _feedbackText != null ? _feedbackText : FindChildComponent<TMP_Text>("PanelContent/FeedbackText");
+        _optionLayout = _optionLayout != null ? _optionLayout : FindChildComponent<VerticalLayoutGroup>("PanelContent/OptionsRoot");
+        _optionLayoutElement = _optionLayoutElement != null
+            ? _optionLayoutElement
+            : FindChildComponent<LayoutElement>("PanelContent/OptionsRoot");
+        _floatingStatText = _floatingStatText != null ? _floatingStatText : FindChildComponent<TMP_Text>("PanelContent/FeedbackText/FloatingStatText");
+        _closeButton = _closeButton != null ? _closeButton : FindChildComponent<Button>("PanelContent/CloseButton");
     }
 
     private void RefreshPanelLayout()
@@ -915,6 +1034,12 @@ public class DecisionPanel : MonoBehaviour
         GameObject child = new GameObject(childName, typeof(RectTransform));
         child.transform.SetParent(parent.transform, false);
         return child;
+    }
+
+    private T FindChildComponent<T>(string relativePath) where T : Component
+    {
+        Transform child = transform.Find(relativePath);
+        return child != null ? child.GetComponent<T>() : null;
     }
 
     private static RectTransform EnsureRectTransform(GameObject target)

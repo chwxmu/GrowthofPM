@@ -57,14 +57,24 @@ public class CPMGame
             return false;
         }
 
-        RemoveOutgoingConnection(fromIndex);
         if (HasConnection(fromIndex, toIndex))
         {
             return true;
         }
 
+        Vector2Int? previousConnection = TryGetOutgoingConnection(fromIndex);
+        if (previousConnection.HasValue)
+        {
+            RemoveOutgoingConnection(fromIndex);
+        }
+
         if (CreatesCycle(fromIndex, toIndex))
         {
+            if (previousConnection.HasValue)
+            {
+                _connections.Add(previousConnection.Value);
+            }
+
             return false;
         }
 
@@ -138,6 +148,19 @@ public class CPMGame
         }
 
         return false;
+    }
+
+    private Vector2Int? TryGetOutgoingConnection(int fromIndex)
+    {
+        for (int index = 0; index < _connections.Count; index += 1)
+        {
+            if (_connections[index].x == fromIndex)
+            {
+                return _connections[index];
+            }
+        }
+
+        return null;
     }
 
     private void RemoveOutgoingConnection(int fromIndex)

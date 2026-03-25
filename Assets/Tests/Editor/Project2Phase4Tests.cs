@@ -116,6 +116,19 @@ public class Project2Phase4Tests
     }
 
     [Test]
+    public void CPMGame_TrySetConnectionShouldPreservePreviousConnectionWhenReplacementCreatesCycle()
+    {
+        CPMGame game = new CPMGame();
+        Assert.IsTrue(game.TrySetConnection(0, 1));
+        Assert.IsTrue(game.TrySetConnection(1, 2));
+        Assert.IsTrue(game.TrySetConnection(2, 3));
+
+        Assert.IsFalse(game.TrySetConnection(2, 0));
+        Assert.IsTrue(HasConnection(game, 2, 3));
+        Assert.IsTrue(game.IsSolved());
+    }
+
+    [Test]
     public void StoryManager_ShowNextDecisionOrScheduleShouldLaunchCpmMiniGameAtWeek3()
     {
         DataManager dataManager = CreateComponent<DataManager>("DataManager");
@@ -133,6 +146,27 @@ public class Project2Phase4Tests
         Assert.AreEqual(StoryFlowStage.MiniGame, storyManager.CurrentFlowStage);
         Assert.IsTrue(panel.gameObject.activeSelf);
         Assert.AreEqual(StoryFlowStage.MiniGame, gameManager.CurrentPlayerData.savedFlowStage);
+    }
+
+    [Test]
+    public void StoryManager_ShowNextDecisionOrScheduleShouldPersistDecisionCheckpoint()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 4);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        DecisionPanel panel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        SetPrivateField(storyManager, "_currentWeekEvent", gameManager.GetCurrentWeekEvent());
+        SetPrivateField(storyManager, "_decisionStepIndex", 0);
+
+        InvokePrivate(storyManager, "ShowNextDecisionOrSchedule");
+
+        Assert.AreEqual(StoryFlowStage.Decision, storyManager.CurrentFlowStage);
+        Assert.IsTrue(panel.gameObject.activeSelf);
+        Assert.AreEqual(StoryFlowStage.Decision, gameManager.CurrentPlayerData.savedFlowStage);
+        Assert.AreEqual(0, gameManager.CurrentPlayerData.savedDecisionStepIndex);
     }
 
     [Test]
@@ -282,6 +316,68 @@ public class Project2Phase4Tests
         Assert.IsTrue(panel.gameObject.activeSelf);
     }
 
+    [Test]
+    public void StoryManager_HandleGameSceneLoadedShouldRestoreConditionalCheckpointWithoutReapplyingPenalty()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 5);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        gameManager.SetEventFlag(GameConstants.EVENT_FLAG_CPM_CORRECT, false);
+        gameManager.CurrentPlayerData.managePower = 45;
+        gameManager.CurrentPlayerData.stressPower = 45;
+        gameManager.CurrentPlayerData.hiddenRisk = 10;
+        gameManager.CurrentPlayerData.savedFlowStage = StoryFlowStage.Conditional;
+        gameManager.CurrentPlayerData.savedDecisionStepIndex = 0;
+        SetPrivateField(gameManager, "_currentState", GameState.Playing);
+
+        storyManager.HandleGameSceneLoaded();
+
+        Assert.AreEqual(StoryFlowStage.Conditional, storyManager.CurrentFlowStage);
+        Assert.IsTrue(dialoguePanel.gameObject.activeSelf);
+        Assert.AreEqual(45, gameManager.CurrentPlayerData.managePower);
+        Assert.AreEqual(45, gameManager.CurrentPlayerData.stressPower);
+        Assert.AreEqual(10, gameManager.CurrentPlayerData.hiddenRisk);
+    }
+
+    [Test]
+    public void StoryManager_ShowSchedulePanelShouldPersistScheduleCheckpoint()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 11);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        SchedulePanel schedulePanel = CreateComponent<SchedulePanel>("SchedulePanel");
+
+        SetPrivateField(storyManager, "_currentWeekEvent", gameManager.GetCurrentWeekEvent());
+        SetPrivateField(storyManager, "_decisionStepIndex", 0);
+
+        InvokePrivate(storyManager, "ShowSchedulePanel", true);
+
+        Assert.AreEqual(StoryFlowStage.Schedule, storyManager.CurrentFlowStage);
+        Assert.IsTrue(schedulePanel.gameObject.activeSelf);
+        Assert.AreEqual(StoryFlowStage.Schedule, gameManager.CurrentPlayerData.savedFlowStage);
+    }
+
+    [Test]
+    public void GameScene_ShouldContainStaticP2PanelShells()
+    {
+#if UNITY_EDITOR
+        EditorSceneManager.OpenScene("Assets/Scenes/GameScene.unity", OpenSceneMode.Single);
+#endif
+
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/DecisionPanel/PanelContent/DescriptionText"));
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/DecisionPanel/PanelContent/AIAdviceRow/AIAdviceButton"));
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/CPMGamePanel/PanelContent/Playfield"));
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/CPMGamePanel/PanelContent/FooterButtons/ConfirmButton"));
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/RiskDashboardPanel/PanelContent/TimerText"));
+        Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/RiskDashboardPanel/PanelContent/ModulesRoot"));
+    }
+
     private GameManager CreateProject2GameManager(DataManager dataManager, int weekNumber)
     {
         GameManager gameManager = CreateComponent<GameManager>("GameManager");
@@ -357,6 +453,45 @@ public class Project2Phase4Tests
         }
 
         Assert.Fail("Method not found: " + methodName);
+        return null;
+    }
+
+    private static bool HasConnection(CPMGame game, int fromIndex, int toIndex)
+    {
+        foreach (Vector2Int connection in game.Connections)
+        {
+            if (connection.x == fromIndex && connection.y == toIndex)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static Transform FindInOpenScene(string relativePath)
+    {
+        string[] segments = relativePath.Split('/');
+        GameObject[] rootObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+        foreach (GameObject rootObject in rootObjects)
+        {
+            if (!string.Equals(rootObject.name, segments[0], StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            Transform current = rootObject.transform;
+            for (int index = 1; index < segments.Length && current != null; index += 1)
+            {
+                current = current.Find(segments[index]);
+            }
+
+            if (current != null)
+            {
+                return current;
+            }
+        }
+
         return null;
     }
 }

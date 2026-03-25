@@ -126,6 +126,8 @@ public class RiskDashboardPanel : MonoBehaviour
 
     private void EnsureModuleButtons()
     {
+        RefreshStaticModuleButtons();
+
         if (_moduleLayout == null || _game == null)
         {
             return;
@@ -298,8 +300,12 @@ public class RiskDashboardPanel : MonoBehaviour
 
     private void EnsureLayout()
     {
+        TryBindSceneReferences();
+
         if (_titleText != null && _timerText != null && _moduleLayout != null && _closeButton != null)
         {
+            ApplyBoundLayoutDefaults();
+            BindCloseButton();
             return;
         }
 
@@ -373,6 +379,114 @@ public class RiskDashboardPanel : MonoBehaviour
 
         _resultText = EnsureText(contentRoot.transform, "ResultText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 90f);
         _closeButton = EnsureButton(contentRoot.transform, "CloseButton", font, "继续");
+    }
+
+    private void ApplyBoundLayoutDefaults()
+    {
+        TMP_FontAsset font = ResolveUIFont();
+        RectTransform root = transform as RectTransform;
+        if (root != null)
+        {
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+        }
+
+        Image background = GetComponent<Image>();
+        if (background == null)
+        {
+            background = gameObject.AddComponent<Image>();
+        }
+        background.color = new Color32(9, 17, 30, 224);
+
+        GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
+        RectTransform contentRect = EnsureRectTransform(contentRoot);
+        contentRect.anchorMin = new Vector2(0.1f, 0.12f);
+        contentRect.anchorMax = new Vector2(0.9f, 0.88f);
+        contentRect.offsetMin = Vector2.zero;
+        contentRect.offsetMax = Vector2.zero;
+
+        Image contentBackground = contentRoot.GetComponent<Image>();
+        if (contentBackground == null)
+        {
+            contentBackground = contentRoot.AddComponent<Image>();
+        }
+        contentBackground.color = new Color32(22, 33, 54, 245);
+
+        VerticalLayoutGroup layout = contentRoot.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
+        {
+            layout = contentRoot.AddComponent<VerticalLayoutGroup>();
+        }
+        layout.padding = new RectOffset(28, 28, 28, 28);
+        layout.spacing = 18f;
+        layout.childControlWidth = true;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        _titleText = EnsureText(contentRoot.transform, "TitleText", font, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 54f);
+        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 110f);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 76f);
+        _timerText = EnsureText(contentRoot.transform, "TimerText", font, 28f, FontStyles.Bold, TextAlignmentOptions.Center, 50f);
+
+        GameObject modulesObject = FindOrCreateChild(contentRoot, "ModulesRoot");
+        LayoutElement modulesLayoutElement = modulesObject.GetComponent<LayoutElement>();
+        if (modulesLayoutElement == null)
+        {
+            modulesLayoutElement = modulesObject.AddComponent<LayoutElement>();
+        }
+        modulesLayoutElement.minHeight = 200f;
+        modulesLayoutElement.preferredHeight = 200f;
+
+        _moduleLayout = modulesObject.GetComponent<HorizontalLayoutGroup>();
+        if (_moduleLayout == null)
+        {
+            _moduleLayout = modulesObject.AddComponent<HorizontalLayoutGroup>();
+        }
+        _moduleLayout.spacing = 20f;
+        _moduleLayout.childControlWidth = true;
+        _moduleLayout.childControlHeight = true;
+        _moduleLayout.childForceExpandWidth = true;
+        _moduleLayout.childForceExpandHeight = false;
+
+        _resultText = EnsureText(contentRoot.transform, "ResultText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 90f);
+        _closeButton = EnsureButton(contentRoot.transform, "CloseButton", font, "继续");
+    }
+
+    private void TryBindSceneReferences()
+    {
+        _titleText = _titleText != null ? _titleText : FindChildComponent<TMP_Text>("PanelContent/TitleText");
+        _instructionText = _instructionText != null ? _instructionText : FindChildComponent<TMP_Text>("PanelContent/InstructionText");
+        _aiAdviceText = _aiAdviceText != null ? _aiAdviceText : FindChildComponent<TMP_Text>("PanelContent/AIAdviceText");
+        _timerText = _timerText != null ? _timerText : FindChildComponent<TMP_Text>("PanelContent/TimerText");
+        _resultText = _resultText != null ? _resultText : FindChildComponent<TMP_Text>("PanelContent/ResultText");
+        _moduleLayout = _moduleLayout != null ? _moduleLayout : FindChildComponent<HorizontalLayoutGroup>("PanelContent/ModulesRoot");
+        _closeButton = _closeButton != null ? _closeButton : FindChildComponent<Button>("PanelContent/CloseButton");
+        RefreshStaticModuleButtons();
+    }
+
+    private void RefreshStaticModuleButtons()
+    {
+        _moduleButtons.Clear();
+        if (_moduleLayout == null)
+        {
+            return;
+        }
+
+        for (int index = 0; index < 3; index += 1)
+        {
+            Transform module = _moduleLayout.transform.Find("ModuleButton" + (index + 1));
+            if (module != null)
+            {
+                Button button = module.GetComponent<Button>();
+                if (button != null)
+                {
+                    _moduleButtons.Add(button);
+                }
+            }
+        }
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float minHeight)
@@ -497,6 +611,12 @@ public class RiskDashboardPanel : MonoBehaviour
         GameObject child = new GameObject(childName, typeof(RectTransform));
         child.transform.SetParent(parent.transform, false);
         return child;
+    }
+
+    private T FindChildComponent<T>(string relativePath) where T : Component
+    {
+        Transform child = transform.Find(relativePath);
+        return child != null ? child.GetComponent<T>() : null;
     }
 
     private static RectTransform EnsureRectTransform(GameObject target)

@@ -88,6 +88,7 @@ public class CPMGamePanel : MonoBehaviour
         _hasPendingResult = false;
         _isSuccessful = false;
         _dragSourceIndex = -1;
+        RemovePreviewLine();
         gameObject.SetActive(true);
         RestorePanelVisibility();
 
@@ -210,6 +211,8 @@ public class CPMGamePanel : MonoBehaviour
 
     private void EnsureNodeViews()
     {
+        RefreshStaticNodeReferences();
+
         if (_nodeLayer == null || _game == null)
         {
             return;
@@ -570,8 +573,12 @@ public class CPMGamePanel : MonoBehaviour
 
     private void EnsureLayout()
     {
+        TryBindSceneReferences();
+
         if (_titleText != null && _instructionText != null && _playfield != null && _confirmButton != null && _closeButton != null)
         {
+            ApplyBoundLayoutDefaults();
+            BindButtons();
             return;
         }
 
@@ -673,6 +680,142 @@ public class CPMGamePanel : MonoBehaviour
         _confirmButton = EnsureButton(footerObject.transform, "ConfirmButton", font, "确认");
         _resetButton = EnsureButton(footerObject.transform, "ResetButton", font, "重置");
         _closeButton = EnsureButton(footerObject.transform, "CloseButton", font, "继续");
+    }
+
+    private void ApplyBoundLayoutDefaults()
+    {
+        TMP_FontAsset font = ResolveUIFont();
+        RectTransform root = transform as RectTransform;
+        if (root != null)
+        {
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+        }
+
+        Image background = GetComponent<Image>();
+        if (background == null)
+        {
+            background = gameObject.AddComponent<Image>();
+        }
+        background.color = new Color32(10, 16, 30, 224);
+
+        GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
+        RectTransform contentRect = EnsureRectTransform(contentRoot);
+        contentRect.anchorMin = new Vector2(0.08f, 0.08f);
+        contentRect.anchorMax = new Vector2(0.92f, 0.92f);
+        contentRect.offsetMin = Vector2.zero;
+        contentRect.offsetMax = Vector2.zero;
+
+        Image contentBackground = contentRoot.GetComponent<Image>();
+        if (contentBackground == null)
+        {
+            contentBackground = contentRoot.AddComponent<Image>();
+        }
+        contentBackground.color = new Color32(24, 34, 55, 245);
+
+        VerticalLayoutGroup layout = contentRoot.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
+        {
+            layout = contentRoot.AddComponent<VerticalLayoutGroup>();
+        }
+        layout.padding = new RectOffset(28, 28, 28, 28);
+        layout.spacing = 16f;
+        layout.childControlWidth = true;
+        layout.childControlHeight = false;
+        layout.childForceExpandHeight = false;
+        layout.childForceExpandWidth = true;
+
+        _titleText = EnsureText(contentRoot.transform, "TitleText", font, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 54f);
+        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 118f);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 80f);
+
+        GameObject playfieldObject = FindOrCreateChild(contentRoot, "Playfield");
+        _playfield = EnsureRectTransform(playfieldObject);
+        LayoutElement playfieldLayout = playfieldObject.GetComponent<LayoutElement>();
+        if (playfieldLayout == null)
+        {
+            playfieldLayout = playfieldObject.AddComponent<LayoutElement>();
+        }
+        playfieldLayout.preferredHeight = 360f;
+        playfieldLayout.minHeight = 360f;
+
+        Image playfieldImage = playfieldObject.GetComponent<Image>();
+        if (playfieldImage == null)
+        {
+            playfieldImage = playfieldObject.AddComponent<Image>();
+        }
+        playfieldImage.color = new Color32(17, 25, 42, 255);
+
+        GameObject lineLayerObject = FindOrCreateChild(playfieldObject, "LineLayer");
+        _lineLayer = EnsureRectTransform(lineLayerObject);
+        StretchToParent(_lineLayer);
+
+        GameObject nodeLayerObject = FindOrCreateChild(playfieldObject, "NodeLayer");
+        _nodeLayer = EnsureRectTransform(nodeLayerObject);
+        StretchToParent(_nodeLayer);
+
+        _connectionText = EnsureText(contentRoot.transform, "ConnectionText", font, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 82f);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 72f);
+
+        GameObject footerObject = FindOrCreateChild(contentRoot, "FooterButtons");
+        HorizontalLayoutGroup footerLayout = footerObject.GetComponent<HorizontalLayoutGroup>();
+        if (footerLayout == null)
+        {
+            footerLayout = footerObject.AddComponent<HorizontalLayoutGroup>();
+        }
+        footerLayout.spacing = 18f;
+        footerLayout.childControlWidth = true;
+        footerLayout.childControlHeight = true;
+        footerLayout.childForceExpandWidth = true;
+        footerLayout.childForceExpandHeight = false;
+
+        LayoutElement footerElement = footerObject.GetComponent<LayoutElement>();
+        if (footerElement == null)
+        {
+            footerElement = footerObject.AddComponent<LayoutElement>();
+        }
+        footerElement.minHeight = 64f;
+        footerElement.preferredHeight = 64f;
+
+        _confirmButton = EnsureButton(footerObject.transform, "ConfirmButton", font, "确认");
+        _resetButton = EnsureButton(footerObject.transform, "ResetButton", font, "重置");
+        _closeButton = EnsureButton(footerObject.transform, "CloseButton", font, "继续");
+    }
+
+    private void TryBindSceneReferences()
+    {
+        _titleText = _titleText != null ? _titleText : FindChildComponent<TMP_Text>("PanelContent/TitleText");
+        _instructionText = _instructionText != null ? _instructionText : FindChildComponent<TMP_Text>("PanelContent/InstructionText");
+        _aiAdviceText = _aiAdviceText != null ? _aiAdviceText : FindChildComponent<TMP_Text>("PanelContent/AIAdviceText");
+        _connectionText = _connectionText != null ? _connectionText : FindChildComponent<TMP_Text>("PanelContent/ConnectionText");
+        _feedbackText = _feedbackText != null ? _feedbackText : FindChildComponent<TMP_Text>("PanelContent/FeedbackText");
+        _playfield = _playfield != null ? _playfield : FindChildComponent<RectTransform>("PanelContent/Playfield");
+        _lineLayer = _lineLayer != null ? _lineLayer : FindChildComponent<RectTransform>("PanelContent/Playfield/LineLayer");
+        _nodeLayer = _nodeLayer != null ? _nodeLayer : FindChildComponent<RectTransform>("PanelContent/Playfield/NodeLayer");
+        _confirmButton = _confirmButton != null ? _confirmButton : FindChildComponent<Button>("PanelContent/FooterButtons/ConfirmButton");
+        _resetButton = _resetButton != null ? _resetButton : FindChildComponent<Button>("PanelContent/FooterButtons/ResetButton");
+        _closeButton = _closeButton != null ? _closeButton : FindChildComponent<Button>("PanelContent/FooterButtons/CloseButton");
+        RefreshStaticNodeReferences();
+    }
+
+    private void RefreshStaticNodeReferences()
+    {
+        _nodeRects.Clear();
+        if (_nodeLayer == null)
+        {
+            return;
+        }
+
+        for (int index = 0; index < NodeAnchoredPositions.Length; index += 1)
+        {
+            Transform node = _nodeLayer.Find("Node" + (index + 1));
+            if (node is RectTransform rectTransform)
+            {
+                _nodeRects.Add(rectTransform);
+            }
+        }
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float minHeight)
@@ -795,6 +938,12 @@ public class CPMGamePanel : MonoBehaviour
         GameObject child = new GameObject(childName, typeof(RectTransform));
         child.transform.SetParent(parent.transform, false);
         return child;
+    }
+
+    private T FindChildComponent<T>(string relativePath) where T : Component
+    {
+        Transform child = transform.Find(relativePath);
+        return child != null ? child.GetComponent<T>() : null;
     }
 
     private static RectTransform EnsureRectTransform(GameObject target)
