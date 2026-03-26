@@ -7,6 +7,7 @@ using TMPro;
 using UnityEditor.SceneManagement;
 #endif
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Project2Phase4Tests
 {
@@ -378,18 +379,216 @@ public class Project2Phase4Tests
         Assert.NotNull(FindInOpenScene("GameCanvas/PanelsRoot/RiskDashboardPanel/PanelContent/ModulesRoot"));
     }
 
-    private GameManager CreateProject2GameManager(DataManager dataManager, int weekNumber)
+    [Test]
+    public void CPMGamePanel_ShowGameShouldResetRuntimeStateWhenReopened()
+    {
+        DecisionEventData eventData = GetProject2WeekEvent(3).decisionEvent;
+        CPMGamePanel panel = CreateComponent<CPMGamePanel>("CPMGamePanel");
+
+        panel.ShowGame(eventData, _ => { });
+
+        SetPrivateField(panel, "_hasPendingResult", true);
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(panel, "_feedbackText");
+        Button confirmButton = GetPrivateField<Button>(panel, "_confirmButton");
+        Button resetButton = GetPrivateField<Button>(panel, "_resetButton");
+        Button closeButton = GetPrivateField<Button>(panel, "_closeButton");
+
+        feedbackText.gameObject.SetActive(true);
+        feedbackText.text = "旧反馈";
+        confirmButton.gameObject.SetActive(false);
+        resetButton.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(true);
+        closeButton.interactable = true;
+
+        panel.ShowGame(eventData, _ => { });
+
+        Assert.IsFalse(GetPrivateField<bool>(panel, "_hasPendingResult"));
+        Assert.IsTrue(confirmButton.gameObject.activeSelf);
+        Assert.IsTrue(confirmButton.interactable);
+        Assert.IsTrue(resetButton.gameObject.activeSelf);
+        Assert.IsTrue(resetButton.interactable);
+        Assert.IsFalse(closeButton.gameObject.activeSelf);
+        Assert.IsFalse(closeButton.interactable);
+        Assert.IsFalse(feedbackText.gameObject.activeSelf);
+        Assert.AreEqual(string.Empty, feedbackText.text);
+    }
+
+    [Test]
+    public void RiskDashboardPanel_ShowGameShouldResetRuntimeStateWhenReopened()
+    {
+        DecisionEventData eventData = GetProject2WeekEvent(9).decisionEvent;
+        RiskDashboardPanel panel = CreateComponent<RiskDashboardPanel>("RiskDashboardPanel");
+
+        panel.ShowGame(eventData, _ => { });
+
+        SetPrivateField(panel, "_pendingResult", new RiskDashboardGame.SessionResult(3, 5, 2, 11));
+        TMP_Text resultText = GetPrivateField<TMP_Text>(panel, "_resultText");
+        Button closeButton = GetPrivateField<Button>(panel, "_closeButton");
+
+        resultText.gameObject.SetActive(true);
+        resultText.text = "旧结果";
+        closeButton.gameObject.SetActive(true);
+        closeButton.interactable = true;
+
+        panel.ShowGame(eventData, _ => { });
+
+        Assert.IsNull(GetPrivateField<RiskDashboardGame.SessionResult>(panel, "_pendingResult"));
+        Assert.AreEqual("点击红色模块即可修复问题，漏掉报警会增加隐藏风险。", resultText.text);
+        Assert.IsTrue(resultText.gameObject.activeSelf);
+        Assert.IsFalse(closeButton.gameObject.activeSelf);
+        Assert.IsFalse(closeButton.interactable);
+    }
+
+    [Test]
+    public void EndingPanel_ShowEndingShouldHideNextProjectButtonForFailResult()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        CreateProject2GameManager(dataManager, 12, 320, 65);
+        EndingPanel panel = CreateComponent<EndingPanel>("EndingPanel");
+
+        ProjectEndingData project2Ending = GetProject2Ending(dataManager);
+        panel.ShowEnding(project2Ending.fail);
+
+        Button nextProjectButton = GetPrivateField<Button>(panel, "_nextProjectButton");
+        Assert.IsFalse(nextProjectButton.gameObject.activeSelf);
+    }
+
+    [Test]
+    public void StoryManager_ContinueToNextProjectFromEndingShouldShowTransitionForPassResult()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 12, 320, 35);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        EndingPanel endingPanel = CreateComponent<EndingPanel>("EndingPanel");
+        TransitionPanel transitionPanel = CreateComponent<TransitionPanel>("TransitionPanel");
+
+        endingPanel.ShowEnding(gameManager.EvaluateCurrentProjectEnding());
+        storyManager.ContinueToNextProjectFromEnding();
+
+        Assert.AreEqual(StoryFlowStage.Transition, storyManager.CurrentFlowStage);
+        Assert.IsTrue(transitionPanel.gameObject.activeSelf);
+        Assert.AreEqual(StoryFlowStage.Transition, gameManager.CurrentPlayerData.savedFlowStage);
+        Assert.AreEqual(3, gameManager.CurrentPlayerData.pendingProjectNumber);
+    }
+
+    [Test]
+    public void StoryManager_StartCurrentProjectFromTransitionShouldResetHiddenRiskForProject3()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 12, 320, 42);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        CreateComponent<TransitionPanel>("TransitionPanel");
+
+        gameManager.CurrentPlayerData.pendingProjectNumber = 3;
+        storyManager.StartCurrentProjectFromTransition();
+
+        Assert.AreEqual(3, gameManager.CurrentPlayerData.currentProject);
+        Assert.AreEqual(1, gameManager.CurrentPlayerData.currentWeek);
+        Assert.AreEqual(0, gameManager.CurrentPlayerData.hiddenRisk);
+        Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK, gameManager.CurrentPlayerData.energy);
+    }
+
+    [Test]
+    public void Project2DemoRoute_ExcellentShouldStayLowRiskAndReachExcellentEnding()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 12, 320, 0);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+
+        ApplyProject2Choice(gameManager, 1, 1);
+        ApplyProject2Choice(gameManager, 2, 1);
+        ApplyProject2Choice(gameManager, 4, 0);
+        ApplyProject2Choice(gameManager, 6, 2);
+        gameManager.ApplyRiskChange(GetProject2WeekEvent(7).riskAutoChange);
+        ApplyProject2Choice(gameManager, 8, 2);
+        gameManager.ApplyRiskChange(new RiskDashboardGame.SessionResult(7, 1, 0, -11).TotalRiskChange);
+        ApplyProject2Choice(gameManager, 10, 1);
+
+        gameManager.SetCurrentWeek(11);
+        SetPrivateField(storyManager, "_currentWeekEvent", GetProject2WeekEvent(11));
+        List<DialogueLine> week11Dialogues = (List<DialogueLine>)InvokePrivate(storyManager, "GetRiskBasedDialoguesForCurrentWeek");
+        EndingResultData ending = gameManager.EvaluateCurrentProjectEnding();
+
+        Assert.Less(gameManager.CurrentPlayerData.hiddenRisk, GameConstants.PROJECT2_EXCELLENT_RISK_THRESHOLD);
+        StringAssert.Contains("全员信心满满", week11Dialogues[0].text);
+        Assert.NotNull(ending);
+        Assert.AreEqual("excellent", ending.grade);
+        Assert.AreEqual("电商教父", ending.title);
+    }
+
+    [Test]
+    public void Project2DemoRoute_PassShouldStayMediumRiskAndReachPassEnding()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 12, 320, 0);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+
+        ApplyProject2Choice(gameManager, 1, 0);
+        ApplyProject2Choice(gameManager, 2, 2);
+        ApplyProject2Choice(gameManager, 4, 2);
+        ApplyProject2Choice(gameManager, 6, 0);
+        gameManager.ApplyRiskChange(GetProject2WeekEvent(7).riskAutoChange);
+        ApplyProject2Choice(gameManager, 8, 1);
+        gameManager.ApplyRiskChange(new RiskDashboardGame.SessionResult(4, 5, 3, 10).TotalRiskChange);
+        ApplyProject2Choice(gameManager, 10, 2);
+
+        gameManager.SetCurrentWeek(11);
+        SetPrivateField(storyManager, "_currentWeekEvent", GetProject2WeekEvent(11));
+        List<DialogueLine> week11Dialogues = (List<DialogueLine>)InvokePrivate(storyManager, "GetRiskBasedDialoguesForCurrentWeek");
+        EndingResultData ending = gameManager.EvaluateCurrentProjectEnding();
+
+        Assert.GreaterOrEqual(gameManager.CurrentPlayerData.hiddenRisk, GameConstants.PROJECT2_RISK_DIALOGUE_MEDIUM_THRESHOLD);
+        Assert.Less(gameManager.CurrentPlayerData.hiddenRisk, GetProject2Ending(dataManager).riskFailThreshold);
+        StringAssert.Contains("担忧的眼神", week11Dialogues[0].text);
+        Assert.NotNull(ending);
+        Assert.AreEqual("pass", ending.grade);
+        Assert.AreEqual("修补匠", ending.title);
+    }
+
+    [Test]
+    public void Project2DemoRoute_FailShouldReachHighRiskAndFailEnding()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        GameManager gameManager = CreateProject2GameManager(dataManager, 12, 320, 0);
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+        ProjectEndingData project2Ending = GetProject2Ending(dataManager);
+
+        ApplyProject2Choice(gameManager, 1, 0);
+        ApplyProject2Choice(gameManager, 2, 0);
+        ApplyProject2Choice(gameManager, 4, 1);
+        ApplyProject2ConditionalPenalty(gameManager, 5);
+        ApplyProject2Choice(gameManager, 6, 1);
+        gameManager.ApplyRiskChange(GetProject2WeekEvent(7).riskAutoChange);
+        ApplyProject2Choice(gameManager, 8, 1);
+        gameManager.ApplyRiskChange(new RiskDashboardGame.SessionResult(3, 6, 1, 13).TotalRiskChange);
+        ApplyProject2Choice(gameManager, 10, 0);
+
+        gameManager.SetCurrentWeek(11);
+        SetPrivateField(storyManager, "_currentWeekEvent", GetProject2WeekEvent(11));
+        List<DialogueLine> week11Dialogues = (List<DialogueLine>)InvokePrivate(storyManager, "GetRiskBasedDialoguesForCurrentWeek");
+        EndingResultData ending = gameManager.EvaluateCurrentProjectEnding();
+
+        Assert.GreaterOrEqual(gameManager.CurrentPlayerData.hiddenRisk, project2Ending.riskFailThreshold);
+        StringAssert.Contains("沉默不语", week11Dialogues[0].text);
+        Assert.NotNull(ending);
+        Assert.AreEqual("fail", ending.grade);
+        Assert.AreEqual("背锅侠", ending.title);
+    }
+
+    private GameManager CreateProject2GameManager(DataManager dataManager, int weekNumber, int baseStatValue = 50, int initialHiddenRisk = 0)
     {
         GameManager gameManager = CreateComponent<GameManager>("GameManager");
         SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
         {
             currentProject = 2,
             currentWeek = weekNumber,
-            techPower = 50,
-            commPower = 50,
-            managePower = 50,
-            stressPower = 50,
-            hiddenRisk = 0,
+            techPower = baseStatValue,
+            commPower = baseStatValue,
+            managePower = baseStatValue,
+            stressPower = baseStatValue,
+            hiddenRisk = initialHiddenRisk,
             aiTrustRecords = new List<AITrustRecord>(),
             eventFlags = new List<EventFlagRecord>()
         });
@@ -436,6 +635,13 @@ public class Project2Phase4Tests
         FieldInfo field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
         Assert.IsNotNull(field, "Field not found: " + fieldName);
         field.SetValue(target, value);
+    }
+
+    private static T GetPrivateField<T>(object target, string fieldName)
+    {
+        FieldInfo field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(field, "Field not found: " + fieldName);
+        return (T)field.GetValue(target);
     }
 
     private static object InvokePrivate(object target, string methodName, params object[] args)
@@ -493,5 +699,53 @@ public class Project2Phase4Tests
         }
 
         return null;
+    }
+
+    private static WeekEventData GetProject2WeekEvent(int weekNumber)
+    {
+        TextAsset textAsset = Resources.Load<TextAsset>(GameConstants.DATA_PROJECT2_STORY_RESOURCE_PATH);
+        Assert.NotNull(textAsset);
+
+        ProjectStoryData storyData = JsonUtility.FromJson<ProjectStoryData>(textAsset.text);
+        Assert.NotNull(storyData);
+        Assert.NotNull(storyData.weeks);
+
+        WeekEventData weekEvent = storyData.weeks.Find(week => week != null && week.weekNumber == weekNumber);
+        Assert.NotNull(weekEvent, "Week data not found: " + weekNumber);
+        return weekEvent;
+    }
+
+    private static ProjectEndingData GetProject2Ending(DataManager dataManager)
+    {
+        EndingsData endingsData = dataManager.LoadEndings();
+        Assert.NotNull(endingsData);
+        Assert.NotNull(endingsData.projects);
+
+        ProjectEndingData projectEnding = endingsData.projects.Find(item => item != null && item.projectNumber == 2);
+        Assert.NotNull(projectEnding);
+        return projectEnding;
+    }
+
+    private static void ApplyProject2Choice(GameManager gameManager, int weekNumber, int optionIndex)
+    {
+        WeekEventData weekEvent = GetProject2WeekEvent(weekNumber);
+        Assert.NotNull(weekEvent.decisionEvent);
+        Assert.NotNull(weekEvent.decisionEvent.options);
+        Assert.Greater(weekEvent.decisionEvent.options.Count, optionIndex);
+
+        OptionData option = weekEvent.decisionEvent.options[optionIndex];
+        Assert.NotNull(option);
+
+        gameManager.ApplyStatChanges(option.effects);
+        gameManager.ModifyHiddenRisk(option.riskChange);
+    }
+
+    private static void ApplyProject2ConditionalPenalty(GameManager gameManager, int weekNumber)
+    {
+        WeekEventData weekEvent = GetProject2WeekEvent(weekNumber);
+        Assert.NotNull(weekEvent.conditionalEvent);
+
+        gameManager.ApplyStatChanges(weekEvent.conditionalEvent.statPenalty);
+        gameManager.ApplyRiskChange(weekEvent.conditionalEvent.riskPenalty);
     }
 }

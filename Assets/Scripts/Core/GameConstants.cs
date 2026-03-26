@@ -11,6 +11,7 @@
     public const string EVENT_FLAG_CPM_CORRECT = "cpmCorrect";
     public const string MINI_GAME_TYPE_CPM = "cpm";
     public const string MINI_GAME_TYPE_RISK_DASHBOARD = "risk_dashboard";
+    public const string DATA_PROJECT2_STORY_RESOURCE_PATH = "Data/project2/story";
     public const string PROJECT2_AI_NAME = "阿法";
     public const string PROJECT2_AI_PERSONALITY = "激进、结果导向，倾向牺牲长期质量换短期进度。";
     public const string PROJECT3_AI_NAME = "混沌";
