@@ -588,7 +588,7 @@
         { "speaker": "", "location": "公司大会议室", "text": "你看着他们，突然有点感动。" }
       ],
       "prologueDialogues": [
-        { "speaker": "", "location": "公司", "text": "【周三凌晨 4:00】距离上线还有4小时。" },
+        { "speaker": "", "location": "公司", "text": "【周五凌晨 0:00】距离上线还有4小时。" },
         { "speaker": "张小红", "location": "公司", "text": "手机功能有Bug，课表显示不完全！" },
         { "speaker": "韩梅梅", "location": "公司", "text": "我代码没问题，是测试环境问题。" },
         { "speaker": "张小红", "location": "公司", "text": "我测出来过，你们说不改！" },

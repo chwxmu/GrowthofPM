@@ -100,6 +100,11 @@ public class DataManager : Singleton<DataManager>
             loaded.eventFlags = new List<EventFlagRecord>();
         }
 
+        if (loaded.savedScheduleTaskNames == null)
+        {
+            loaded.savedScheduleTaskNames = new List<string>();
+        }
+
         return loaded;
     }
 

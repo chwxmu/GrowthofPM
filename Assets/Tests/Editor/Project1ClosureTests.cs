@@ -231,7 +231,7 @@ public class Project1ClosureTests
         Assert.AreEqual(1, gameManager.CurrentPlayerData.currentWeek);
         Assert.AreEqual(GameConstants.BASE_ENERGY_PER_WEEK, gameManager.CurrentPlayerData.energy);
         Assert.AreEqual(0, gameManager.CurrentPlayerData.hiddenRisk);
-        Assert.AreEqual(StoryFlowStage.None, gameManager.CurrentPlayerData.savedFlowStage);
+        Assert.AreEqual(StoryFlowStage.Prologue, gameManager.CurrentPlayerData.savedFlowStage);
         Assert.AreEqual(0, gameManager.CurrentPlayerData.pendingProjectNumber);
     }
 

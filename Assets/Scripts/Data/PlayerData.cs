@@ -15,8 +15,11 @@ public class PlayerData
     public StoryFlowStage savedFlowStage = StoryFlowStage.None;
     public int savedDecisionStepIndex = 0;
     public int pendingProjectNumber = 0;
+    public int totalQuizAnswered = 0;
+    public int totalQuizCorrect = 0;
     public List<AITrustRecord> aiTrustRecords = new List<AITrustRecord>();
     public List<EventFlagRecord> eventFlags = new List<EventFlagRecord>();
+    public List<string> savedScheduleTaskNames = new List<string>();
 }
 
 [Serializable]

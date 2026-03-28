@@ -58,7 +58,7 @@ public class SchedulePanel : MonoBehaviour
         }
     }
 
-    public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<List<DailyTaskData>> onConfirm)
+    public void ShowSchedule(List<DailyTaskData> tasks, int availableEnergy, Action<List<DailyTaskData>> onConfirm, List<DailyTaskData> restoredSelection = null)
     {
         EnsureLayout();
 
@@ -69,9 +69,21 @@ public class SchedulePanel : MonoBehaviour
         }
 
         _selectedTasks.Clear();
+        if (restoredSelection != null)
+        {
+            for (int index = 0; index < restoredSelection.Count; index += 1)
+            {
+                DailyTaskData restoredTask = restoredSelection[index];
+                if (restoredTask != null)
+                {
+                    _selectedTasks.Add(restoredTask);
+                }
+            }
+        }
+
         _onConfirm = onConfirm;
         _maxEnergy = Mathf.Max(0, availableEnergy);
-        _remainingEnergy = _maxEnergy;
+        _remainingEnergy = Mathf.Clamp(_maxEnergy - SumSelectedTaskEnergy(), 0, _maxEnergy);
         CacheCurrentWeekContext();
         gameObject.SetActive(true);
         RestorePanelVisibility();
@@ -85,6 +97,7 @@ public class SchedulePanel : MonoBehaviour
         RebuildAvailableList();
         RebuildSelectedList();
         RefreshEnergyDisplay(true);
+        PersistScheduleSelection();
     }
 
     public void ReopenSchedule()
@@ -202,6 +215,7 @@ public class SchedulePanel : MonoBehaviour
         RebuildAvailableList();
         RebuildSelectedList();
         RefreshEnergyDisplay(false);
+        PersistScheduleSelection();
     }
 
     private void OnClickRemoveTask(int index)
@@ -217,6 +231,7 @@ public class SchedulePanel : MonoBehaviour
         RebuildAvailableList();
         RebuildSelectedList();
         RefreshEnergyDisplay(false);
+        PersistScheduleSelection();
     }
 
     private void RebuildAvailableList()
@@ -1125,6 +1140,16 @@ public class SchedulePanel : MonoBehaviour
         }
 
         return total;
+    }
+
+    private void PersistScheduleSelection()
+    {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
+        GameManager.Instance.SaveScheduleSelection(_selectedTasks);
     }
 
 #if UNITY_EDITOR

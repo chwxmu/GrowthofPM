@@ -12,6 +12,7 @@ public class StoryManager : Singleton<StoryManager>
     private const string QuizPanelName = "QuizPanel";
     private const string EndingPanelName = "EndingPanel";
     private const string TransitionPanelName = "TransitionPanel";
+    private const string GameSummaryPanelName = "GameSummaryPanel";
     private const string CpmCorrectFlag = GameConstants.EVENT_FLAG_CPM_CORRECT;
     private const KeyCode SkipMainStoryKey = KeyCode.P;
 
@@ -94,10 +95,15 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
+        if (ShouldShowDailyIntroBeforePrologue())
+        {
+            ShowDailyIntro();
+            return;
+        }
+
         if (HasDialogues(_currentWeekEvent.prologueDialogues))
         {
-            SetFlowStage(StoryFlowStage.Prologue);
-            ShowDialogue(_currentWeekEvent.prologueDialogues, OnPrologueComplete);
+            ShowPrologue();
             return;
         }
 
@@ -111,10 +117,9 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
-        if (HasDialogues(_currentWeekEvent.dailyIntroDialogues))
+        if (ShouldShowDailyIntroAfterPrologue())
         {
-            SetFlowStage(StoryFlowStage.DailyIntro);
-            ShowDialogue(_currentWeekEvent.dailyIntroDialogues, OnDailyIntroComplete);
+            ShowDailyIntro();
             return;
         }
 
@@ -123,6 +128,12 @@ public class StoryManager : Singleton<StoryManager>
 
     public void OnDailyIntroComplete()
     {
+        if (ShouldShowPrologueAfterDailyIntro())
+        {
+            ShowPrologue();
+            return;
+        }
+
         _decisionStepIndex = 0;
         ShowNextDecisionOrSchedule();
     }
@@ -244,7 +255,6 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         UIManager.Instance.HideAllPanels();
-        SetFlowStage(StoryFlowStage.Ending);
 
         EndingResultData result = GameManager.Instance.EvaluateCurrentProjectEnding();
         if (result != null)
@@ -256,8 +266,17 @@ public class StoryManager : Singleton<StoryManager>
             Debug.LogError("[StoryManager] Ending evaluation returned null result.");
         }
 
-        GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Ending);
+        StoryFlowStage checkpointStage = ShouldShowGameSummary() ? StoryFlowStage.Summary : StoryFlowStage.Ending;
+        SetFlowStage(checkpointStage);
+        GameManager.Instance.UpdateFlowCheckpoint(checkpointStage);
         GameManager.Instance.SaveProgress();
+
+        if (checkpointStage == StoryFlowStage.Summary)
+        {
+            ShowGameSummary(result);
+            return;
+        }
+
         ShowEndingResult(result);
     }
 
@@ -485,6 +504,42 @@ public class StoryManager : Singleton<StoryManager>
         return _currentFlowStage == StoryFlowStage.Prologue || _currentFlowStage == StoryFlowStage.DailyIntro;
     }
 
+    private void ShowPrologue()
+    {
+        if (_currentWeekEvent == null || !HasDialogues(_currentWeekEvent.prologueDialogues))
+        {
+            OnPrologueComplete();
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.Prologue);
+            GameManager.Instance.SaveProgress();
+        }
+
+        SetFlowStage(StoryFlowStage.Prologue);
+        ShowDialogue(_currentWeekEvent.prologueDialogues, OnPrologueComplete);
+    }
+
+    private void ShowDailyIntro()
+    {
+        if (_currentWeekEvent == null || !HasDialogues(_currentWeekEvent.dailyIntroDialogues))
+        {
+            OnDailyIntroComplete();
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateFlowCheckpoint(StoryFlowStage.DailyIntro);
+            GameManager.Instance.SaveProgress();
+        }
+
+        SetFlowStage(StoryFlowStage.DailyIntro);
+        ShowDialogue(_currentWeekEvent.dailyIntroDialogues, OnDailyIntroComplete);
+    }
+
     private void RunPostDecisionContentOrSchedule()
     {
         if (_currentWeekEvent != null && HasDialogues(_currentWeekEvent.postDecisionDialogues))
@@ -564,6 +619,7 @@ public class StoryManager : Singleton<StoryManager>
         {
             PlayerData currentPlayerData = GameManager.Instance != null ? GameManager.Instance.CurrentPlayerData : null;
             int currentAvailableEnergy = currentPlayerData != null ? currentPlayerData.energy : GameConstants.BASE_ENERGY_PER_WEEK;
+            List<DailyTaskData> availableTasks = DataManager.Instance != null ? DataManager.Instance.LoadDailyTasks() : new List<DailyTaskData>();
 
             if (!resetData && schedulePanel.HasCachedSchedule)
             {
@@ -572,7 +628,11 @@ public class StoryManager : Singleton<StoryManager>
                 return;
             }
 
-            schedulePanel.ShowSchedule(DataManager.Instance.LoadDailyTasks(), currentAvailableEnergy, OnScheduleComplete);
+            List<DailyTaskData> restoredSelection = !resetData && GameManager.Instance != null
+                ? GameManager.Instance.GetSavedScheduleSelection(availableTasks)
+                : null;
+
+            schedulePanel.ShowSchedule(availableTasks, currentAvailableEnergy, OnScheduleComplete, restoredSelection);
             return;
         }
 
@@ -722,6 +782,24 @@ public class StoryManager : Singleton<StoryManager>
         PlayerData playerData = GameManager.Instance.CurrentPlayerData;
         switch (playerData.savedFlowStage)
         {
+            case StoryFlowStage.Prologue:
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                ShowPrologue();
+                return true;
+
+            case StoryFlowStage.DailyIntro:
+                if (!PrepareCurrentWeekContext())
+                {
+                    return false;
+                }
+
+                ShowDailyIntro();
+                return true;
+
             case StoryFlowStage.Decision:
                 _decisionStepIndex = Mathf.Max(0, playerData.savedDecisionStepIndex);
                 if (!PrepareCurrentWeekContext())
@@ -782,7 +860,7 @@ public class StoryManager : Singleton<StoryManager>
                     return false;
                 }
 
-                ShowSchedulePanel();
+                ShowSchedulePanel(false);
                 return true;
 
             case StoryFlowStage.Ending:
@@ -802,6 +880,12 @@ public class StoryManager : Singleton<StoryManager>
                 UIManager.Instance.HideAllPanels();
                 SetFlowStage(StoryFlowStage.Transition);
                 ShowTransitionResult(nextProjectStory);
+                return true;
+
+            case StoryFlowStage.Summary:
+                UIManager.Instance.HideAllPanels();
+                SetFlowStage(StoryFlowStage.Summary);
+                ShowGameSummary(GameManager.Instance.EvaluateCurrentProjectEnding());
                 return true;
 
             default:
@@ -835,6 +919,20 @@ public class StoryManager : Singleton<StoryManager>
         UIManager.Instance.ShowPanel(TransitionPanelName);
     }
 
+    private void ShowGameSummary(EndingResultData result)
+    {
+        ProjectEnded?.Invoke(result);
+
+        GameSummaryPanel gameSummaryPanel = FindObjectOfType<GameSummaryPanel>(true);
+        if (gameSummaryPanel != null)
+        {
+            gameSummaryPanel.ShowSummary(result);
+            return;
+        }
+
+        UIManager.Instance.ShowPanel(GameSummaryPanelName);
+    }
+
     private void GetCheckpointAfterDecision(out StoryFlowStage checkpointStage, out int checkpointDecisionIndex)
     {
         checkpointDecisionIndex = _decisionStepIndex + 1;
@@ -859,6 +957,36 @@ public class StoryManager : Singleton<StoryManager>
     {
         return _currentWeekEvent != null
             && (HasDialogues(_currentWeekEvent.postDecisionDialogues) || _currentWeekEvent.postDecisionStatChanges != null);
+    }
+
+    private bool ShouldShowDailyIntroBeforePrologue()
+    {
+        return IsProject3WeekFlow() && HasDialogues(_currentWeekEvent != null ? _currentWeekEvent.dailyIntroDialogues : null);
+    }
+
+    private bool ShouldShowDailyIntroAfterPrologue()
+    {
+        return !IsProject3WeekFlow() && HasDialogues(_currentWeekEvent != null ? _currentWeekEvent.dailyIntroDialogues : null);
+    }
+
+    private bool ShouldShowPrologueAfterDailyIntro()
+    {
+        return IsProject3WeekFlow() && HasDialogues(_currentWeekEvent != null ? _currentWeekEvent.prologueDialogues : null);
+    }
+
+    private bool ShouldShowGameSummary()
+    {
+        return GameManager.Instance != null
+            && GameManager.Instance.CurrentPlayerData != null
+            && GameManager.Instance.CurrentPlayerData.currentProject == 3
+            && !GameManager.Instance.HasNextProject();
+    }
+
+    private bool IsProject3WeekFlow()
+    {
+        return GameManager.Instance != null
+            && GameManager.Instance.CurrentPlayerData != null
+            && GameManager.Instance.CurrentPlayerData.currentProject == 3;
     }
 
     private List<DialogueLine> GetRiskBasedDialoguesForCurrentWeek()
@@ -1132,6 +1260,7 @@ public class StoryManager : Singleton<StoryManager>
         FindObjectOfType<QuizPanel>(true);
         FindObjectOfType<EndingPanel>(true);
         FindObjectOfType<TransitionPanel>(true);
+        FindObjectOfType<GameSummaryPanel>(true);
     }
 }
 
@@ -1148,7 +1277,8 @@ public enum StoryFlowStage
     Quiz,
     Settlement,
     Ending,
-    Transition
+    Transition,
+    Summary
 }
 
 

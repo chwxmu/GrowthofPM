@@ -258,6 +258,77 @@ public class GameManager : Singleton<GameManager>
         NotifyDataChanged();
     }
 
+    public void RecordQuizAnswer(bool isCorrect)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        _currentPlayerData.totalQuizAnswered = Mathf.Max(0, _currentPlayerData.totalQuizAnswered + 1);
+        if (isCorrect)
+        {
+            _currentPlayerData.totalQuizCorrect = Mathf.Max(0, _currentPlayerData.totalQuizCorrect + 1);
+        }
+
+        SaveProgress();
+        NotifyDataChanged();
+    }
+
+    public void SaveScheduleSelection(List<DailyTaskData> selectedTasks)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        if (_currentPlayerData.savedScheduleTaskNames == null)
+        {
+            _currentPlayerData.savedScheduleTaskNames = new List<string>();
+        }
+
+        _currentPlayerData.savedScheduleTaskNames.Clear();
+        if (selectedTasks != null)
+        {
+            foreach (DailyTaskData task in selectedTasks)
+            {
+                if (task == null || string.IsNullOrWhiteSpace(task.name))
+                {
+                    continue;
+                }
+
+                _currentPlayerData.savedScheduleTaskNames.Add(task.name.Trim());
+            }
+        }
+
+        SaveProgress();
+    }
+
+    public List<DailyTaskData> GetSavedScheduleSelection(List<DailyTaskData> availableTasks)
+    {
+        List<DailyTaskData> restoredTasks = new List<DailyTaskData>();
+        if (_currentPlayerData == null || _currentPlayerData.savedScheduleTaskNames == null || _currentPlayerData.savedScheduleTaskNames.Count == 0 || availableTasks == null)
+        {
+            return restoredTasks;
+        }
+
+        foreach (string savedTaskName in _currentPlayerData.savedScheduleTaskNames)
+        {
+            if (string.IsNullOrWhiteSpace(savedTaskName))
+            {
+                continue;
+            }
+
+            DailyTaskData matchedTask = availableTasks.Find(task => task != null && string.Equals(task.name, savedTaskName.Trim(), StringComparison.Ordinal));
+            if (matchedTask != null)
+            {
+                restoredTasks.Add(matchedTask);
+            }
+        }
+
+        return restoredTasks;
+    }
+
     public void UpdateFlowCheckpoint(StoryFlowStage stage, int decisionStepIndex = 0, int pendingProjectNumber = 0)
     {
         if (_currentPlayerData == null)
@@ -275,6 +346,7 @@ public class GameManager : Singleton<GameManager>
     public void ClearFlowCheckpoint()
     {
         UpdateFlowCheckpoint(StoryFlowStage.None);
+        ClearSavedScheduleSelection();
     }
 
     public void SetEventFlag(string flagId, bool value)
@@ -349,6 +421,11 @@ public class GameManager : Singleton<GameManager>
         return GetAIAdoptionRateByProject(0);
     }
 
+    public float GetAIAdviceViewRate()
+    {
+        return GetAIAdviceViewRateByProject(0);
+    }
+
     /// <summary>
     /// Calculates AI adoption rate for a specific project, or across all projects when 0 is passed.
     /// </summary>
@@ -356,35 +433,70 @@ public class GameManager : Singleton<GameManager>
     /// <returns>Adoption rate in the range of 0-1.</returns>
     public float GetAIAdoptionRateByProject(int projectNumber)
     {
-        if (_currentPlayerData == null || _currentPlayerData.aiTrustRecords == null || _currentPlayerData.aiTrustRecords.Count == 0)
+        return CalculateRate(GetAIFollowedCountByProject(projectNumber), GetTotalDecisionCount(projectNumber));
+    }
+
+    public float GetAIAdviceViewRateByProject(int projectNumber)
+    {
+        return CalculateRate(GetAIViewedCountByProject(projectNumber), GetTotalDecisionCount(projectNumber));
+    }
+
+    public float GetAIAdoptionRateByQuality(string aiQuality, int projectNumber = 3)
+    {
+        return CalculateRate(GetAIFollowedCountByQuality(aiQuality, projectNumber), GetAIRecordCountByQuality(aiQuality, projectNumber));
+    }
+
+    public int GetTotalDecisionCount(int projectNumber = 0)
+    {
+        return CountAIRecords(projectNumber, string.Empty, false, false);
+    }
+
+    public int GetAIViewedCountByProject(int projectNumber)
+    {
+        return CountAIRecords(projectNumber, string.Empty, true, false);
+    }
+
+    public int GetAIFollowedCountByProject(int projectNumber)
+    {
+        return CountAIRecords(projectNumber, string.Empty, false, true);
+    }
+
+    public int GetAIRecordCountByQuality(string aiQuality, int projectNumber = 3)
+    {
+        return CountAIRecords(projectNumber, aiQuality, false, false);
+    }
+
+    public int GetAIFollowedCountByQuality(string aiQuality, int projectNumber = 3)
+    {
+        return CountAIRecords(projectNumber, aiQuality, false, true);
+    }
+
+    public int GetTotalWeeksPlayed()
+    {
+        if (_currentPlayerData == null)
         {
-            return 0f;
+            return 0;
         }
 
-        int adoptedCount = 0;
-        int totalCount = 0;
-        foreach (AITrustRecord record in _currentPlayerData.aiTrustRecords)
+        int totalWeeks = 0;
+        for (int projectNumber = 1; projectNumber < _currentPlayerData.currentProject; projectNumber += 1)
         {
-            if (record == null || (projectNumber > 0 && record.projectNumber != projectNumber))
-            {
-                continue;
-            }
-
-            bool isFollowed = record.isFollowed || record.adoptedAIAdvice;
-            if (isFollowed)
-            {
-                adoptedCount += 1;
-            }
-
-            totalCount += 1;
+            totalWeeks += GetWeeksForProject(projectNumber);
         }
 
-        if (totalCount <= 0)
-        {
-            return 0f;
-        }
+        int currentProjectWeeks = GetWeeksForProject(_currentPlayerData.currentProject);
+        totalWeeks += Mathf.Clamp(_currentPlayerData.currentWeek, 1, currentProjectWeeks);
+        return totalWeeks;
+    }
 
-        return (float)adoptedCount / totalCount;
+    public int GetTotalQuizAnsweredCount()
+    {
+        return _currentPlayerData != null ? Mathf.Max(0, _currentPlayerData.totalQuizAnswered) : 0;
+    }
+
+    public int GetTotalQuizCorrectCount()
+    {
+        return _currentPlayerData != null ? Mathf.Max(0, _currentPlayerData.totalQuizCorrect) : 0;
     }
 
     public EndingResultData EvaluateCurrentProjectEnding()
@@ -628,6 +740,73 @@ public class GameManager : Singleton<GameManager>
         return _currentPlayerData.eventFlags.Find(record => record != null
             && string.Equals(record.flagId, flagId, StringComparison.Ordinal)
             && record.projectNumber == projectNumber);
+    }
+
+    private void ClearSavedScheduleSelection()
+    {
+        if (_currentPlayerData == null || _currentPlayerData.savedScheduleTaskNames == null)
+        {
+            return;
+        }
+
+        _currentPlayerData.savedScheduleTaskNames.Clear();
+    }
+
+    private int CountAIRecords(int projectNumber, string aiQuality, bool viewedOnly, bool followedOnly)
+    {
+        if (_currentPlayerData == null || _currentPlayerData.aiTrustRecords == null || _currentPlayerData.aiTrustRecords.Count == 0)
+        {
+            return 0;
+        }
+
+        string normalizedQuality = NormalizeAIQuality(aiQuality);
+        int count = 0;
+        foreach (AITrustRecord record in _currentPlayerData.aiTrustRecords)
+        {
+            if (record == null)
+            {
+                continue;
+            }
+
+            if (projectNumber > 0 && record.projectNumber != projectNumber)
+            {
+                continue;
+            }
+
+            if (!string.IsNullOrEmpty(normalizedQuality) && !string.Equals(NormalizeAIQuality(record.aiQuality), normalizedQuality, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (viewedOnly && !record.hasViewed)
+            {
+                continue;
+            }
+
+            if (followedOnly && !DidFollowAI(record))
+            {
+                continue;
+            }
+
+            count += 1;
+        }
+
+        return count;
+    }
+
+    private static float CalculateRate(int numerator, int denominator)
+    {
+        if (denominator <= 0)
+        {
+            return 0f;
+        }
+
+        return (float)numerator / denominator;
+    }
+
+    private static bool DidFollowAI(AITrustRecord record)
+    {
+        return record != null && (record.isFollowed || record.adoptedAIAdvice);
     }
 
     private static string NormalizeAIQuality(string aiQuality)

@@ -414,6 +414,29 @@ public class Project2Phase4Tests
     }
 
     [Test]
+    public void CPMGamePanel_ShowGameShouldPinFooterButtonsToPanelBottom()
+    {
+        DecisionEventData eventData = GetProject2WeekEvent(3).decisionEvent;
+        CPMGamePanel panel = CreateComponent<CPMGamePanel>("CPMGamePanel");
+
+        panel.ShowGame(eventData, _ => { });
+
+        Transform footer = panel.transform.Find("PanelContent/FooterButtons");
+        Assert.NotNull(footer);
+
+        RectTransform footerRect = footer.GetComponent<RectTransform>();
+        LayoutElement footerLayout = footer.GetComponent<LayoutElement>();
+
+        Assert.NotNull(footerRect);
+        Assert.NotNull(footerLayout);
+        Assert.IsTrue(footerLayout.ignoreLayout);
+        Assert.AreEqual(0f, footerRect.anchorMin.y, 0.001f);
+        Assert.AreEqual(0f, footerRect.anchorMax.y, 0.001f);
+        Assert.AreEqual(0f, footerRect.pivot.y, 0.001f);
+        Assert.Greater(footerRect.offsetMin.y, 0f);
+    }
+
+    [Test]
     public void RiskDashboardPanel_ShowGameShouldResetRuntimeStateWhenReopened()
     {
         DecisionEventData eventData = GetProject2WeekEvent(9).decisionEvent;

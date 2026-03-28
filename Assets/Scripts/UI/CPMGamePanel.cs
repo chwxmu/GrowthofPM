@@ -17,12 +17,24 @@ public class CPMGamePanel : MonoBehaviour
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
 
+    private const float ContentAnchorMin = 0.07f;
+    private const float ContentAnchorMax = 0.93f;
+    private const float ContentPadding = 24f;
+    private const float ContentSpacing = 12f;
+    private const float InstructionBlockHeight = 96f;
+    private const float AdviceBlockHeight = 64f;
+    private const float PlayfieldHeight = 320f;
+    private const float ConnectionBlockHeight = 72f;
+    private const float FeedbackBlockHeight = 64f;
+    private const float FooterHeight = 56f;
+    private const float FooterReservedPadding = 92f;
+
     private static readonly Vector2[] NodeAnchoredPositions =
     {
-        new Vector2(-250f, 120f),
-        new Vector2(230f, 130f),
-        new Vector2(-220f, -110f),
-        new Vector2(240f, -120f)
+        new Vector2(-250f, 102f),
+        new Vector2(230f, 112f),
+        new Vector2(-220f, -74f),
+        new Vector2(240f, -78f)
     };
 
     [SerializeField] private TMP_Text _titleText;
@@ -601,8 +613,8 @@ public class CPMGamePanel : MonoBehaviour
 
         GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
         RectTransform contentRect = EnsureRectTransform(contentRoot);
-        contentRect.anchorMin = new Vector2(0.08f, 0.08f);
-        contentRect.anchorMax = new Vector2(0.92f, 0.92f);
+        contentRect.anchorMin = new Vector2(ContentAnchorMin, ContentAnchorMin);
+        contentRect.anchorMax = new Vector2(ContentAnchorMax, ContentAnchorMax);
         contentRect.offsetMin = Vector2.zero;
         contentRect.offsetMax = Vector2.zero;
 
@@ -618,16 +630,16 @@ public class CPMGamePanel : MonoBehaviour
         {
             layout = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
-        layout.padding = new RectOffset(28, 28, 28, 28);
-        layout.spacing = 16f;
+        layout.padding = new RectOffset((int)ContentPadding, (int)ContentPadding, (int)ContentPadding, (int)FooterReservedPadding);
+        layout.spacing = ContentSpacing;
         layout.childControlWidth = true;
         layout.childControlHeight = false;
         layout.childForceExpandHeight = false;
         layout.childForceExpandWidth = true;
 
         _titleText = EnsureText(contentRoot.transform, "TitleText", font, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 54f);
-        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 118f);
-        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 80f);
+        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, InstructionBlockHeight);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceBlockHeight);
 
         GameObject playfieldObject = FindOrCreateChild(contentRoot, "Playfield");
         _playfield = EnsureRectTransform(playfieldObject);
@@ -636,8 +648,8 @@ public class CPMGamePanel : MonoBehaviour
         {
             playfieldLayout = playfieldObject.AddComponent<LayoutElement>();
         }
-        playfieldLayout.preferredHeight = 360f;
-        playfieldLayout.minHeight = 360f;
+        playfieldLayout.preferredHeight = PlayfieldHeight;
+        playfieldLayout.minHeight = PlayfieldHeight;
 
         Image playfieldImage = playfieldObject.GetComponent<Image>();
         if (playfieldImage == null)
@@ -654,8 +666,8 @@ public class CPMGamePanel : MonoBehaviour
         _nodeLayer = EnsureRectTransform(nodeLayerObject);
         StretchToParent(_nodeLayer);
 
-        _connectionText = EnsureText(contentRoot.transform, "ConnectionText", font, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 82f);
-        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 72f);
+        _connectionText = EnsureText(contentRoot.transform, "ConnectionText", font, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, ConnectionBlockHeight);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackBlockHeight);
 
         GameObject footerObject = FindOrCreateChild(contentRoot, "FooterButtons");
         HorizontalLayoutGroup footerLayout = footerObject.GetComponent<HorizontalLayoutGroup>();
@@ -674,8 +686,16 @@ public class CPMGamePanel : MonoBehaviour
         {
             footerElement = footerObject.AddComponent<LayoutElement>();
         }
-        footerElement.minHeight = 64f;
-        footerElement.preferredHeight = 64f;
+        footerElement.ignoreLayout = true;
+        footerElement.minHeight = FooterHeight;
+        footerElement.preferredHeight = FooterHeight;
+
+        RectTransform footerRect = EnsureRectTransform(footerObject);
+        footerRect.anchorMin = new Vector2(0f, 0f);
+        footerRect.anchorMax = new Vector2(1f, 0f);
+        footerRect.pivot = new Vector2(0.5f, 0f);
+        footerRect.offsetMin = new Vector2(ContentPadding, ContentPadding);
+        footerRect.offsetMax = new Vector2(-ContentPadding, ContentPadding + FooterHeight);
 
         _confirmButton = EnsureButton(footerObject.transform, "ConfirmButton", font, "确认");
         _resetButton = EnsureButton(footerObject.transform, "ResetButton", font, "重置");
@@ -703,8 +723,8 @@ public class CPMGamePanel : MonoBehaviour
 
         GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
         RectTransform contentRect = EnsureRectTransform(contentRoot);
-        contentRect.anchorMin = new Vector2(0.08f, 0.08f);
-        contentRect.anchorMax = new Vector2(0.92f, 0.92f);
+        contentRect.anchorMin = new Vector2(ContentAnchorMin, ContentAnchorMin);
+        contentRect.anchorMax = new Vector2(ContentAnchorMax, ContentAnchorMax);
         contentRect.offsetMin = Vector2.zero;
         contentRect.offsetMax = Vector2.zero;
 
@@ -720,16 +740,16 @@ public class CPMGamePanel : MonoBehaviour
         {
             layout = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
-        layout.padding = new RectOffset(28, 28, 28, 28);
-        layout.spacing = 16f;
+        layout.padding = new RectOffset((int)ContentPadding, (int)ContentPadding, (int)ContentPadding, (int)FooterReservedPadding);
+        layout.spacing = ContentSpacing;
         layout.childControlWidth = true;
         layout.childControlHeight = false;
         layout.childForceExpandHeight = false;
         layout.childForceExpandWidth = true;
 
         _titleText = EnsureText(contentRoot.transform, "TitleText", font, 34f, FontStyles.Bold, TextAlignmentOptions.Center, 54f);
-        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 118f);
-        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 80f);
+        _instructionText = EnsureText(contentRoot.transform, "InstructionText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, InstructionBlockHeight);
+        _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceBlockHeight);
 
         GameObject playfieldObject = FindOrCreateChild(contentRoot, "Playfield");
         _playfield = EnsureRectTransform(playfieldObject);
@@ -738,8 +758,8 @@ public class CPMGamePanel : MonoBehaviour
         {
             playfieldLayout = playfieldObject.AddComponent<LayoutElement>();
         }
-        playfieldLayout.preferredHeight = 360f;
-        playfieldLayout.minHeight = 360f;
+        playfieldLayout.preferredHeight = PlayfieldHeight;
+        playfieldLayout.minHeight = PlayfieldHeight;
 
         Image playfieldImage = playfieldObject.GetComponent<Image>();
         if (playfieldImage == null)
@@ -756,8 +776,8 @@ public class CPMGamePanel : MonoBehaviour
         _nodeLayer = EnsureRectTransform(nodeLayerObject);
         StretchToParent(_nodeLayer);
 
-        _connectionText = EnsureText(contentRoot.transform, "ConnectionText", font, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 82f);
-        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, 72f);
+        _connectionText = EnsureText(contentRoot.transform, "ConnectionText", font, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, ConnectionBlockHeight);
+        _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", font, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackBlockHeight);
 
         GameObject footerObject = FindOrCreateChild(contentRoot, "FooterButtons");
         HorizontalLayoutGroup footerLayout = footerObject.GetComponent<HorizontalLayoutGroup>();
@@ -776,8 +796,16 @@ public class CPMGamePanel : MonoBehaviour
         {
             footerElement = footerObject.AddComponent<LayoutElement>();
         }
-        footerElement.minHeight = 64f;
-        footerElement.preferredHeight = 64f;
+        footerElement.ignoreLayout = true;
+        footerElement.minHeight = FooterHeight;
+        footerElement.preferredHeight = FooterHeight;
+
+        RectTransform footerRect = EnsureRectTransform(footerObject);
+        footerRect.anchorMin = new Vector2(0f, 0f);
+        footerRect.anchorMax = new Vector2(1f, 0f);
+        footerRect.pivot = new Vector2(0.5f, 0f);
+        footerRect.offsetMin = new Vector2(ContentPadding, ContentPadding);
+        footerRect.offsetMax = new Vector2(-ContentPadding, ContentPadding + FooterHeight);
 
         _confirmButton = EnsureButton(footerObject.transform, "ConfirmButton", font, "确认");
         _resetButton = EnsureButton(footerObject.transform, "ResetButton", font, "重置");

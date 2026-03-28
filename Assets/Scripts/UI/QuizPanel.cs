@@ -186,6 +186,11 @@ public class QuizPanel : MonoBehaviour
         _answered = true;
         bool isCorrect = selectedIndex == _currentQuestion.correctIndex;
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RecordQuizAnswer(isCorrect);
+        }
+
         for (int i = 0; i < _optionButtons.Count; i += 1)
         {
             Button button = _optionButtons[i];
