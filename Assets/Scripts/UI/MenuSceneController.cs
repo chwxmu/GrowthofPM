@@ -1,11 +1,17 @@
-﻿using UnityEngine;
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuSceneController : MonoBehaviour
 {
+    private const string ContinueGameDefaultLabel = "继续游戏";
+    private const string ContinueGameNoSaveLabel = "继续游戏（无存档）";
+
     [SerializeField] private Button _newGameButton;
     [SerializeField] private Button _continueGameButton;
     [SerializeField] private Button _quitButton;
+    [SerializeField] private TMP_Text _continueGameButtonLabel;
+    [SerializeField] private Text _continueGameButtonLegacyLabel;
 
     #region Unity Lifecycle
 
@@ -97,6 +103,8 @@ public class MenuSceneController : MonoBehaviour
                 _quitButton = target.GetComponent<Button>();
             }
         }
+
+        BindContinueButtonLabelIfNeeded();
     }
 
     private void RefreshContinueButton()
@@ -106,7 +114,42 @@ public class MenuSceneController : MonoBehaviour
             return;
         }
 
-        _continueGameButton.interactable = DataManager.Instance.HasSaveFile();
+        bool hasSave = DataManager.Instance != null && DataManager.Instance.HasSaveFile();
+        _continueGameButton.interactable = hasSave;
+        SetContinueButtonLabel(hasSave ? ContinueGameDefaultLabel : ContinueGameNoSaveLabel);
+    }
+
+    private void BindContinueButtonLabelIfNeeded()
+    {
+        if (_continueGameButton == null)
+        {
+            return;
+        }
+
+        if (_continueGameButtonLabel == null)
+        {
+            _continueGameButtonLabel = _continueGameButton.GetComponentInChildren<TMP_Text>(true);
+        }
+
+        if (_continueGameButtonLegacyLabel == null)
+        {
+            _continueGameButtonLegacyLabel = _continueGameButton.GetComponentInChildren<Text>(true);
+        }
+    }
+
+    private void SetContinueButtonLabel(string labelText)
+    {
+        BindContinueButtonLabelIfNeeded();
+
+        if (_continueGameButtonLabel != null)
+        {
+            _continueGameButtonLabel.text = labelText;
+        }
+
+        if (_continueGameButtonLegacyLabel != null)
+        {
+            _continueGameButtonLegacyLabel.text = labelText;
+        }
     }
 
     private static void OnClickNewGame()

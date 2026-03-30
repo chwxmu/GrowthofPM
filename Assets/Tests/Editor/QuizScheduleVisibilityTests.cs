@@ -22,6 +22,7 @@ public class QuizScheduleVisibilityTests
         DestroyAllOfType<SchedulePanel>();
         DestroyAllOfType<DialoguePanel>();
         DestroyAllOfType<DecisionPanel>();
+        DestroyAllOfType<MenuSceneController>();
         EnsureTmpFontHost();
     }
 
@@ -38,6 +39,12 @@ public class QuizScheduleVisibilityTests
 
         _createdObjects.Clear();
 
+        DataManager[] existingDataManagers = UnityEngine.Object.FindObjectsOfType<DataManager>(true);
+        if (existingDataManagers.Length > 0 && existingDataManagers[0] != null)
+        {
+            existingDataManagers[0].DeleteSave();
+        }
+
         DestroyAllOfType<GameManager>();
         DestroyAllOfType<DataManager>();
         DestroyAllOfType<StoryManager>();
@@ -47,6 +54,7 @@ public class QuizScheduleVisibilityTests
         DestroyAllOfType<SchedulePanel>();
         DestroyAllOfType<DialoguePanel>();
         DestroyAllOfType<DecisionPanel>();
+        DestroyAllOfType<MenuSceneController>();
     }
 
     [Test]
@@ -207,6 +215,96 @@ public class QuizScheduleVisibilityTests
     }
 
     [Test]
+    public void ShowDialogues_ShouldExposeKeyboardAdvanceHint()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "旁白",
+                location = "会议室",
+                text = "测试对话"
+            }
+        }, null);
+
+        TMP_Text hintText = GetPrivateField<TMP_Text>(dialoguePanel, "_hintText");
+
+        Assert.AreEqual("点击 / 空格 / 回车继续", hintText.text);
+    }
+
+    [Test]
+    public void AdvanceDialogueByShortcut_ShouldMoveToNextDialogue()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "旁白",
+                location = "会议室",
+                text = "第一句"
+            },
+            new DialogueLine
+            {
+                speaker = "小李",
+                location = "办公室",
+                text = "第二句"
+            }
+        }, null);
+
+        SetPrivateField(dialoguePanel, "_isTyping", false);
+
+        InvokePrivate(dialoguePanel, "AdvanceDialogueByShortcut");
+
+        TMP_Text speakerText = GetPrivateField<TMP_Text>(dialoguePanel, "_speakerText");
+        TMP_Text locationText = GetPrivateField<TMP_Text>(dialoguePanel, "_locationText");
+
+        Assert.AreEqual("小李", speakerText.text);
+        Assert.AreEqual("办公室", locationText.text);
+    }
+
+    [Test]
+    public void RefreshContinueButton_ShouldDisableContinueAndShowNoSaveHint()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.DeleteSave();
+
+        MenuSceneController controller = CreateComponent<MenuSceneController>("MenuSceneController");
+        Button continueButton = CreateButtonWithLabel("ContinueGameButton", "继续游戏");
+        SetPrivateField(controller, "_continueGameButton", continueButton);
+
+        InvokePrivate(controller, "RefreshContinueButton");
+
+        Assert.IsFalse(continueButton.interactable);
+        Assert.AreEqual("继续游戏（无存档）", continueButton.GetComponentInChildren<TMP_Text>(true).text);
+    }
+
+    [Test]
+    public void RefreshContinueButton_ShouldEnableContinueAndRestoreDefaultLabelWhenSaveExists()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        dataManager.SaveGame(new PlayerData
+        {
+            currentProject = 2,
+            currentWeek = 5,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        MenuSceneController controller = CreateComponent<MenuSceneController>("MenuSceneController");
+        Button continueButton = CreateButtonWithLabel("ContinueGameButton", "继续游戏（无存档）");
+        continueButton.interactable = false;
+        SetPrivateField(controller, "_continueGameButton", continueButton);
+
+        InvokePrivate(controller, "RefreshContinueButton");
+
+        Assert.IsTrue(continueButton.interactable);
+        Assert.AreEqual("继续游戏", continueButton.GetComponentInChildren<TMP_Text>(true).text);
+    }
+
+    [Test]
     public void ShowDecision_ShouldRestoreDecisionPanelVisibility()
     {
         DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
@@ -356,6 +454,25 @@ public class QuizScheduleVisibilityTests
         GameObject gameObject = new GameObject(name);
         _createdObjects.Add(gameObject);
         return gameObject.AddComponent<T>();
+    }
+
+    private Button CreateButtonWithLabel(string name, string label)
+    {
+        GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+        _createdObjects.Add(buttonObject);
+
+        GameObject labelObject = new GameObject("Label", typeof(RectTransform));
+        labelObject.transform.SetParent(buttonObject.transform, false);
+
+        TextMeshProUGUI labelText = labelObject.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset fallback = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (fallback != null)
+        {
+            labelText.font = fallback;
+        }
+        labelText.text = label;
+
+        return buttonObject.GetComponent<Button>();
     }
 
     private static void DestroyAllOfType<T>() where T : Component

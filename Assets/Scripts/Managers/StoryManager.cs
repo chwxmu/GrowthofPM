@@ -41,7 +41,7 @@ public class StoryManager : Singleton<StoryManager>
 
     private void Update()
     {
-        if (!Input.GetKeyDown(SkipMainStoryKey))
+        if (!IsDebugSkipShortcutPressed())
         {
             return;
         }
@@ -145,7 +145,7 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
-        Debug.Log("[StoryManager] : 玩家按下P，跳过本周主剧情并进入决策阶段。");
+        Debug.Log("[StoryManager] : 玩家按下 Shift+P，跳过本周主剧情并进入决策阶段。");
 
         DialoguePanel dialoguePanel = FindObjectOfType<DialoguePanel>(true);
         if (dialoguePanel != null)
@@ -155,6 +155,16 @@ public class StoryManager : Singleton<StoryManager>
 
         _decisionStepIndex = 0;
         ShowNextDecisionOrSchedule();
+    }
+
+    private static bool IsDebugSkipShortcutPressed()
+    {
+#if UNITY_EDITOR
+        return (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            && Input.GetKeyDown(SkipMainStoryKey);
+#else
+        return false;
+#endif
     }
 
     public void OnDecisionComplete()

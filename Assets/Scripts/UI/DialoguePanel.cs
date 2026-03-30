@@ -11,6 +11,8 @@ using UnityEditor;
 
 public class DialoguePanel : MonoBehaviour
 {
+    private const string AdvanceHintText = "点击 / 空格 / 回车继续";
+
     [Serializable]
     private class LocationBackgroundEntry
     {
@@ -60,6 +62,16 @@ public class DialoguePanel : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (!gameObject.activeInHierarchy || !IsAdvanceShortcutPressed())
+        {
+            return;
+        }
+
+        AdvanceDialogueByShortcut();
+    }
+
     private void OnDestroy()
     {
         if (_clickButton != null)
@@ -70,6 +82,8 @@ public class DialoguePanel : MonoBehaviour
 
     public void ShowDialogues(List<DialogueLine> dialogues, Action onComplete)
     {
+        EnsureLayout();
+
         _dialogues.Clear();
         if (dialogues != null)
         {
@@ -380,6 +394,7 @@ public class DialoguePanel : MonoBehaviour
         _onComplete = null;
         callback?.Invoke();
     }
+
     private void RestorePanelVisibility()
     {
         CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
@@ -395,9 +410,10 @@ public class DialoguePanel : MonoBehaviour
     }
     private void EnsureLayout()
     {
-        if (_locationText != null && _speakerText != null && _contentText != null && _clickButton != null)
+        if (_locationText != null && _speakerText != null && _contentText != null && _hintText != null && _clickButton != null)
         {
             ApplyAllFonts();
+            RefreshHintText();
             return;
         }
 
@@ -469,7 +485,7 @@ public class DialoguePanel : MonoBehaviour
         _speakerText = EnsureText(contentRoot.transform, "SpeakerText", sharedFont, 34, FontStyles.Bold, TextAlignmentOptions.Left);
         _contentText = EnsureText(contentRoot.transform, "ContentText", sharedFont, 32, FontStyles.Normal, TextAlignmentOptions.TopLeft);
         _hintText = EnsureText(contentRoot.transform, "HintText", sharedFont, 24, FontStyles.Italic, TextAlignmentOptions.BottomRight);
-        _hintText.text = "点击继续";
+        RefreshHintText();
 
         if (_clickButton == null)
         {
@@ -489,6 +505,31 @@ public class DialoguePanel : MonoBehaviour
         }
 
         ApplyAllFonts();
+    }
+
+    private void RefreshHintText()
+    {
+        if (_hintText != null)
+        {
+            _hintText.text = AdvanceHintText;
+        }
+    }
+
+    private static bool IsAdvanceShortcutPressed()
+    {
+        return Input.GetKeyDown(KeyCode.Space)
+            || Input.GetKeyDown(KeyCode.Return)
+            || Input.GetKeyDown(KeyCode.KeypadEnter);
+    }
+
+    private void AdvanceDialogueByShortcut()
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        OnClickNext();
     }
 
     private static GameObject FindOrCreateChild(GameObject parent, string childName)
