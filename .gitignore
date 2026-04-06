@@ -23,6 +23,9 @@ Assets/Docs/*
 !Assets/Docs/TaskReports/
 !Assets/Docs/TaskReports.meta
 !Assets/Docs/TaskReports/**
+!Assets/Docs/DefenseAssets/
+!Assets/Docs/DefenseAssets.meta
+!Assets/Docs/DefenseAssets/**
 
 # 系统文件
 .DS_Store
