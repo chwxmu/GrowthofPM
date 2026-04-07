@@ -637,12 +637,27 @@ public class DecisionPanel : MonoBehaviour
         layoutElement.minHeight = 96f;
         layoutElement.preferredHeight = 120f;
 
+        GameObject iconObject = new GameObject("OptionIcon", typeof(RectTransform), typeof(Image));
+        iconObject.transform.SetParent(buttonObject.transform, false);
+        RectTransform iconRect = iconObject.GetComponent<RectTransform>();
+        iconRect.anchorMin = new Vector2(0f, 0.5f);
+        iconRect.anchorMax = new Vector2(0f, 0.5f);
+        iconRect.pivot = new Vector2(0f, 0.5f);
+        iconRect.sizeDelta = new Vector2(22f, 22f);
+        iconRect.anchoredPosition = new Vector2(22f, 0f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        iconImage.sprite = UIVisualResources.LoadIcon("dialogue_choice");
+        iconImage.preserveAspect = true;
+        iconImage.color = new Color32(230, 241, 255, 255);
+        iconImage.raycastTarget = false;
+
         GameObject textObject = new GameObject("Label", typeof(RectTransform));
         textObject.transform.SetParent(buttonObject.transform, false);
         RectTransform textRect = textObject.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = new Vector2(24f, 18f);
+        textRect.offsetMin = new Vector2(56f, 18f);
         textRect.offsetMax = new Vector2(-24f, -18f);
 
         TextMeshProUGUI label = textObject.AddComponent<TextMeshProUGUI>();
@@ -763,6 +778,7 @@ public class DecisionPanel : MonoBehaviour
         _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
         _closeButton.gameObject.SetActive(false);
         _closeButton.interactable = false;
+        ApplyDecorativeTheme(contentRoot.transform, sharedFont);
         BindAIAdviceButton();
         BindCloseButton();
     }
@@ -863,6 +879,7 @@ public class DecisionPanel : MonoBehaviour
         _optionLayout.childForceExpandHeight = false;
 
         _closeButton = EnsureCornerButton(contentRoot.transform, "CloseButton", sharedFont, "关闭");
+        ApplyDecorativeTheme(contentRoot.transform, sharedFont);
     }
 
     private void TryBindSceneReferences()
@@ -976,6 +993,137 @@ public class DecisionPanel : MonoBehaviour
         {
             image.color = _aiAdviceButton.interactable ? normalColor : disabledColor;
         }
+    }
+
+    private void ApplyDecorativeTheme(Transform contentRoot, TMP_FontAsset sharedFont)
+    {
+        if (contentRoot == null)
+        {
+            return;
+        }
+
+        Image contentBackground = contentRoot.GetComponent<Image>();
+        if (contentBackground != null)
+        {
+            contentBackground.color = new Color32(18, 28, 46, 246);
+        }
+
+        Outline contentOutline = contentRoot.GetComponent<Outline>();
+        if (contentOutline == null)
+        {
+            contentOutline = contentRoot.gameObject.AddComponent<Outline>();
+        }
+        contentOutline.effectColor = new Color32(146, 196, 255, 70);
+        contentOutline.effectDistance = new Vector2(1f, -1f);
+
+        GameObject watermarkObject = FindOrCreateChild(contentRoot.gameObject, "Watermark");
+        RectTransform watermarkRect = EnsureRectTransform(watermarkObject);
+        watermarkRect.anchorMin = new Vector2(1f, 1f);
+        watermarkRect.anchorMax = new Vector2(1f, 1f);
+        watermarkRect.pivot = new Vector2(1f, 1f);
+        watermarkRect.sizeDelta = new Vector2(72f, 72f);
+        watermarkRect.anchoredPosition = new Vector2(-18f, -16f);
+
+        LayoutElement watermarkLayout = watermarkObject.GetComponent<LayoutElement>();
+        if (watermarkLayout == null)
+        {
+            watermarkLayout = watermarkObject.AddComponent<LayoutElement>();
+        }
+        watermarkLayout.ignoreLayout = true;
+
+        Image watermarkImage = watermarkObject.GetComponent<Image>();
+        if (watermarkImage == null)
+        {
+            watermarkImage = watermarkObject.AddComponent<Image>();
+        }
+        watermarkImage.sprite = UIVisualResources.LoadIcon("dialogue_choice");
+        watermarkImage.preserveAspect = true;
+        watermarkImage.color = new Color32(166, 209, 255, 22);
+        watermarkImage.raycastTarget = false;
+
+        GameObject headerRow = FindOrCreateChild(contentRoot.gameObject, "HeaderRow");
+        headerRow.transform.SetSiblingIndex(0);
+        HorizontalLayoutGroup headerLayout = headerRow.GetComponent<HorizontalLayoutGroup>();
+        if (headerLayout == null)
+        {
+            headerLayout = headerRow.AddComponent<HorizontalLayoutGroup>();
+        }
+        headerLayout.spacing = 12f;
+        headerLayout.childAlignment = TextAnchor.MiddleLeft;
+        headerLayout.childControlWidth = false;
+        headerLayout.childControlHeight = true;
+        headerLayout.childForceExpandWidth = false;
+        headerLayout.childForceExpandHeight = false;
+
+        LayoutElement headerRowLayout = headerRow.GetComponent<LayoutElement>();
+        if (headerRowLayout == null)
+        {
+            headerRowLayout = headerRow.AddComponent<LayoutElement>();
+        }
+        headerRowLayout.minHeight = 42f;
+        headerRowLayout.preferredHeight = 42f;
+
+        EnsureIconImage(headerRow.transform, "HeaderIcon", "dialogue_choice", 28f, false);
+        TMP_Text headerText = EnsureText(headerRow.transform, "HeaderText", sharedFont, 24f, FontStyles.Bold, TextAlignmentOptions.Left, 42f);
+        ApplyFixedWidth(headerText, 400f);
+        headerText.text = "本周决策";
+        headerText.color = new Color32(173, 210, 255, 255);
+
+        if (_descriptionText != null)
+        {
+            _descriptionText.transform.SetSiblingIndex(1);
+        }
+
+        EnsureIconImage(_aiAdviceRow != null ? _aiAdviceRow.transform : null, "AdviceIcon", "reminder", 18f, true);
+
+        GameObject optionsHeaderRow = FindOrCreateChild(contentRoot.gameObject, "OptionsHeaderRow");
+        if (_feedbackText != null)
+        {
+            optionsHeaderRow.transform.SetSiblingIndex(Mathf.Max(0, _feedbackText.transform.GetSiblingIndex()));
+        }
+        HorizontalLayoutGroup optionsHeaderLayout = optionsHeaderRow.GetComponent<HorizontalLayoutGroup>();
+        if (optionsHeaderLayout == null)
+        {
+            optionsHeaderLayout = optionsHeaderRow.AddComponent<HorizontalLayoutGroup>();
+        }
+        optionsHeaderLayout.spacing = 10f;
+        optionsHeaderLayout.childAlignment = TextAnchor.MiddleLeft;
+        optionsHeaderLayout.childControlWidth = false;
+        optionsHeaderLayout.childControlHeight = true;
+        optionsHeaderLayout.childForceExpandWidth = false;
+        optionsHeaderLayout.childForceExpandHeight = false;
+
+        LayoutElement optionsHeaderRowLayout = optionsHeaderRow.GetComponent<LayoutElement>();
+        if (optionsHeaderRowLayout == null)
+        {
+            optionsHeaderRowLayout = optionsHeaderRow.AddComponent<LayoutElement>();
+        }
+        optionsHeaderRowLayout.minHeight = 34f;
+        optionsHeaderRowLayout.preferredHeight = 34f;
+
+        EnsureIconImage(optionsHeaderRow.transform, "OptionsHeaderIcon", "key_hint", 16f, true);
+        TMP_Text optionsHeaderText = EnsureText(optionsHeaderRow.transform, "OptionsHeaderText", sharedFont, 20f, FontStyles.Normal, TextAlignmentOptions.Left, 34f);
+        ApplyFixedWidth(optionsHeaderText, 800f);
+        optionsHeaderText.text = "结合团队状态与AI建议，选择一个方案";
+        optionsHeaderText.color = new Color32(194, 210, 228, 255);
+    }
+
+    private static void ApplyFixedWidth(TMP_Text text, float width)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        LayoutElement layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
+
+        layoutElement.minWidth = width;
+        layoutElement.preferredWidth = width;
+        layoutElement.flexibleWidth = 0f;
     }
 
     private string BuildAIAdviceHintText(bool hasViewedAdvice)
@@ -1107,6 +1255,12 @@ public class DecisionPanel : MonoBehaviour
         outline.effectColor = new Color32(176, 214, 255, 110);
         outline.effectDistance = new Vector2(1f, -1f);
 
+        Transform icon = buttonObject.transform.Find("ButtonIcon");
+        if (icon != null)
+        {
+            UnityEngine.Object.Destroy(icon.gameObject);
+        }
+
         SetButtonLabel(button, buttonText, font, 24f);
         return button;
     }
@@ -1205,10 +1359,60 @@ public class DecisionPanel : MonoBehaviour
             label.font = font;
         }
 
+        Transform buttonIcon = button.transform.Find("ButtonIcon");
+        Transform genericIcon = button.transform.Find("Icon");
+        bool hasLeadingIcon = (buttonIcon != null && buttonIcon.gameObject.activeSelf)
+            || (genericIcon != null && genericIcon.gameObject.activeSelf);
         label.fontSize = fontSize;
-        label.alignment = TextAlignmentOptions.Center;
+        label.alignment = hasLeadingIcon ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center;
+        label.margin = hasLeadingIcon ? new Vector4(32f, 0f, 12f, 0f) : Vector4.zero;
         label.color = Color.white;
         label.text = buttonText;
+    }
+
+    private static Image EnsureIconImage(Transform parent, string name, string iconResource, float size, bool useLayout)
+    {
+        if (parent == null)
+        {
+            return null;
+        }
+
+        GameObject iconObject = FindOrCreateChild(parent.gameObject, name);
+        if (useLayout)
+        {
+            iconObject.transform.SetAsFirstSibling();
+            LayoutElement layoutElement = iconObject.GetComponent<LayoutElement>();
+            if (layoutElement == null)
+            {
+                layoutElement = iconObject.AddComponent<LayoutElement>();
+            }
+            layoutElement.minWidth = size;
+            layoutElement.preferredWidth = size;
+            layoutElement.minHeight = size;
+            layoutElement.preferredHeight = size;
+            layoutElement.flexibleWidth = 0f;
+        }
+
+        RectTransform rectTransform = EnsureRectTransform(iconObject);
+        rectTransform.sizeDelta = new Vector2(size, size);
+        if (!useLayout)
+        {
+            rectTransform.anchorMin = new Vector2(0f, 0.5f);
+            rectTransform.anchorMax = new Vector2(0f, 0.5f);
+            rectTransform.pivot = new Vector2(0f, 0.5f);
+            rectTransform.anchoredPosition = new Vector2(14f, 0f);
+        }
+
+        Image image = iconObject.GetComponent<Image>();
+        if (image == null)
+        {
+            image = iconObject.AddComponent<Image>();
+        }
+        image.sprite = UIVisualResources.LoadIcon(iconResource);
+        image.preserveAspect = true;
+        image.color = new Color32(230, 241, 255, 255);
+        image.raycastTarget = false;
+        return image;
     }
 
     private TMP_FontAsset ResolveUIFont()

@@ -196,6 +196,7 @@ public class TopStatusBar : MonoBehaviour
 
         EnsureEntryButtonVisuals();
         AdjustEnergyRowLayout();
+        EnsureVisualDecorations();
     }
 
     private Button CreateScheduleButton()
@@ -254,6 +255,121 @@ public class TopStatusBar : MonoBehaviour
     {
         SetQuizEntryLabel();
         AlignScheduleButtonLeftOfQuiz();
+        EnsureEntryButtonIcon(_quizEntryButton, "key_hint");
+        EnsureEntryButtonIcon(_scheduleEntryButton, "schedule");
+    }
+
+    private void EnsureVisualDecorations()
+    {
+        EnsureAccentLine();
+        EnsureStatRowIcon("TechRow", "technical_skill_icon");
+        EnsureStatRowIcon("CommRow", "communication_skill_icon");
+        EnsureStatRowIcon("ManageRow", "management_skill_icon");
+        EnsureStatRowIcon("StressRow", "stress_resistance_icon");
+        EnsureStatRowIcon("EnergyRow", "energy_icon");
+    }
+
+    private void EnsureAccentLine()
+    {
+        GameObject accentObject = FindOrCreateChild(gameObject, "AccentLine");
+        accentObject.transform.SetAsLastSibling();
+
+        RectTransform accentRect = accentObject.GetComponent<RectTransform>();
+        if (accentRect == null)
+        {
+            accentRect = accentObject.AddComponent<RectTransform>();
+        }
+        accentRect.anchorMin = new Vector2(0f, 0f);
+        accentRect.anchorMax = new Vector2(1f, 0f);
+        accentRect.pivot = new Vector2(0.5f, 0f);
+        accentRect.anchoredPosition = Vector2.zero;
+        accentRect.sizeDelta = new Vector2(0f, 4f);
+
+        Image accentImage = accentObject.GetComponent<Image>();
+        if (accentImage == null)
+        {
+            accentImage = accentObject.AddComponent<Image>();
+        }
+        accentImage.color = new Color32(88, 150, 225, 190);
+        accentImage.raycastTarget = false;
+    }
+
+    private void EnsureStatRowIcon(string rowName, string iconResource)
+    {
+        Transform row = transform.Find(rowName);
+        if (row == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = FindOrCreateChild(row.gameObject, "StatIcon");
+        iconObject.transform.SetAsFirstSibling();
+
+        LayoutElement layoutElement = iconObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = iconObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.minWidth = 28f;
+        layoutElement.preferredWidth = 28f;
+        layoutElement.minHeight = 28f;
+        layoutElement.preferredHeight = 28f;
+        layoutElement.flexibleWidth = 0f;
+
+        RectTransform iconRect = iconObject.GetComponent<RectTransform>();
+        if (iconRect == null)
+        {
+            iconRect = iconObject.AddComponent<RectTransform>();
+        }
+        iconRect.sizeDelta = new Vector2(28f, 28f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        if (iconImage == null)
+        {
+            iconImage = iconObject.AddComponent<Image>();
+        }
+        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
+        iconImage.preserveAspect = true;
+        iconImage.color = Color.white;
+        iconImage.raycastTarget = false;
+    }
+
+    private void EnsureEntryButtonIcon(Button button, string iconResource)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = FindOrCreateChild(button.gameObject, "Icon");
+        iconObject.transform.SetAsFirstSibling();
+
+        RectTransform iconRect = iconObject.GetComponent<RectTransform>();
+        if (iconRect == null)
+        {
+            iconRect = iconObject.AddComponent<RectTransform>();
+        }
+        iconRect.anchorMin = new Vector2(0f, 0.5f);
+        iconRect.anchorMax = new Vector2(0f, 0.5f);
+        iconRect.pivot = new Vector2(0f, 0.5f);
+        iconRect.sizeDelta = new Vector2(18f, 18f);
+        iconRect.anchoredPosition = new Vector2(12f, 0f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        if (iconImage == null)
+        {
+            iconImage = iconObject.AddComponent<Image>();
+        }
+        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
+        iconImage.preserveAspect = true;
+        iconImage.color = new Color32(235, 243, 255, 255);
+        iconImage.raycastTarget = false;
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            label.margin = new Vector4(28f, 0f, 6f, 0f);
+        }
     }
 
     private void SetQuizEntryLabel()
@@ -379,6 +495,19 @@ public class TopStatusBar : MonoBehaviour
     {
         Transform target = transform.Find(childName);
         return target != null ? target.GetComponent<Slider>() : null;
+    }
+
+    private static GameObject FindOrCreateChild(GameObject parent, string childName)
+    {
+        Transform target = parent != null ? parent.transform.Find(childName) : null;
+        if (target != null)
+        {
+            return target.gameObject;
+        }
+
+        GameObject child = new GameObject(childName, typeof(RectTransform));
+        child.transform.SetParent(parent.transform, false);
+        return child;
     }
 
     private static void UpdateSliderAndText(Slider slider, TMP_Text valueText, int value, int defaultMax)

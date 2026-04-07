@@ -513,7 +513,87 @@ public class GameSummaryPanel : MonoBehaviour
         _restartButton = EnsureButton(buttonRow.transform, "RestartButton", "重新开始");
         _menuButton = EnsureButton(buttonRow.transform, "MenuButton", "返回主菜单");
 
+        ApplyDecorativeTheme(contentObject.transform);
         ApplyAllFonts();
+    }
+
+    private void ApplyDecorativeTheme(Transform contentRoot)
+    {
+        if (contentRoot == null)
+        {
+            return;
+        }
+
+        Image contentImage = contentRoot.GetComponent<Image>();
+        if (contentImage != null)
+        {
+            contentImage.color = new Color32(18, 28, 46, 246);
+        }
+
+        Outline contentOutline = contentRoot.GetComponent<Outline>();
+        if (contentOutline == null)
+        {
+            contentOutline = contentRoot.gameObject.AddComponent<Outline>();
+        }
+        contentOutline.effectColor = new Color32(147, 194, 255, 64);
+        contentOutline.effectDistance = new Vector2(1f, -1f);
+
+        GameObject topIconObject = FindOrCreateChild(contentRoot.gameObject, "TopIcon");
+        topIconObject.transform.SetSiblingIndex(0);
+        LayoutElement topIconLayout = topIconObject.GetComponent<LayoutElement>();
+        if (topIconLayout == null)
+        {
+            topIconLayout = topIconObject.AddComponent<LayoutElement>();
+        }
+        topIconLayout.minHeight = 46f;
+        topIconLayout.preferredHeight = 46f;
+
+        RectTransform topIconRect = EnsureRectTransform(topIconObject);
+        topIconRect.sizeDelta = new Vector2(46f, 46f);
+
+        Image topIconImage = topIconObject.GetComponent<Image>();
+        if (topIconImage == null)
+        {
+            topIconImage = topIconObject.AddComponent<Image>();
+        }
+        topIconImage.sprite = UIVisualResources.LoadIcon("personal_experience_icon");
+        topIconImage.preserveAspect = true;
+        topIconImage.color = new Color32(216, 232, 255, 255);
+        topIconImage.raycastTarget = false;
+
+        GameObject watermarkObject = FindOrCreateChild(contentRoot.gameObject, "Watermark");
+        RectTransform watermarkRect = EnsureRectTransform(watermarkObject);
+        watermarkRect.anchorMin = new Vector2(1f, 1f);
+        watermarkRect.anchorMax = new Vector2(1f, 1f);
+        watermarkRect.pivot = new Vector2(1f, 1f);
+        watermarkRect.sizeDelta = new Vector2(84f, 84f);
+        watermarkRect.anchoredPosition = new Vector2(-18f, -18f);
+
+        LayoutElement watermarkLayout = watermarkObject.GetComponent<LayoutElement>();
+        if (watermarkLayout == null)
+        {
+            watermarkLayout = watermarkObject.AddComponent<LayoutElement>();
+        }
+        watermarkLayout.ignoreLayout = true;
+
+        Image watermarkImage = watermarkObject.GetComponent<Image>();
+        if (watermarkImage == null)
+        {
+            watermarkImage = watermarkObject.AddComponent<Image>();
+        }
+        watermarkImage.sprite = UIVisualResources.LoadIcon("progress");
+        watermarkImage.preserveAspect = true;
+        watermarkImage.color = new Color32(164, 206, 255, 18);
+        watermarkImage.raycastTarget = false;
+
+        if (_titleText != null)
+        {
+            _titleText.transform.SetSiblingIndex(1);
+            _titleText.color = new Color32(245, 249, 255, 255);
+        }
+
+        EnsureButtonIcon(_restartButton, "protagonist");
+        EnsureButtonIcon(_menuButton, "reminder");
     }
 
     private Transform EnsureSection(Transform parent, string name, string headerText)
@@ -601,6 +681,7 @@ public class GameSummaryPanel : MonoBehaviour
         layout.childForceExpandWidth = false;
         layout.childForceExpandHeight = false;
 
+        EnsureRowIcon(rowObject.transform, rowName);
         TMP_Text label = EnsureText(rowObject.transform, "LabelText", 22f, FontStyles.Normal, TextAlignmentOptions.Left, 36f);
         LayoutElement labelLayout = label.GetComponent<LayoutElement>();
         if (labelLayout == null)
@@ -818,6 +899,99 @@ public class GameSummaryPanel : MonoBehaviour
         label.color = Color.white;
         label.text = labelText;
         return button;
+    }
+
+    private static void EnsureButtonIcon(Button button, string iconResource)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = FindOrCreateChild(button.gameObject, "Icon");
+        RectTransform iconRect = EnsureRectTransform(iconObject);
+        iconRect.anchorMin = new Vector2(0f, 0.5f);
+        iconRect.anchorMax = new Vector2(0f, 0.5f);
+        iconRect.pivot = new Vector2(0f, 0.5f);
+        iconRect.sizeDelta = new Vector2(18f, 18f);
+        iconRect.anchoredPosition = new Vector2(14f, 0f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        if (iconImage == null)
+        {
+            iconImage = iconObject.AddComponent<Image>();
+        }
+        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
+        iconImage.preserveAspect = true;
+        iconImage.color = new Color32(236, 243, 255, 255);
+        iconImage.raycastTarget = false;
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            label.alignment = TextAlignmentOptions.MidlineLeft;
+            label.margin = new Vector4(28f, 0f, 10f, 0f);
+        }
+    }
+
+    private static void EnsureRowIcon(Transform row, string rowName)
+    {
+        string iconResource = GetRowIconResource(rowName);
+        if (string.IsNullOrWhiteSpace(iconResource) || row == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = FindOrCreateChild(row.gameObject, "Icon");
+        iconObject.transform.SetAsFirstSibling();
+
+        LayoutElement layoutElement = iconObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = iconObject.AddComponent<LayoutElement>();
+        }
+        layoutElement.minWidth = 22f;
+        layoutElement.preferredWidth = 22f;
+        layoutElement.minHeight = 22f;
+        layoutElement.preferredHeight = 22f;
+
+        RectTransform iconRect = EnsureRectTransform(iconObject);
+        iconRect.sizeDelta = new Vector2(22f, 22f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        if (iconImage == null)
+        {
+            iconImage = iconObject.AddComponent<Image>();
+        }
+        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
+        iconImage.preserveAspect = true;
+        iconImage.color = Color.white;
+        iconImage.raycastTarget = false;
+    }
+
+    private static string GetRowIconResource(string rowName)
+    {
+        switch (rowName)
+        {
+            case "TechRow":
+                return "technical_skill_icon";
+            case "CommRow":
+                return "communication_skill_icon";
+            case "ManageRow":
+                return "management_skill_icon";
+            case "StressRow":
+                return "stress_resistance_icon";
+            case "Project1Row":
+            case "Project2Row":
+            case "Project3Row":
+                return "progress";
+            case "GoodQualityRow":
+            case "NeutralQualityRow":
+            case "BadQualityRow":
+                return "dialogue_choice";
+            default:
+                return null;
+        }
     }
 
     private void ApplyAllFonts()

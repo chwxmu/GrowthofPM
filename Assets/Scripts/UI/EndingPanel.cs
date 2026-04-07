@@ -221,6 +221,7 @@ public class EndingPanel : MonoBehaviour
     {
         if (_titleText != null && _descriptionText != null && _statsText != null && _aiRateText != null && _detailsScrollRect != null && _nextProjectButton != null && _restartButton != null && _menuButton != null)
         {
+            ApplyDecorativeTheme(FindChildContentRoot(), ResolveUIFont());
             ApplyAllFonts();
             return;
         }
@@ -301,8 +302,105 @@ public class EndingPanel : MonoBehaviour
         _nextProjectButton = EnsureButton(buttonRow.transform, "NextProjectButton", sharedFont, "继续下一个项目");
         _restartButton = EnsureButton(buttonRow.transform, "RestartButton", sharedFont, "重新开始");
         _menuButton = EnsureButton(buttonRow.transform, "MenuButton", sharedFont, "返回主菜单");
+        ApplyDecorativeTheme(contentRect, sharedFont);
         ApplyAllFonts();
         BindButtons();
+    }
+
+    private RectTransform FindChildContentRoot()
+    {
+        Transform content = transform.Find("PanelContent");
+        return content as RectTransform;
+    }
+
+    private void ApplyDecorativeTheme(RectTransform contentRoot, TMP_FontAsset sharedFont)
+    {
+        if (contentRoot == null)
+        {
+            return;
+        }
+
+        Image contentImage = contentRoot.GetComponent<Image>();
+        if (contentImage != null)
+        {
+            contentImage.color = new Color32(19, 28, 46, 246);
+        }
+
+        Outline contentOutline = contentRoot.GetComponent<Outline>();
+        if (contentOutline == null)
+        {
+            contentOutline = contentRoot.gameObject.AddComponent<Outline>();
+        }
+        contentOutline.effectColor = new Color32(149, 192, 255, 66);
+        contentOutline.effectDistance = new Vector2(1f, -1f);
+
+        GameObject headerIconObject = FindOrCreateChild(contentRoot.gameObject, "HeaderIcon");
+        headerIconObject.transform.SetSiblingIndex(0);
+        LayoutElement headerLayout = headerIconObject.GetComponent<LayoutElement>();
+        if (headerLayout == null)
+        {
+            headerLayout = headerIconObject.AddComponent<LayoutElement>();
+        }
+        headerLayout.minHeight = 46f;
+        headerLayout.preferredHeight = 46f;
+
+        RectTransform headerRect = EnsureRectTransform(headerIconObject);
+        headerRect.sizeDelta = new Vector2(46f, 46f);
+
+        Image headerImage = headerIconObject.GetComponent<Image>();
+        if (headerImage == null)
+        {
+            headerImage = headerIconObject.AddComponent<Image>();
+        }
+        headerImage.sprite = UIVisualResources.LoadIcon("personal_experience_icon");
+        headerImage.preserveAspect = true;
+        headerImage.color = new Color32(215, 232, 255, 255);
+        headerImage.raycastTarget = false;
+
+        GameObject watermarkObject = FindOrCreateChild(contentRoot.gameObject, "Watermark");
+        RectTransform watermarkRect = EnsureRectTransform(watermarkObject);
+        watermarkRect.anchorMin = new Vector2(1f, 1f);
+        watermarkRect.anchorMax = new Vector2(1f, 1f);
+        watermarkRect.pivot = new Vector2(1f, 1f);
+        watermarkRect.sizeDelta = new Vector2(84f, 84f);
+        watermarkRect.anchoredPosition = new Vector2(-18f, -18f);
+
+        LayoutElement watermarkLayout = watermarkObject.GetComponent<LayoutElement>();
+        if (watermarkLayout == null)
+        {
+            watermarkLayout = watermarkObject.AddComponent<LayoutElement>();
+        }
+        watermarkLayout.ignoreLayout = true;
+
+        Image watermarkImage = watermarkObject.GetComponent<Image>();
+        if (watermarkImage == null)
+        {
+            watermarkImage = watermarkObject.AddComponent<Image>();
+        }
+        watermarkImage.sprite = UIVisualResources.LoadIcon("progress");
+        watermarkImage.preserveAspect = true;
+        watermarkImage.color = new Color32(164, 206, 255, 18);
+        watermarkImage.raycastTarget = false;
+
+        if (_titleText != null)
+        {
+            _titleText.transform.SetSiblingIndex(1);
+            _titleText.color = new Color32(244, 248, 255, 255);
+        }
+
+        if (_statsText != null)
+        {
+            _statsText.color = new Color32(224, 234, 248, 255);
+        }
+
+        if (_aiRateText != null)
+        {
+            _aiRateText.color = new Color32(178, 215, 255, 255);
+        }
+
+        EnsureButtonIcon(_nextProjectButton, "progress", sharedFont);
+        EnsureButtonIcon(_restartButton, "protagonist", sharedFont);
+        EnsureButtonIcon(_menuButton, "reminder", sharedFont);
     }
 
     private static ScrollRect EnsureDetailsScrollRect(Transform parent, string name)
@@ -476,6 +574,44 @@ public class EndingPanel : MonoBehaviour
         label.color = Color.white;
         label.text = labelText;
         return button;
+    }
+
+    private static void EnsureButtonIcon(Button button, string iconResource, TMP_FontAsset font)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = FindOrCreateChild(button.gameObject, "Icon");
+        RectTransform iconRect = EnsureRectTransform(iconObject);
+        iconRect.anchorMin = new Vector2(0f, 0.5f);
+        iconRect.anchorMax = new Vector2(0f, 0.5f);
+        iconRect.pivot = new Vector2(0f, 0.5f);
+        iconRect.sizeDelta = new Vector2(18f, 18f);
+        iconRect.anchoredPosition = new Vector2(14f, 0f);
+
+        Image iconImage = iconObject.GetComponent<Image>();
+        if (iconImage == null)
+        {
+            iconImage = iconObject.AddComponent<Image>();
+        }
+        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
+        iconImage.preserveAspect = true;
+        iconImage.color = new Color32(236, 243, 255, 255);
+        iconImage.raycastTarget = false;
+
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+        if (label != null)
+        {
+            if (font != null)
+            {
+                label.font = font;
+            }
+
+            label.alignment = TextAlignmentOptions.MidlineLeft;
+            label.margin = new Vector4(28f, 0f, 10f, 0f);
+        }
     }
 
     private static GameObject FindOrCreateChild(GameObject parent, string childName)

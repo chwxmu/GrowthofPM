@@ -40,6 +40,8 @@ public class DialoguePanel : MonoBehaviour
     [SerializeField] private TMP_Text _contentText;
     [SerializeField] private TMP_Text _hintText;
     [SerializeField] private Button _clickButton;
+    [SerializeField] private Image _portraitFrame;
+    [SerializeField] private Image _portraitImage;
     [SerializeField] private TMP_FontAsset _preferredChineseFont;
 
     private readonly List<DialogueLine> _dialogues = new List<DialogueLine>();
@@ -52,6 +54,7 @@ public class DialoguePanel : MonoBehaviour
     private bool _isTyping;
     private string _fullText = string.Empty;
     private string _lastResolvedLocation = string.Empty;
+    private RectTransform _contentRect;
 
     private void Awake()
     {
@@ -167,6 +170,8 @@ public class DialoguePanel : MonoBehaviour
             _speakerText.text = string.IsNullOrWhiteSpace(line.speaker) ? "旁白" : line.speaker;
         }
 
+        UpdateSpeakerPortrait(line.speaker);
+
         if (_typingCoroutine != null)
         {
             StopCoroutine(_typingCoroutine);
@@ -238,6 +243,13 @@ public class DialoguePanel : MonoBehaviour
             }
         }
 
+        Sprite semanticBackground = UIVisualResources.ResolveSemanticDialogueBackground(location);
+        if (semanticBackground != null)
+        {
+            _runtimeBackgroundCache[location] = semanticBackground;
+            return semanticBackground;
+        }
+
         if (!_missingBackgroundLocations.Contains(location))
         {
             _missingBackgroundLocations.Add(location);
@@ -255,8 +267,46 @@ public class DialoguePanel : MonoBehaviour
         }
 
         _backgroundImage.sprite = sprite;
-        _backgroundImage.preserveAspect = true;
+        _backgroundImage.type = Image.Type.Simple;
+        _backgroundImage.preserveAspect = false;
         _backgroundImage.color = sprite != null ? Color.white : new Color32(20, 28, 44, 255);
+    }
+
+    private void UpdateSpeakerPortrait(string speaker)
+    {
+        Sprite portraitSprite = UIVisualResources.ResolveSpeakerPortrait(speaker);
+        bool hasPortrait = portraitSprite != null;
+
+        if (_portraitFrame != null)
+        {
+            _portraitFrame.gameObject.SetActive(hasPortrait);
+        }
+
+        if (_portraitImage != null)
+        {
+            _portraitImage.sprite = portraitSprite;
+            _portraitImage.preserveAspect = true;
+            _portraitImage.color = hasPortrait ? Color.white : Color.clear;
+        }
+
+        RefreshPortraitLayout(hasPortrait);
+    }
+
+    private void RefreshPortraitLayout(bool hasPortrait)
+    {
+        if (_contentRect == null)
+        {
+            Transform contentTransform = transform.Find("PanelContent");
+            _contentRect = contentTransform as RectTransform;
+        }
+
+        if (_contentRect != null)
+        {
+            _contentRect.anchorMin = new Vector2(0.05f, 0.08f);
+            _contentRect.anchorMax = hasPortrait ? new Vector2(0.68f, 0.4f) : new Vector2(0.92f, 0.4f);
+            _contentRect.offsetMin = Vector2.zero;
+            _contentRect.offsetMax = Vector2.zero;
+        }
     }
 
     private static List<string> BuildLocationCandidates(string location)
@@ -410,10 +460,11 @@ public class DialoguePanel : MonoBehaviour
     }
     private void EnsureLayout()
     {
-        if (_locationText != null && _speakerText != null && _contentText != null && _hintText != null && _clickButton != null)
+        if (_backgroundImage != null && _locationText != null && _speakerText != null && _contentText != null && _hintText != null && _clickButton != null && _portraitFrame != null && _portraitImage != null)
         {
             ApplyAllFonts();
             RefreshHintText();
+            RefreshPortraitLayout(_portraitFrame.gameObject.activeSelf);
             return;
         }
 
@@ -444,10 +495,25 @@ public class DialoguePanel : MonoBehaviour
         _backgroundImage.raycastTarget = false;
         ApplyBackgroundSprite(_defaultBackground);
 
+        GameObject dimmerRoot = FindOrCreateChild(gameObject, "BackgroundDimmer");
+        dimmerRoot.transform.SetSiblingIndex(1);
+        RectTransform dimmerRect = EnsureRectTransform(dimmerRoot);
+        dimmerRect.anchorMin = Vector2.zero;
+        dimmerRect.anchorMax = Vector2.one;
+        dimmerRect.offsetMin = Vector2.zero;
+        dimmerRect.offsetMax = Vector2.zero;
+
+        Image dimmerImage = dimmerRoot.GetComponent<Image>();
+        if (dimmerImage == null)
+        {
+            dimmerImage = dimmerRoot.AddComponent<Image>();
+        }
+        dimmerImage.color = new Color32(6, 12, 22, 126);
+        dimmerImage.raycastTarget = false;
+
         GameObject contentRoot = FindOrCreateChild(gameObject, "PanelContent");
         RectTransform contentRect = EnsureRectTransform(contentRoot);
-        contentRect.anchorMin = new Vector2(0.15f, 0.18f);
-        contentRect.anchorMax = new Vector2(0.85f, 0.82f);
+        _contentRect = contentRect;
         contentRect.offsetMin = Vector2.zero;
         contentRect.offsetMax = Vector2.zero;
 
@@ -456,7 +522,15 @@ public class DialoguePanel : MonoBehaviour
         {
             contentBackground = contentRoot.AddComponent<Image>();
         }
-        contentBackground.color = new Color32(10, 16, 28, 185);
+        contentBackground.color = new Color32(8, 14, 24, 224);
+
+        Outline contentOutline = contentRoot.GetComponent<Outline>();
+        if (contentOutline == null)
+        {
+            contentOutline = contentRoot.AddComponent<Outline>();
+        }
+        contentOutline.effectColor = new Color32(140, 191, 255, 72);
+        contentOutline.effectDistance = new Vector2(1f, -1f);
 
         VerticalLayoutGroup layoutGroup = contentRoot.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup == null)
@@ -464,8 +538,8 @@ public class DialoguePanel : MonoBehaviour
             layoutGroup = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
 
-        layoutGroup.padding = new RectOffset(32, 32, 32, 32);
-        layoutGroup.spacing = 16f;
+        layoutGroup.padding = new RectOffset(28, 28, 24, 24);
+        layoutGroup.spacing = 12f;
         layoutGroup.childAlignment = TextAnchor.UpperLeft;
         layoutGroup.childControlHeight = true;
         layoutGroup.childControlWidth = true;
@@ -481,11 +555,55 @@ public class DialoguePanel : MonoBehaviour
         fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
+        GameObject portraitFrameObject = FindOrCreateChild(gameObject, "PortraitFrame");
+        portraitFrameObject.transform.SetSiblingIndex(Mathf.Max(2, gameObject.transform.childCount - 1));
+        RectTransform portraitFrameRect = EnsureRectTransform(portraitFrameObject);
+        portraitFrameRect.anchorMin = new Vector2(0.7f, 0.05f);
+        portraitFrameRect.anchorMax = new Vector2(0.96f, 0.86f);
+        portraitFrameRect.offsetMin = Vector2.zero;
+        portraitFrameRect.offsetMax = Vector2.zero;
+
+        _portraitFrame = portraitFrameObject.GetComponent<Image>();
+        if (_portraitFrame == null)
+        {
+            _portraitFrame = portraitFrameObject.AddComponent<Image>();
+        }
+        _portraitFrame.color = new Color32(9, 18, 31, 176);
+        _portraitFrame.raycastTarget = false;
+
+        Outline portraitOutline = portraitFrameObject.GetComponent<Outline>();
+        if (portraitOutline == null)
+        {
+            portraitOutline = portraitFrameObject.AddComponent<Outline>();
+        }
+        portraitOutline.effectColor = new Color32(124, 179, 252, 90);
+        portraitOutline.effectDistance = new Vector2(1f, -1f);
+
+        GameObject portraitImageObject = FindOrCreateChild(portraitFrameObject, "PortraitImage");
+        RectTransform portraitImageRect = EnsureRectTransform(portraitImageObject);
+        portraitImageRect.anchorMin = Vector2.zero;
+        portraitImageRect.anchorMax = Vector2.one;
+        portraitImageRect.offsetMin = new Vector2(6f, 6f);
+        portraitImageRect.offsetMax = new Vector2(-6f, -6f);
+
+        _portraitImage = portraitImageObject.GetComponent<Image>();
+        if (_portraitImage == null)
+        {
+            _portraitImage = portraitImageObject.AddComponent<Image>();
+        }
+        _portraitImage.raycastTarget = false;
+        _portraitImage.preserveAspect = true;
+
         _locationText = EnsureText(contentRoot.transform, "LocationText", sharedFont, 28, FontStyles.Bold, TextAlignmentOptions.Left);
         _speakerText = EnsureText(contentRoot.transform, "SpeakerText", sharedFont, 34, FontStyles.Bold, TextAlignmentOptions.Left);
         _contentText = EnsureText(contentRoot.transform, "ContentText", sharedFont, 32, FontStyles.Normal, TextAlignmentOptions.TopLeft);
         _hintText = EnsureText(contentRoot.transform, "HintText", sharedFont, 24, FontStyles.Italic, TextAlignmentOptions.BottomRight);
         RefreshHintText();
+
+        _locationText.color = new Color32(174, 205, 233, 255);
+        _speakerText.color = new Color32(246, 249, 255, 255);
+        _contentText.color = new Color32(246, 249, 255, 255);
+        _hintText.color = new Color32(170, 188, 214, 255);
 
         if (_clickButton == null)
         {
@@ -505,6 +623,7 @@ public class DialoguePanel : MonoBehaviour
         }
 
         ApplyAllFonts();
+        UpdateSpeakerPortrait(string.Empty);
     }
 
     private void RefreshHintText()
@@ -584,6 +703,7 @@ public class DialoguePanel : MonoBehaviour
         text.fontStyle = fontStyle;
         text.alignment = alignment;
         text.enableWordWrapping = true;
+        text.margin = new Vector4(8f, 4f, 8f, 4f);
         text.color = Color.white;
         return text;
     }
