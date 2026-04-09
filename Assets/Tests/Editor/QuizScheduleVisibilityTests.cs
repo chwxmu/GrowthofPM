@@ -355,10 +355,12 @@ public class QuizScheduleVisibilityTests
         }, (_, _, _, _) => { });
 
         Button aiAdviceButton = GetPrivateField<Button>(decisionPanel, "_aiAdviceButton");
+        HorizontalLayoutGroup aiAdviceRow = GetPrivateField<HorizontalLayoutGroup>(decisionPanel, "_aiAdviceRow");
         TMP_Text aiAdviceText = GetPrivateField<TMP_Text>(decisionPanel, "_aiAdviceText");
         TMP_Text aiAdviceButtonLabel = aiAdviceButton.GetComponentInChildren<TMP_Text>(true);
 
         Assert.IsTrue(aiAdviceButton.gameObject.activeSelf);
+        Assert.IsTrue(aiAdviceRow.gameObject.activeSelf);
         Assert.IsTrue(aiAdviceButton.interactable);
         Assert.IsFalse(aiAdviceText.gameObject.activeSelf);
         Assert.IsFalse(GetPrivateField<bool>(decisionPanel, "_hasViewedAiAdvice"));
@@ -366,14 +368,56 @@ public class QuizScheduleVisibilityTests
 
         aiAdviceButton.onClick.Invoke();
 
+        Assert.IsFalse(aiAdviceRow.gameObject.activeSelf);
         Assert.IsTrue(aiAdviceText.gameObject.activeSelf);
         Assert.IsTrue(GetPrivateField<bool>(decisionPanel, "_hasViewedAiAdvice"));
-        Assert.AreEqual("AI建议已查看", aiAdviceButtonLabel.text);
         StringAssert.Contains("建议优先保障质量", aiAdviceText.text);
     }
 
     [Test]
-    public void OnClickOption_ShouldExpandFeedbackLayoutForLongAdoptionMessage()
+    public void ShowDecision_ShouldClampDescriptionAndAdviceHeights()
+    {
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        string longDescription = string.Empty;
+        string longAdvice = string.Empty;
+        for (int i = 0; i < 30; i += 1)
+        {
+            longDescription += "这是一段很长的决策背景描述，用于验证描述区域不会占满整个决策面板。";
+            longAdvice += "这是一段很长的AI建议内容，用于验证建议展开后的文本区域高度被合理限制。";
+        }
+
+        decisionPanel.ShowDecision(new DecisionEventData
+        {
+            description = longDescription,
+            aiAdvice = longAdvice,
+            options = new List<OptionData>
+            {
+                new OptionData
+                {
+                    text = "按计划推进",
+                    narrative = "测试结果"
+                }
+            }
+        }, (_, _, _, _) => { });
+
+        TMP_Text descriptionText = GetPrivateField<TMP_Text>(decisionPanel, "_descriptionText");
+        LayoutElement descriptionLayout = descriptionText.GetComponent<LayoutElement>();
+        Assert.LessOrEqual(descriptionLayout.preferredHeight, 96f);
+        Assert.LessOrEqual(descriptionText.rectTransform.sizeDelta.y, 96.1f);
+
+        Button aiAdviceButton = GetPrivateField<Button>(decisionPanel, "_aiAdviceButton");
+        aiAdviceButton.onClick.Invoke();
+
+        TMP_Text aiAdviceText = GetPrivateField<TMP_Text>(decisionPanel, "_aiAdviceText");
+        LayoutElement aiAdviceLayout = aiAdviceText.GetComponent<LayoutElement>();
+        Assert.LessOrEqual(aiAdviceLayout.preferredHeight, 112f);
+        Assert.LessOrEqual(aiAdviceText.rectTransform.sizeDelta.y, 112.1f);
+        Assert.AreEqual(TextAlignmentOptions.MidlineLeft, aiAdviceText.alignment);
+    }
+
+    [Test]
+    public void OnClickOption_ShouldExpandFeedbackLayoutForLongNarrative()
     {
         DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
 
@@ -402,8 +446,14 @@ public class QuizScheduleVisibilityTests
         LayoutElement feedbackLayout = feedbackText.GetComponent<LayoutElement>();
 
         Assert.IsTrue(feedbackText.gameObject.activeSelf);
-        StringAssert.Contains("你采纳了", feedbackText.text);
-        Assert.Greater(feedbackLayout.preferredHeight, 120f);
+        StringAssert.Contains("你选择了一条需要更多说明的方案", feedbackText.text);
+        StringAssert.DoesNotContain("你采纳了", feedbackText.text);
+        StringAssert.DoesNotContain("你没有采纳", feedbackText.text);
+        StringAssert.DoesNotContain("技术力", feedbackText.text);
+        StringAssert.DoesNotContain("管理力", feedbackText.text);
+        Assert.AreEqual(100f, feedbackLayout.preferredHeight, 0.1f);
+        Assert.AreEqual(100f, feedbackText.rectTransform.sizeDelta.y, 0.1f);
+        Assert.AreEqual(TextAlignmentOptions.MidlineLeft, feedbackText.alignment);
     }
 
     [Test]
@@ -430,8 +480,32 @@ public class QuizScheduleVisibilityTests
         InvokePrivate(decisionPanel, "OnClickOption", 0);
 
         TMP_Text feedbackText = GetPrivateField<TMP_Text>(decisionPanel, "_feedbackText");
+        Assert.AreEqual("测试结果", feedbackText.text);
         StringAssert.DoesNotContain("采纳了", feedbackText.text);
         StringAssert.DoesNotContain("没有采纳", feedbackText.text);
+    }
+
+    [Test]
+    public void ShowDecision_ShouldRemoveOptionsHeaderRow()
+    {
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+
+        decisionPanel.ShowDecision(new DecisionEventData
+        {
+            description = "测试决策",
+            options = new List<OptionData>
+            {
+                new OptionData
+                {
+                    text = "按计划推进",
+                    narrative = "测试结果"
+                }
+            }
+        }, (_, _, _, _) => { });
+
+        Transform contentRoot = decisionPanel.transform.Find("PanelContent");
+        Assert.IsNotNull(contentRoot);
+        Assert.IsNull(contentRoot.Find("OptionsHeaderRow"));
     }
 
     private void EnsureTmpFontHost()

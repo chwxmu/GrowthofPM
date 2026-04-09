@@ -186,8 +186,8 @@ public class MenuSceneController : MonoBehaviour
         BindVisualReferencesIfNeeded();
         ApplyBackgroundTheme();
         ApplyTitleTheme();
-        ApplyButtonTheme(_newGameButton, new Color32(46, 91, 148, 240), "progress");
-        ApplyButtonTheme(_continueGameButton, new Color32(29, 63, 110, 236), "protagonist");
+        ApplyButtonTheme(_newGameButton, new Color32(46, 91, 148, 240));
+        ApplyButtonTheme(_continueGameButton, new Color32(29, 63, 110, 236));
         ApplyButtonTheme(_quitButton, new Color32(94, 74, 74, 228));
     }
 
@@ -309,6 +309,19 @@ public class MenuSceneController : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(iconResource))
         {
+            Transform existingIcon = button.transform.Find("Icon");
+            if (existingIcon != null)
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(existingIcon.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(existingIcon.gameObject);
+                }
+            }
+
             return;
         }
 

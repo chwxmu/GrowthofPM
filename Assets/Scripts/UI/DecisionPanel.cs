@@ -10,14 +10,21 @@ using UnityEditor;
 
 public class DecisionPanel : MonoBehaviour
 {
-    private const float DescriptionMinHeight = 90f;
-    private const float AdviceButtonHeight = 52f;
-    private const float AdviceRowMinHeight = 56f;
+    private const float DescriptionMinHeight = 72f;
+    private const float AdviceButtonHeight = 48f;
+    private const float AdviceRowMinHeight = 48f;
     private const float AdviceButtonWidth = 208f;
-    private const float AdviceTextMinHeight = 96f;
-    private const float AdviceHintMinHeight = 40f;
-    private const float FeedbackMinHeight = 120f;
-    private const float TextLayoutPadding = 20f;
+    private const float AdviceTextMinHeight = 56f;
+    private const float AdviceTextMaxHeight = 112f;
+    private const float AdviceHintMinHeight = 36f;
+    private const float DescriptionMaxHeight = 96f;
+    private const float FeedbackMinHeight = 100f;
+    private const float FeedbackTextMaxHeight = 100f;
+    private const float ContentSpacingDefault = 14f;
+    private const float ContentSpacingWithFeedback = 10f;
+    private const float TextLayoutPadding = 16f;
+    private const float DescriptionTextLayoutPadding = 12f;
+    private const float FeedbackTextLayoutPadding = 8f;
     private const float StatFloatMoveY = 46f;
     private const float StatFloatFadeInDuration = 0.15f;
     private const float StatFloatHoldDuration = 0.45f;
@@ -103,7 +110,7 @@ public class DecisionPanel : MonoBehaviour
         if (_descriptionText != null)
         {
             _descriptionText.text = _currentEventData != null ? _currentEventData.description : string.Empty;
-            RefreshTextLayout(_descriptionText, DescriptionMinHeight);
+            RefreshTextLayout(_descriptionText, DescriptionMinHeight, DescriptionTextLayoutPadding, DescriptionMaxHeight);
         }
 
         if (_aiAdviceRow != null)
@@ -128,14 +135,14 @@ public class DecisionPanel : MonoBehaviour
         {
             _aiAdviceText.text = _currentAdviceText;
             _aiAdviceText.gameObject.SetActive(false);
-            RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
+            RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight, TextLayoutPadding, AdviceTextMaxHeight);
         }
 
         if (_feedbackText != null)
         {
             _feedbackText.text = string.Empty;
             _feedbackText.gameObject.SetActive(false);
-            RefreshTextLayout(_feedbackText, FeedbackMinHeight);
+            RefreshTextLayout(_feedbackText, FeedbackMinHeight, FeedbackTextLayoutPadding, FeedbackTextMaxHeight);
         }
 
         if (_floatingStatText != null)
@@ -232,8 +239,15 @@ public class DecisionPanel : MonoBehaviour
 
         _hasViewedAiAdvice = true;
         _aiAdviceText.text = _currentAdviceText;
+
+        if (_aiAdviceRow != null)
+        {
+            _aiAdviceText.transform.SetSiblingIndex(_aiAdviceRow.transform.GetSiblingIndex());
+            _aiAdviceRow.gameObject.SetActive(false);
+        }
+
         _aiAdviceText.gameObject.SetActive(true);
-        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
+        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight, TextLayoutPadding, AdviceTextMaxHeight);
 
         if (_aiAdviceButton != null)
         {
@@ -314,9 +328,12 @@ public class DecisionPanel : MonoBehaviour
             return;
         }
 
-        _feedbackText.gameObject.SetActive(true);
-        _feedbackText.text = BuildFeedbackText(option);
-        RefreshTextLayout(_feedbackText, FeedbackMinHeight);
+        string feedbackText = BuildFeedbackText(option);
+        bool hasFeedbackText = !string.IsNullOrWhiteSpace(feedbackText);
+
+        _feedbackText.gameObject.SetActive(hasFeedbackText);
+        _feedbackText.text = feedbackText;
+        RefreshTextLayout(_feedbackText, FeedbackMinHeight, FeedbackTextLayoutPadding, FeedbackTextMaxHeight);
         RefreshPanelLayout();
     }
 
@@ -508,55 +525,7 @@ public class DecisionPanel : MonoBehaviour
             return string.Empty;
         }
 
-        string narrative = string.IsNullOrWhiteSpace(option.narrative) ? string.Empty : option.narrative;
-        string statChangeText = BuildStatChangeText(option.effects);
-        string adoptionFeedback = BuildAIAdoptionFeedback();
-
-        if (string.IsNullOrWhiteSpace(narrative))
-        {
-            if (string.IsNullOrWhiteSpace(statChangeText))
-            {
-                return adoptionFeedback;
-            }
-
-            if (string.IsNullOrWhiteSpace(adoptionFeedback))
-            {
-                return statChangeText;
-            }
-
-            return statChangeText + "\n\n" + adoptionFeedback;
-        }
-
-        if (string.IsNullOrWhiteSpace(statChangeText))
-        {
-            if (string.IsNullOrWhiteSpace(adoptionFeedback))
-            {
-                return narrative;
-            }
-
-            return narrative + "\n\n" + adoptionFeedback;
-        }
-
-        if (string.IsNullOrWhiteSpace(adoptionFeedback))
-        {
-            return narrative + "\n\n" + statChangeText;
-        }
-
-        return narrative + "\n\n" + statChangeText + "\n\n" + adoptionFeedback;
-    }
-
-    private string BuildAIAdoptionFeedback()
-    {
-        int recommendedOption = AIAdvisor.Instance != null ? AIAdvisor.Instance.GetRecommendedOption(_currentEventData) : -1;
-        if (recommendedOption < 0 || !_hasViewedAiAdvice)
-        {
-            return string.Empty;
-        }
-
-        string aiName = AIAdvisor.Instance != null ? AIAdvisor.Instance.CurrentAIName : "AI";
-        return _selectedFollowedAiAdvice
-            ? "<color=#7CFF8A>你采纳了" + aiName + "的建议。</color>"
-            : "<color=#FFD08A>你没有采纳" + aiName + "的建议。</color>";
+        return string.IsNullOrWhiteSpace(option.narrative) ? string.Empty : option.narrative;
     }
 
     private static string BuildStatChangeText(StatEffects effects)
@@ -719,7 +688,7 @@ public class DecisionPanel : MonoBehaviour
             layout = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
         layout.padding = new RectOffset(32, 32, 32, 32);
-        layout.spacing = 20f;
+        layout.spacing = ContentSpacingDefault;
         layout.childAlignment = TextAnchor.UpperLeft;
         layout.childControlWidth = true;
         layout.childControlHeight = false;
@@ -727,6 +696,7 @@ public class DecisionPanel : MonoBehaviour
         layout.childForceExpandHeight = false;
 
         _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 30f, FontStyles.Bold, TextAlignmentOptions.TopLeft, DescriptionMinHeight);
+        ApplyDescriptionTextStyle(_descriptionText);
 
         GameObject aiAdviceRowObject = FindOrCreateChild(contentRoot, "AIAdviceRow");
         LayoutElement aiAdviceRowLayout = aiAdviceRowObject.GetComponent<LayoutElement>();
@@ -742,7 +712,7 @@ public class DecisionPanel : MonoBehaviour
         {
             _aiAdviceRow = aiAdviceRowObject.AddComponent<HorizontalLayoutGroup>();
         }
-        _aiAdviceRow.spacing = 14f;
+        _aiAdviceRow.spacing = 8f;
         _aiAdviceRow.childAlignment = TextAnchor.MiddleLeft;
         _aiAdviceRow.childControlWidth = false;
         _aiAdviceRow.childControlHeight = true;
@@ -752,7 +722,9 @@ public class DecisionPanel : MonoBehaviour
         _aiAdviceButton = EnsureInlineButton(aiAdviceRowObject.transform, "AIAdviceButton", sharedFont, "查看AI建议");
         _aiAdviceHintText = EnsureHintText(aiAdviceRowObject.transform, "AIAdviceHintText", sharedFont, AdviceHintMinHeight);
         _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceTextMinHeight);
+        ApplyAdviceTextStyle(_aiAdviceText);
         _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackMinHeight);
+        ApplyFeedbackTextStyle(_feedbackText);
 
         GameObject optionsRoot = FindOrCreateChild(contentRoot, "OptionsRoot");
         _optionLayoutElement = optionsRoot.GetComponent<LayoutElement>();
@@ -822,7 +794,7 @@ public class DecisionPanel : MonoBehaviour
             layout = contentRoot.AddComponent<VerticalLayoutGroup>();
         }
         layout.padding = new RectOffset(32, 32, 32, 32);
-        layout.spacing = 20f;
+        layout.spacing = ContentSpacingDefault;
         layout.childAlignment = TextAnchor.UpperLeft;
         layout.childControlWidth = true;
         layout.childControlHeight = false;
@@ -830,6 +802,7 @@ public class DecisionPanel : MonoBehaviour
         layout.childForceExpandHeight = false;
 
         _descriptionText = EnsureText(contentRoot.transform, "DescriptionText", sharedFont, 30f, FontStyles.Bold, TextAlignmentOptions.TopLeft, DescriptionMinHeight);
+        ApplyDescriptionTextStyle(_descriptionText);
 
         GameObject aiAdviceRowObject = FindOrCreateChild(contentRoot, "AIAdviceRow");
         LayoutElement aiAdviceRowLayout = aiAdviceRowObject.GetComponent<LayoutElement>();
@@ -845,7 +818,7 @@ public class DecisionPanel : MonoBehaviour
         {
             _aiAdviceRow = aiAdviceRowObject.AddComponent<HorizontalLayoutGroup>();
         }
-        _aiAdviceRow.spacing = 14f;
+        _aiAdviceRow.spacing = 8f;
         _aiAdviceRow.childAlignment = TextAnchor.MiddleLeft;
         _aiAdviceRow.childControlWidth = false;
         _aiAdviceRow.childControlHeight = true;
@@ -855,7 +828,9 @@ public class DecisionPanel : MonoBehaviour
         _aiAdviceButton = EnsureInlineButton(aiAdviceRowObject.transform, "AIAdviceButton", sharedFont, "查看AI建议");
         _aiAdviceHintText = EnsureHintText(aiAdviceRowObject.transform, "AIAdviceHintText", sharedFont, AdviceHintMinHeight);
         _aiAdviceText = EnsureText(contentRoot.transform, "AIAdviceText", sharedFont, 28f, FontStyles.Normal, TextAlignmentOptions.TopLeft, AdviceTextMinHeight);
+        ApplyAdviceTextStyle(_aiAdviceText);
         _feedbackText = EnsureText(contentRoot.transform, "FeedbackText", sharedFont, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, FeedbackMinHeight);
+        ApplyFeedbackTextStyle(_feedbackText);
 
         GameObject optionsRoot = FindOrCreateChild(contentRoot, "OptionsRoot");
         _optionLayoutElement = optionsRoot.GetComponent<LayoutElement>();
@@ -900,9 +875,10 @@ public class DecisionPanel : MonoBehaviour
 
     private void RefreshPanelLayout()
     {
-        RefreshTextLayout(_descriptionText, DescriptionMinHeight);
-        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight);
-        RefreshTextLayout(_feedbackText, FeedbackMinHeight);
+        UpdateContentSpacing();
+        RefreshTextLayout(_descriptionText, DescriptionMinHeight, DescriptionTextLayoutPadding, DescriptionMaxHeight);
+        RefreshTextLayout(_aiAdviceText, AdviceTextMinHeight, TextLayoutPadding, AdviceTextMaxHeight);
+        RefreshTextLayout(_feedbackText, FeedbackMinHeight, FeedbackTextLayoutPadding, FeedbackTextMaxHeight);
         UpdateOptionLayoutHeight();
 
         RectTransform contentRect = transform.Find("PanelContent") as RectTransform;
@@ -912,7 +888,7 @@ public class DecisionPanel : MonoBehaviour
         }
     }
 
-    private void RefreshTextLayout(TMP_Text text, float minHeight)
+    private void RefreshTextLayout(TMP_Text text, float minHeight, float extraPadding = TextLayoutPadding, float maxHeight = -1f)
     {
         if (text == null)
         {
@@ -929,13 +905,51 @@ public class DecisionPanel : MonoBehaviour
         {
             layoutElement.minHeight = 0f;
             layoutElement.preferredHeight = 0f;
+
+            RectTransform hiddenRect = text.rectTransform;
+            if (hiddenRect != null)
+            {
+                hiddenRect.sizeDelta = new Vector2(hiddenRect.sizeDelta.x, 0f);
+            }
+
             return;
         }
 
         text.ForceMeshUpdate();
-        float preferredHeight = Mathf.Max(minHeight, text.preferredHeight + TextLayoutPadding);
+        float preferredHeight = Mathf.Max(minHeight, text.preferredHeight + extraPadding);
+        if (maxHeight > 0f)
+        {
+            preferredHeight = Mathf.Min(preferredHeight, maxHeight);
+        }
         layoutElement.minHeight = minHeight;
         layoutElement.preferredHeight = preferredHeight;
+
+        RectTransform rectTransform = text.rectTransform;
+        if (rectTransform != null)
+        {
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, preferredHeight);
+        }
+    }
+
+    private void UpdateContentSpacing()
+    {
+        RectTransform contentRect = transform.Find("PanelContent") as RectTransform;
+        if (contentRect == null)
+        {
+            return;
+        }
+
+        VerticalLayoutGroup layout = contentRect.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
+        {
+            return;
+        }
+
+        bool hasFeedback = _feedbackText != null
+            && _feedbackText.gameObject.activeSelf
+            && !string.IsNullOrWhiteSpace(_feedbackText.text);
+
+        layout.spacing = hasFeedback ? ContentSpacingWithFeedback : ContentSpacingDefault;
     }
 
     private void UpdateOptionLayoutHeight()
@@ -1076,36 +1090,7 @@ public class DecisionPanel : MonoBehaviour
 
         EnsureIconImage(_aiAdviceRow != null ? _aiAdviceRow.transform : null, "AdviceIcon", "reminder", 18f, true);
 
-        GameObject optionsHeaderRow = FindOrCreateChild(contentRoot.gameObject, "OptionsHeaderRow");
-        if (_feedbackText != null)
-        {
-            optionsHeaderRow.transform.SetSiblingIndex(Mathf.Max(0, _feedbackText.transform.GetSiblingIndex()));
-        }
-        HorizontalLayoutGroup optionsHeaderLayout = optionsHeaderRow.GetComponent<HorizontalLayoutGroup>();
-        if (optionsHeaderLayout == null)
-        {
-            optionsHeaderLayout = optionsHeaderRow.AddComponent<HorizontalLayoutGroup>();
-        }
-        optionsHeaderLayout.spacing = 10f;
-        optionsHeaderLayout.childAlignment = TextAnchor.MiddleLeft;
-        optionsHeaderLayout.childControlWidth = false;
-        optionsHeaderLayout.childControlHeight = true;
-        optionsHeaderLayout.childForceExpandWidth = false;
-        optionsHeaderLayout.childForceExpandHeight = false;
-
-        LayoutElement optionsHeaderRowLayout = optionsHeaderRow.GetComponent<LayoutElement>();
-        if (optionsHeaderRowLayout == null)
-        {
-            optionsHeaderRowLayout = optionsHeaderRow.AddComponent<LayoutElement>();
-        }
-        optionsHeaderRowLayout.minHeight = 34f;
-        optionsHeaderRowLayout.preferredHeight = 34f;
-
-        EnsureIconImage(optionsHeaderRow.transform, "OptionsHeaderIcon", "key_hint", 16f, true);
-        TMP_Text optionsHeaderText = EnsureText(optionsHeaderRow.transform, "OptionsHeaderText", sharedFont, 20f, FontStyles.Normal, TextAlignmentOptions.Left, 34f);
-        ApplyFixedWidth(optionsHeaderText, 800f);
-        optionsHeaderText.text = "结合团队状态与AI建议，选择一个方案";
-        optionsHeaderText.color = new Color32(194, 210, 228, 255);
+        RemoveChildIfExists(contentRoot.gameObject, "OptionsHeaderRow");
     }
 
     private static void ApplyFixedWidth(TMP_Text text, float width)
@@ -1124,6 +1109,12 @@ public class DecisionPanel : MonoBehaviour
         layoutElement.minWidth = width;
         layoutElement.preferredWidth = width;
         layoutElement.flexibleWidth = 0f;
+
+        RectTransform rectTransform = text.rectTransform;
+        if (rectTransform != null)
+        {
+            rectTransform.sizeDelta = new Vector2(width, rectTransform.sizeDelta.y);
+        }
     }
 
     private string BuildAIAdviceHintText(bool hasViewedAdvice)
@@ -1167,8 +1158,43 @@ public class DecisionPanel : MonoBehaviour
         text.alignment = alignment;
         text.enableWordWrapping = true;
         text.color = Color.white;
-        text.margin = new Vector4(20f, 16f, 20f, 16f);
+        text.margin = new Vector4(16f, 12f, 16f, 12f);
         return text;
+    }
+
+    private static void ApplyDescriptionTextStyle(TMP_Text text)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.margin = new Vector4(14f, 10f, 14f, 10f);
+        text.overflowMode = TextOverflowModes.Masking;
+    }
+
+    private static void ApplyAdviceTextStyle(TMP_Text text)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.alignment = TextAlignmentOptions.MidlineLeft;
+        text.margin = new Vector4(12f, 6f, 12f, 4f);
+        text.overflowMode = TextOverflowModes.Masking;
+    }
+
+    private static void ApplyFeedbackTextStyle(TMP_Text text)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.alignment = TextAlignmentOptions.MidlineLeft;
+        text.margin = new Vector4(12f, 6f, 12f, 0f);
+        text.overflowMode = TextOverflowModes.Masking;
     }
 
     private static GameObject FindOrCreateChild(GameObject parent, string childName)
@@ -1182,6 +1208,29 @@ public class DecisionPanel : MonoBehaviour
         GameObject child = new GameObject(childName, typeof(RectTransform));
         child.transform.SetParent(parent.transform, false);
         return child;
+    }
+
+    private static void RemoveChildIfExists(GameObject parent, string childName)
+    {
+        if (parent == null)
+        {
+            return;
+        }
+
+        Transform existing = parent.transform.Find(childName);
+        if (existing == null)
+        {
+            return;
+        }
+
+        if (Application.isPlaying)
+        {
+            Destroy(existing.gameObject);
+        }
+        else
+        {
+            DestroyImmediate(existing.gameObject);
+        }
     }
 
     private T FindChildComponent<T>(string relativePath) where T : Component
@@ -1298,7 +1347,7 @@ public class DecisionPanel : MonoBehaviour
         text.alignment = TextAlignmentOptions.Left;
         text.enableWordWrapping = false;
         text.color = new Color32(192, 208, 226, 255);
-        text.margin = new Vector4(6f, 8f, 8f, 8f);
+        text.margin = new Vector4(4f, 6f, 8f, 6f);
         return text;
     }
 
