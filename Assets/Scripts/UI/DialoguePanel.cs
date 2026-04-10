@@ -11,7 +11,13 @@ using UnityEditor;
 
 public class DialoguePanel : MonoBehaviour
 {
-    private const string AdvanceHintText = "点击 / 空格 / 回车继续";
+    private const string AdvanceHintText = "点击 / 空格 继续";
+    private const float ContentBottomAnchor = 0.03f;
+    private const float ContentTopAnchor = 0.35f;
+    private const float ContentTopAnchorWithoutPortrait = 0.35f;
+    private const float PortraitRightInset = 36f;
+    private const float PortraitWidth = 430f;
+    private const float PortraitHeight = 620f;
 
     [Serializable]
     private class LocationBackgroundEntry
@@ -285,10 +291,12 @@ public class DialoguePanel : MonoBehaviour
         if (_portraitImage != null)
         {
             _portraitImage.sprite = portraitSprite;
-            _portraitImage.preserveAspect = true;
+            _portraitImage.preserveAspect = false;
             _portraitImage.color = hasPortrait ? Color.white : Color.clear;
         }
 
+        RefreshPortraitFrameLayout();
+        RefreshPortraitImageLayout(portraitSprite, hasPortrait);
         RefreshPortraitLayout(hasPortrait);
     }
 
@@ -302,8 +310,8 @@ public class DialoguePanel : MonoBehaviour
 
         if (_contentRect != null)
         {
-            _contentRect.anchorMin = new Vector2(0.05f, 0.08f);
-            _contentRect.anchorMax = hasPortrait ? new Vector2(0.68f, 0.4f) : new Vector2(0.92f, 0.4f);
+            _contentRect.anchorMin = new Vector2(0.05f, ContentBottomAnchor);
+            _contentRect.anchorMax = hasPortrait ? new Vector2(0.68f, ContentTopAnchor) : new Vector2(0.92f, ContentTopAnchorWithoutPortrait);
             _contentRect.offsetMin = Vector2.zero;
             _contentRect.offsetMax = Vector2.zero;
         }
@@ -464,6 +472,8 @@ public class DialoguePanel : MonoBehaviour
         {
             ApplyAllFonts();
             RefreshHintText();
+            ApplyPortraitContainerStyle();
+            RefreshPortraitFrameLayout();
             RefreshPortraitLayout(_portraitFrame.gameObject.activeSelf);
             return;
         }
@@ -557,34 +567,15 @@ public class DialoguePanel : MonoBehaviour
 
         GameObject portraitFrameObject = FindOrCreateChild(gameObject, "PortraitFrame");
         portraitFrameObject.transform.SetSiblingIndex(Mathf.Max(2, gameObject.transform.childCount - 1));
-        RectTransform portraitFrameRect = EnsureRectTransform(portraitFrameObject);
-        portraitFrameRect.anchorMin = new Vector2(0.7f, 0.05f);
-        portraitFrameRect.anchorMax = new Vector2(0.96f, 0.86f);
-        portraitFrameRect.offsetMin = Vector2.zero;
-        portraitFrameRect.offsetMax = Vector2.zero;
 
         _portraitFrame = portraitFrameObject.GetComponent<Image>();
         if (_portraitFrame == null)
         {
             _portraitFrame = portraitFrameObject.AddComponent<Image>();
         }
-        _portraitFrame.color = new Color32(9, 18, 31, 176);
-        _portraitFrame.raycastTarget = false;
-
-        Outline portraitOutline = portraitFrameObject.GetComponent<Outline>();
-        if (portraitOutline == null)
-        {
-            portraitOutline = portraitFrameObject.AddComponent<Outline>();
-        }
-        portraitOutline.effectColor = new Color32(124, 179, 252, 90);
-        portraitOutline.effectDistance = new Vector2(1f, -1f);
 
         GameObject portraitImageObject = FindOrCreateChild(portraitFrameObject, "PortraitImage");
         RectTransform portraitImageRect = EnsureRectTransform(portraitImageObject);
-        portraitImageRect.anchorMin = Vector2.zero;
-        portraitImageRect.anchorMax = Vector2.one;
-        portraitImageRect.offsetMin = new Vector2(6f, 6f);
-        portraitImageRect.offsetMax = new Vector2(-6f, -6f);
 
         _portraitImage = portraitImageObject.GetComponent<Image>();
         if (_portraitImage == null)
@@ -593,6 +584,8 @@ public class DialoguePanel : MonoBehaviour
         }
         _portraitImage.raycastTarget = false;
         _portraitImage.preserveAspect = true;
+        ApplyPortraitContainerStyle();
+        RefreshPortraitFrameLayout();
 
         _locationText = EnsureText(contentRoot.transform, "LocationText", sharedFont, 28, FontStyles.Bold, TextAlignmentOptions.Left);
         _speakerText = EnsureText(contentRoot.transform, "SpeakerText", sharedFont, 34, FontStyles.Bold, TextAlignmentOptions.Left);
@@ -634,6 +627,82 @@ public class DialoguePanel : MonoBehaviour
         }
     }
 
+    private void ApplyPortraitContainerStyle()
+    {
+        if (_portraitFrame != null)
+        {
+            _portraitFrame.color = Color.clear;
+            _portraitFrame.raycastTarget = false;
+            RemoveComponentIfExists<Outline>(_portraitFrame.gameObject);
+        }
+
+        if (_portraitImage == null)
+        {
+            return;
+        }
+
+        _portraitImage.raycastTarget = false;
+        _portraitImage.preserveAspect = false;
+    }
+
+    private void RefreshPortraitFrameLayout()
+    {
+        if (_portraitFrame == null)
+        {
+            return;
+        }
+
+        RectTransform portraitFrameRect = _portraitFrame.rectTransform;
+        portraitFrameRect.anchorMin = new Vector2(1f, 0f);
+        portraitFrameRect.anchorMax = new Vector2(1f, 0f);
+        portraitFrameRect.pivot = new Vector2(1f, 0f);
+        portraitFrameRect.anchoredPosition = new Vector2(-PortraitRightInset, 0f);
+        portraitFrameRect.sizeDelta = new Vector2(PortraitWidth, PortraitHeight);
+    }
+
+    private void RefreshPortraitImageLayout(Sprite portraitSprite, bool hasPortrait)
+    {
+        if (_portraitImage == null)
+        {
+            return;
+        }
+
+        RectTransform portraitImageRect = _portraitImage.rectTransform;
+        if (portraitImageRect == null)
+        {
+            return;
+        }
+
+        portraitImageRect.anchorMin = new Vector2(0.5f, 0f);
+        portraitImageRect.anchorMax = new Vector2(0.5f, 0f);
+        portraitImageRect.pivot = new Vector2(0.5f, 0f);
+        portraitImageRect.anchoredPosition = Vector2.zero;
+
+        if (!hasPortrait || portraitSprite == null || _portraitFrame == null)
+        {
+            portraitImageRect.sizeDelta = Vector2.zero;
+            return;
+        }
+
+        RectTransform portraitFrameRect = _portraitFrame.rectTransform;
+        float frameWidth = portraitFrameRect.rect.width > 0f ? portraitFrameRect.rect.width : PortraitWidth;
+        float frameHeight = portraitFrameRect.rect.height > 0f ? portraitFrameRect.rect.height : PortraitHeight;
+        float spriteWidth = Mathf.Max(1f, portraitSprite.rect.width);
+        float spriteHeight = Mathf.Max(1f, portraitSprite.rect.height);
+        float spriteAspect = spriteWidth / spriteHeight;
+
+        float targetWidth = frameWidth;
+        float targetHeight = spriteAspect > 0f ? targetWidth / spriteAspect : frameHeight;
+
+        if (frameHeight > 0f && targetHeight > frameHeight)
+        {
+            targetHeight = frameHeight;
+            targetWidth = targetHeight * spriteAspect;
+        }
+
+        portraitImageRect.sizeDelta = new Vector2(targetWidth, targetHeight);
+    }
+
     private static bool IsAdvanceShortcutPressed()
     {
         return Input.GetKeyDown(KeyCode.Space)
@@ -673,6 +742,29 @@ public class DialoguePanel : MonoBehaviour
         }
 
         return rectTransform;
+    }
+
+    private static void RemoveComponentIfExists<T>(GameObject target) where T : Component
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        T component = target.GetComponent<T>();
+        if (component == null)
+        {
+            return;
+        }
+
+        if (Application.isPlaying)
+        {
+            Destroy(component);
+        }
+        else
+        {
+            DestroyImmediate(component);
+        }
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment)

@@ -380,6 +380,30 @@ public class Project2Phase4Tests
     }
 
     [Test]
+    public void GameScene_ShouldContainStaticGameplayBackground()
+    {
+#if UNITY_EDITOR
+        EditorSceneManager.OpenScene("Assets/Scenes/GameScene.unity", OpenSceneMode.Single);
+#endif
+
+        Transform backgroundTransform = FindInOpenScene("GameCanvas/GameplayBackground");
+        Assert.NotNull(backgroundTransform);
+
+        Image backgroundImage = backgroundTransform.GetComponent<Image>();
+        Assert.NotNull(backgroundImage);
+        Assert.NotNull(backgroundImage.sprite);
+        Assert.AreEqual("OfficeDay", backgroundImage.sprite.name);
+        Assert.IsFalse(backgroundImage.raycastTarget);
+
+        RectTransform backgroundRect = backgroundTransform as RectTransform;
+        Assert.NotNull(backgroundRect);
+        Assert.AreEqual(Vector2.zero, backgroundRect.anchorMin);
+        Assert.AreEqual(Vector2.one, backgroundRect.anchorMax);
+        Assert.AreEqual(Vector2.zero, backgroundRect.anchoredPosition);
+        Assert.AreEqual(Vector2.zero, backgroundRect.sizeDelta);
+    }
+
+    [Test]
     public void CPMGamePanel_ShowGameShouldResetRuntimeStateWhenReopened()
     {
         DecisionEventData eventData = GetProject2WeekEvent(3).decisionEvent;

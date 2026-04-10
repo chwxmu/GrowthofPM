@@ -231,7 +231,7 @@ public class QuizScheduleVisibilityTests
 
         TMP_Text hintText = GetPrivateField<TMP_Text>(dialoguePanel, "_hintText");
 
-        Assert.AreEqual("点击 / 空格 / 回车继续", hintText.text);
+        Assert.AreEqual("点击 / 空格 继续", hintText.text);
     }
 
     [Test]
@@ -264,6 +264,130 @@ public class QuizScheduleVisibilityTests
 
         Assert.AreEqual("小李", speakerText.text);
         Assert.AreEqual("办公室", locationText.text);
+    }
+
+    [Test]
+    public void ShowDialogues_ShouldRemovePortraitFrameDecoration()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "旁白",
+                location = "会议室",
+                text = "测试对话"
+            }
+        }, null);
+
+        Image portraitFrame = GetPrivateField<Image>(dialoguePanel, "_portraitFrame");
+        Image portraitImage = GetPrivateField<Image>(dialoguePanel, "_portraitImage");
+
+        Assert.IsNotNull(portraitFrame);
+        Assert.IsNotNull(portraitImage);
+        Assert.AreEqual(0f, portraitFrame.color.a, 0.001f);
+        Assert.IsNull(portraitFrame.GetComponent<Outline>());
+        Assert.AreEqual(new Vector2(0.5f, 0f), portraitImage.rectTransform.anchorMin);
+        Assert.AreEqual(new Vector2(0.5f, 0f), portraitImage.rectTransform.anchorMax);
+        Assert.AreEqual(new Vector2(0.5f, 0f), portraitImage.rectTransform.pivot);
+        Assert.AreEqual(Vector2.zero, portraitImage.rectTransform.anchoredPosition);
+    }
+
+    [Test]
+    public void ShowDialogues_ShouldShiftDialogueContentAndPortraitDown()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "朱诀",
+                location = "会议室",
+                text = "测试对话"
+            }
+        }, null);
+
+        RectTransform contentRect = dialoguePanel.transform.Find("PanelContent") as RectTransform;
+        Image portraitFrame = GetPrivateField<Image>(dialoguePanel, "_portraitFrame");
+
+        Assert.IsNotNull(contentRect);
+        Assert.IsNotNull(portraitFrame);
+        Assert.AreEqual(0.03f, contentRect.anchorMin.y, 0.0001f);
+        Assert.AreEqual(0.35f, contentRect.anchorMax.y, 0.0001f);
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.anchorMin);
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.anchorMax);
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.pivot);
+        Assert.AreEqual(new Vector2(-36f, 0f), portraitFrame.rectTransform.anchoredPosition);
+        Assert.AreEqual(new Vector2(430f, 620f), portraitFrame.rectTransform.sizeDelta);
+    }
+
+    [Test]
+    public void ShowDialogues_ShouldBottomAlignPortraitImageInsideFrame()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "朱诀",
+                location = "会议室",
+                text = "测试对话"
+            }
+        }, null);
+
+        Image portraitFrame = GetPrivateField<Image>(dialoguePanel, "_portraitFrame");
+        Image portraitImage = GetPrivateField<Image>(dialoguePanel, "_portraitImage");
+
+        Assert.IsNotNull(portraitFrame);
+        Assert.IsNotNull(portraitImage);
+        Assert.AreEqual(0f, portraitFrame.rectTransform.anchorMin.y, 0.0001f);
+        Assert.AreEqual(0f, portraitImage.rectTransform.anchorMin.y, 0.0001f);
+        Assert.AreEqual(0f, portraitImage.rectTransform.anchorMax.y, 0.0001f);
+        Assert.AreEqual(0f, portraitImage.rectTransform.pivot.y, 0.0001f);
+        Assert.AreEqual(0f, portraitImage.rectTransform.anchoredPosition.y, 0.0001f);
+        Assert.Greater(portraitImage.rectTransform.sizeDelta.x, 0f);
+        Assert.Greater(portraitImage.rectTransform.sizeDelta.y, 0f);
+    }
+
+    [Test]
+    public void ShowDialogues_ShouldRefreshPortraitLayoutWhenLayoutAlreadyExists()
+    {
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "朱诀",
+                location = "会议室",
+                text = "第一次显示"
+            }
+        }, null);
+
+        Image portraitFrame = GetPrivateField<Image>(dialoguePanel, "_portraitFrame");
+        Assert.IsNotNull(portraitFrame);
+
+        portraitFrame.rectTransform.anchorMin = new Vector2(0.7f, 0.05f);
+        portraitFrame.rectTransform.anchorMax = new Vector2(0.96f, 0.86f);
+
+        dialoguePanel.ShowDialogues(new List<DialogueLine>
+        {
+            new DialogueLine
+            {
+                speaker = "朱诀",
+                location = "深夜办公室",
+                text = "第二次显示"
+            }
+        }, null);
+
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.anchorMin);
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.anchorMax);
+        Assert.AreEqual(new Vector2(1f, 0f), portraitFrame.rectTransform.pivot);
+        Assert.AreEqual(new Vector2(-36f, 0f), portraitFrame.rectTransform.anchoredPosition);
+        Assert.AreEqual(new Vector2(430f, 620f), portraitFrame.rectTransform.sizeDelta);
     }
 
     [Test]
@@ -302,6 +426,26 @@ public class QuizScheduleVisibilityTests
 
         Assert.IsTrue(continueButton.interactable);
         Assert.AreEqual("继续游戏", continueButton.GetComponentInChildren<TMP_Text>(true).text);
+    }
+
+    [Test]
+    public void MenuSceneController_ShouldNotCreateRuntimeMenuVisuals()
+    {
+        GameObject menuCanvas = new GameObject("MenuCanvas", typeof(RectTransform));
+        _createdObjects.Add(menuCanvas);
+
+        MenuSceneController controller = menuCanvas.AddComponent<MenuSceneController>();
+
+        GameObject backgroundPanel = new GameObject("BackgroundPanel", typeof(RectTransform), typeof(Image));
+        _createdObjects.Add(backgroundPanel);
+        backgroundPanel.transform.SetParent(menuCanvas.transform, false);
+
+        InvokePrivate(controller, "Awake");
+        InvokePrivate(controller, "Start");
+
+        Assert.IsNull(menuCanvas.transform.Find("HeroIllustration"));
+        Assert.IsNull(backgroundPanel.transform.Find("BackgroundOverlay"));
+        Assert.IsNull(backgroundPanel.GetComponent<Image>().sprite);
     }
 
     [Test]
@@ -505,6 +649,7 @@ public class QuizScheduleVisibilityTests
 
         Transform contentRoot = decisionPanel.transform.Find("PanelContent");
         Assert.IsNotNull(contentRoot);
+        Assert.IsNull(contentRoot.Find("Watermark"));
         Assert.IsNull(contentRoot.Find("OptionsHeaderRow"));
     }
 

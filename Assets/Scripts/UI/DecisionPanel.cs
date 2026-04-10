@@ -1030,31 +1030,6 @@ public class DecisionPanel : MonoBehaviour
         contentOutline.effectColor = new Color32(146, 196, 255, 70);
         contentOutline.effectDistance = new Vector2(1f, -1f);
 
-        GameObject watermarkObject = FindOrCreateChild(contentRoot.gameObject, "Watermark");
-        RectTransform watermarkRect = EnsureRectTransform(watermarkObject);
-        watermarkRect.anchorMin = new Vector2(1f, 1f);
-        watermarkRect.anchorMax = new Vector2(1f, 1f);
-        watermarkRect.pivot = new Vector2(1f, 1f);
-        watermarkRect.sizeDelta = new Vector2(72f, 72f);
-        watermarkRect.anchoredPosition = new Vector2(-18f, -16f);
-
-        LayoutElement watermarkLayout = watermarkObject.GetComponent<LayoutElement>();
-        if (watermarkLayout == null)
-        {
-            watermarkLayout = watermarkObject.AddComponent<LayoutElement>();
-        }
-        watermarkLayout.ignoreLayout = true;
-
-        Image watermarkImage = watermarkObject.GetComponent<Image>();
-        if (watermarkImage == null)
-        {
-            watermarkImage = watermarkObject.AddComponent<Image>();
-        }
-        watermarkImage.sprite = UIVisualResources.LoadIcon("dialogue_choice");
-        watermarkImage.preserveAspect = true;
-        watermarkImage.color = new Color32(166, 209, 255, 22);
-        watermarkImage.raycastTarget = false;
-
         GameObject headerRow = FindOrCreateChild(contentRoot.gameObject, "HeaderRow");
         headerRow.transform.SetSiblingIndex(0);
         HorizontalLayoutGroup headerLayout = headerRow.GetComponent<HorizontalLayoutGroup>();
@@ -1090,6 +1065,7 @@ public class DecisionPanel : MonoBehaviour
 
         EnsureIconImage(_aiAdviceRow != null ? _aiAdviceRow.transform : null, "AdviceIcon", "reminder", 18f, true);
 
+        RemoveChildIfExists(contentRoot.gameObject, "Watermark");
         RemoveChildIfExists(contentRoot.gameObject, "OptionsHeaderRow");
     }
 
