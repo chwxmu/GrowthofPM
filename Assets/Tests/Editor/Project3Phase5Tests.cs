@@ -74,6 +74,7 @@ public class Project3Phase5Tests
         CreateComponent<UIManager>("UIManager");
         GameManager gameManager = CreateProject3GameManager(dataManager, 1);
         DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
         StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
 
         storyManager.StartWeek();
@@ -91,6 +92,44 @@ public class Project3Phase5Tests
         Assert.AreEqual(StoryFlowStage.Prologue, storyManager.CurrentFlowStage);
         shownDialogues = GetPrivateField<List<DialogueLine>>(dialoguePanel, "_dialogues");
         StringAssert.Contains("周一早上 9:00", shownDialogues[0].text);
+
+        storyManager.OnPrologueComplete();
+        Assert.AreEqual(StoryFlowStage.Decision, storyManager.CurrentFlowStage);
+        DecisionEventData currentDecision = GetPrivateField<DecisionEventData>(decisionPanel, "_currentEventData");
+        Assert.NotNull(currentDecision);
+        Assert.AreEqual("p3_w1_d1", currentDecision.eventId);
+    }
+
+    [Test]
+    public void StoryManager_Project3WeeksShouldReachDecisionAfterPreDecisionDialogues()
+    {
+        DataManager dataManager = CreateComponent<DataManager>("DataManager");
+        CreateComponent<UIManager>("UIManager");
+        GameManager gameManager = CreateProject3GameManager(dataManager, 1);
+        DialoguePanel dialoguePanel = CreateComponent<DialoguePanel>("DialoguePanel");
+        DecisionPanel decisionPanel = CreateComponent<DecisionPanel>("DecisionPanel");
+        StoryManager storyManager = CreateComponent<StoryManager>("StoryManager");
+
+        for (int week = 1; week <= 12; week += 1)
+        {
+            gameManager.CurrentPlayerData.currentWeek = week;
+            storyManager.StartWeek();
+
+            Assert.AreEqual(StoryFlowStage.DailyIntro, storyManager.CurrentFlowStage, $"Week {week} should start with daily intro.");
+
+            storyManager.OnDailyIntroComplete();
+            Assert.AreEqual(StoryFlowStage.Prologue, storyManager.CurrentFlowStage, $"Week {week} should enter prologue after daily intro.");
+
+            storyManager.OnPrologueComplete();
+
+            DecisionEventData currentDecision = GetPrivateField<DecisionEventData>(decisionPanel, "_currentEventData");
+            Assert.AreEqual(StoryFlowStage.Decision, storyManager.CurrentFlowStage, $"Week {week} should reach decision after prologue.");
+            Assert.NotNull(currentDecision, $"Week {week} should load a decision event.");
+            Assert.AreEqual($"p3_w{week}_d1", currentDecision.eventId);
+
+            dialoguePanel.ForceCloseWithoutCallback();
+            decisionPanel.gameObject.SetActive(false);
+        }
     }
 
     [Test]

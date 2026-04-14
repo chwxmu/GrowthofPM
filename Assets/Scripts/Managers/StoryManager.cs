@@ -123,7 +123,8 @@ public class StoryManager : Singleton<StoryManager>
             return;
         }
 
-        OnDailyIntroComplete();
+        _decisionStepIndex = 0;
+        ShowNextDecisionOrSchedule();
     }
 
     public void OnDailyIntroComplete()

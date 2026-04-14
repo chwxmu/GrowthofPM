@@ -639,6 +639,42 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
+    public void EndingPanel_ShowEndingShouldRemoveButtonIconsAndWatermark()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            currentProject = 1,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        EndingPanel panel = CreateComponent<EndingPanel>("EndingPanel");
+        panel.ShowEnding(new EndingResultData
+        {
+            title = "结局标题",
+            description = "结局描述",
+            grade = "pass"
+        });
+
+        Transform contentRoot = panel.transform.Find("PanelContent");
+        Button nextProjectButton = GetPrivateField<Button>(panel, "_nextProjectButton");
+        Button restartButton = GetPrivateField<Button>(panel, "_restartButton");
+        Button menuButton = GetPrivateField<Button>(panel, "_menuButton");
+
+        Assert.NotNull(contentRoot);
+        Assert.IsNull(contentRoot.Find("Watermark"));
+
+        foreach (Button button in new[] { nextProjectButton, restartButton, menuButton })
+        {
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+            Assert.IsNull(button.transform.Find("Icon"));
+            Assert.NotNull(label);
+            Assert.AreEqual(TextAlignmentOptions.Center, label.alignment);
+            Assert.AreEqual(Vector4.zero, label.margin);
+        }
+    }
+
+    [Test]
     public void EndingPanel_ShowEndingShouldPlaceLongDescriptionInsideScrollableArea()
     {
         GameManager gameManager = CreateComponent<GameManager>("GameManager");
@@ -809,6 +845,39 @@ public class Phase2Flow7To12Tests
         Assert.Less(bottomSpacer.transform.GetSiblingIndex(), startButton.transform.GetSiblingIndex());
         Assert.Greater(bottomSpacer.flexibleHeight, 0f);
         Assert.Greater(inheritanceLayout.preferredHeight, 180f);
+    }
+
+    [Test]
+    public void TransitionPanel_ShowTransitionShouldRemoveHeaderIconStartIconAndWatermark()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            techPower = 66,
+            commPower = 58,
+            managePower = 62,
+            stressPower = 49,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        TransitionPanel panel = CreateComponent<TransitionPanel>("TransitionPanel");
+        panel.ShowTransition(new ProjectStoryData
+        {
+            projectName = "凤凰重构",
+            totalWeeks = 12
+        });
+
+        RectTransform contentRoot = GetPrivateField<RectTransform>(panel, "_contentRoot");
+        Button startButton = GetPrivateField<Button>(panel, "_startButton");
+        TMP_Text label = startButton.GetComponentInChildren<TMP_Text>(true);
+
+        Assert.NotNull(contentRoot);
+        Assert.IsNull(contentRoot.Find("HeaderIcon"));
+        Assert.IsNull(contentRoot.Find("Watermark"));
+        Assert.IsNull(startButton.transform.Find("Icon"));
+        Assert.NotNull(label);
+        Assert.AreEqual(TextAlignmentOptions.Center, label.alignment);
+        Assert.AreEqual(Vector4.zero, label.margin);
     }
 
     private T CreateComponent<T>(string name) where T : Component

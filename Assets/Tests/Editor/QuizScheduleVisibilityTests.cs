@@ -653,6 +653,54 @@ public class QuizScheduleVisibilityTests
         Assert.IsNull(contentRoot.Find("OptionsHeaderRow"));
     }
 
+    [Test]
+    public void TopStatusBar_AwakeShouldHideSlidersAndCreateStatIcons()
+    {
+        TopStatusBar topStatusBar = CreateTopStatusBar();
+        InvokePrivate(topStatusBar, "AutoBindIfNeeded");
+
+        Assert.IsFalse(topStatusBar.transform.Find("TechSlider").gameObject.activeSelf);
+        Assert.IsFalse(topStatusBar.transform.Find("CommSlider").gameObject.activeSelf);
+        Assert.IsFalse(topStatusBar.transform.Find("ManageSlider").gameObject.activeSelf);
+        Assert.IsFalse(topStatusBar.transform.Find("StressSlider").gameObject.activeSelf);
+        Assert.IsFalse(topStatusBar.transform.Find("EnergySlider").gameObject.activeSelf);
+
+        foreach (string iconName in new[] { "TechIcon", "CommIcon", "ManageIcon", "StressIcon", "EnergyIcon" })
+        {
+            Transform icon = topStatusBar.transform.Find(iconName);
+            Assert.NotNull(icon, $"Missing icon: {iconName}");
+
+            Image image = icon.GetComponent<Image>();
+            Assert.NotNull(image);
+            Assert.NotNull(image.sprite, $"Missing sprite on icon: {iconName}");
+        }
+    }
+
+    [Test]
+    public void TopStatusBar_UpdateDisplayShouldKeepValueOnlyStatTexts()
+    {
+        TopStatusBar topStatusBar = CreateTopStatusBar();
+        InvokePrivate(topStatusBar, "AutoBindIfNeeded");
+
+        topStatusBar.UpdateDisplay(new PlayerData
+        {
+            currentProject = 2,
+            currentWeek = 7,
+            techPower = 88,
+            commPower = 77,
+            managePower = 66,
+            stressPower = 55,
+            energy = 123,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        Assert.AreEqual("88", topStatusBar.transform.Find("TechValueText").GetComponent<TMP_Text>().text);
+        Assert.AreEqual("77", topStatusBar.transform.Find("CommValueText").GetComponent<TMP_Text>().text);
+        Assert.AreEqual("66", topStatusBar.transform.Find("ManageValueText").GetComponent<TMP_Text>().text);
+        Assert.AreEqual("55", topStatusBar.transform.Find("StressValueText").GetComponent<TMP_Text>().text);
+        Assert.AreEqual("123", topStatusBar.transform.Find("EnergyValueText").GetComponent<TMP_Text>().text);
+    }
+
     private void EnsureTmpFontHost()
     {
         TMP_FontAsset fallback = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
@@ -691,6 +739,76 @@ public class QuizScheduleVisibilityTests
         }
         labelText.text = label;
 
+        return buttonObject.GetComponent<Button>();
+    }
+
+    private TopStatusBar CreateTopStatusBar()
+    {
+        GameObject root = new GameObject("TopStatusBar", typeof(RectTransform), typeof(Image));
+        _createdObjects.Add(root);
+
+        CreateTextChild(root.transform, "ProjectInfoText", "项目信息");
+        CreateTextChild(root.transform, "PhaseText", "阶段");
+        CreateTextChild(root.transform, "TechLabel", "技术力");
+        CreateSliderChild(root.transform, "TechSlider");
+        CreateTextChild(root.transform, "TechValueText", "0");
+        CreateTextChild(root.transform, "CommLabel", "沟通力");
+        CreateSliderChild(root.transform, "CommSlider");
+        CreateTextChild(root.transform, "CommValueText", "0");
+        CreateTextChild(root.transform, "ManageLabel", "管理力");
+        CreateSliderChild(root.transform, "ManageSlider");
+        CreateTextChild(root.transform, "ManageValueText", "0");
+        CreateTextChild(root.transform, "StressLabel", "抗压力");
+        CreateSliderChild(root.transform, "StressSlider");
+        CreateTextChild(root.transform, "StressValueText", "0");
+        CreateTextChild(root.transform, "EnergyLabel", "精力值");
+        CreateSliderChild(root.transform, "EnergySlider");
+        CreateTextChild(root.transform, "EnergyValueText", "0");
+        CreateButtonChild(root.transform, "QuizButton", "答题");
+        CreateButtonChild(root.transform, "ScheduleButton", "日程安排");
+
+        return root.AddComponent<TopStatusBar>();
+    }
+
+    private TextMeshProUGUI CreateTextChild(Transform parent, string name, string text)
+    {
+        GameObject textObject = new GameObject(name, typeof(RectTransform));
+        textObject.transform.SetParent(parent, false);
+
+        TextMeshProUGUI textComponent = textObject.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset fallback = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (fallback != null)
+        {
+            textComponent.font = fallback;
+        }
+
+        textComponent.text = text;
+        return textComponent;
+    }
+
+    private Slider CreateSliderChild(Transform parent, string name)
+    {
+        GameObject sliderObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Slider));
+        sliderObject.transform.SetParent(parent, false);
+        return sliderObject.GetComponent<Slider>();
+    }
+
+    private Button CreateButtonChild(Transform parent, string name, string label)
+    {
+        GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+        buttonObject.transform.SetParent(parent, false);
+
+        GameObject labelObject = new GameObject("Label", typeof(RectTransform));
+        labelObject.transform.SetParent(buttonObject.transform, false);
+
+        TextMeshProUGUI labelText = labelObject.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset fallback = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (fallback != null)
+        {
+            labelText.font = fallback;
+        }
+
+        labelText.text = label;
         return buttonObject.GetComponent<Button>();
     }
 

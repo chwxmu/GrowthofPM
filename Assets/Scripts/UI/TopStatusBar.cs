@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class TopStatusBar : MonoBehaviour
 {
+    private static readonly Vector2 LeftStatIconSize = new Vector2(24f, 24f);
+    private static readonly Vector2 EnergyIconSize = new Vector2(24f, 24f);
+
     [Header("项目信息")]
     [SerializeField] private TMP_Text _projectInfoText;
     [SerializeField] private TMP_Text _phaseText;
@@ -194,8 +197,8 @@ public class TopStatusBar : MonoBehaviour
             _scheduleEntryButton = CreateScheduleButton();
         }
 
+        HideObsoleteSliders();
         EnsureEntryButtonVisuals();
-        AdjustEnergyRowLayout();
         EnsureVisualDecorations();
     }
 
@@ -262,11 +265,11 @@ public class TopStatusBar : MonoBehaviour
     private void EnsureVisualDecorations()
     {
         EnsureAccentLine();
-        EnsureStatRowIcon("TechRow", "technical_skill_icon");
-        EnsureStatRowIcon("CommRow", "communication_skill_icon");
-        EnsureStatRowIcon("ManageRow", "management_skill_icon");
-        EnsureStatRowIcon("StressRow", "stress_resistance_icon");
-        EnsureStatRowIcon("EnergyRow", "energy_icon");
+        EnsureDirectStatIcon("TechIcon", "technical_skill_icon", new Vector2(20f, -93f), LeftStatIconSize, false);
+        EnsureDirectStatIcon("CommIcon", "communication_skill_icon", new Vector2(20f, -127f), LeftStatIconSize, false);
+        EnsureDirectStatIcon("ManageIcon", "management_skill_icon", new Vector2(20f, -161f), LeftStatIconSize, false);
+        EnsureDirectStatIcon("StressIcon", "stress_resistance_icon", new Vector2(20f, -195f), LeftStatIconSize, false);
+        EnsureDirectStatIcon("EnergyIcon", "energy_icon", new Vector2(-404f, 89f), EnergyIconSize, true);
     }
 
     private void EnsureAccentLine()
@@ -294,34 +297,30 @@ public class TopStatusBar : MonoBehaviour
         accentImage.raycastTarget = false;
     }
 
-    private void EnsureStatRowIcon(string rowName, string iconResource)
+    private void HideObsoleteSliders()
     {
-        Transform row = transform.Find(rowName);
-        if (row == null)
-        {
-            return;
-        }
+        HideSlider(_techSlider);
+        HideSlider(_commSlider);
+        HideSlider(_manageSlider);
+        HideSlider(_stressSlider);
+        HideSlider(_energySlider);
+    }
 
-        GameObject iconObject = FindOrCreateChild(row.gameObject, "StatIcon");
-        iconObject.transform.SetAsFirstSibling();
-
-        LayoutElement layoutElement = iconObject.GetComponent<LayoutElement>();
-        if (layoutElement == null)
-        {
-            layoutElement = iconObject.AddComponent<LayoutElement>();
-        }
-        layoutElement.minWidth = 28f;
-        layoutElement.preferredWidth = 28f;
-        layoutElement.minHeight = 28f;
-        layoutElement.preferredHeight = 28f;
-        layoutElement.flexibleWidth = 0f;
-
+    private void EnsureDirectStatIcon(string iconName, string iconResource, Vector2 anchoredPosition, Vector2 size, bool useBottomRightAnchor)
+    {
+        GameObject iconObject = FindOrCreateChild(gameObject, iconName);
         RectTransform iconRect = iconObject.GetComponent<RectTransform>();
         if (iconRect == null)
         {
             iconRect = iconObject.AddComponent<RectTransform>();
         }
-        iconRect.sizeDelta = new Vector2(28f, 28f);
+
+        Vector2 anchor = useBottomRightAnchor ? new Vector2(1f, 0f) : new Vector2(0f, 1f);
+        iconRect.anchorMin = anchor;
+        iconRect.anchorMax = anchor;
+        iconRect.pivot = new Vector2(0.5f, 0.5f);
+        iconRect.anchoredPosition = anchoredPosition;
+        iconRect.sizeDelta = size;
 
         Image iconImage = iconObject.GetComponent<Image>();
         if (iconImage == null)
@@ -424,37 +423,11 @@ public class TopStatusBar : MonoBehaviour
         scheduleRect.anchoredPosition = new Vector2(quizRect.anchoredPosition.x - quizRect.sizeDelta.x - spacing, quizRect.anchoredPosition.y);
     }
 
-    private void AdjustEnergyRowLayout()
+    private static void HideSlider(Slider slider)
     {
-        TMP_Text energyLabel = FindText("EnergyLabel");
-        if (energyLabel != null)
+        if (slider != null)
         {
-            SetLocalY(energyLabel.rectTransform, -144f);
-        }
-
-        if (_energyValueText != null)
-        {
-            SetLocalY(_energyValueText.rectTransform, -144f);
-        }
-
-        if (_energySlider != null)
-        {
-            RectTransform sliderRect = _energySlider.GetComponent<RectTransform>();
-            SetLocalY(sliderRect, -140f);
-        }
-    }
-
-    private static void SetLocalY(RectTransform rectTransform, float y)
-    {
-        if (rectTransform == null)
-        {
-            return;
-        }
-
-        Vector3 local = rectTransform.localPosition;
-        if (!Mathf.Approximately(local.y, y))
-        {
-            rectTransform.localPosition = new Vector3(local.x, y, local.z);
+            slider.gameObject.SetActive(false);
         }
     }
 

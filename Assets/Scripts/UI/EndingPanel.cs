@@ -357,30 +357,7 @@ public class EndingPanel : MonoBehaviour
         headerImage.color = new Color32(215, 232, 255, 255);
         headerImage.raycastTarget = false;
 
-        GameObject watermarkObject = FindOrCreateChild(contentRoot.gameObject, "Watermark");
-        RectTransform watermarkRect = EnsureRectTransform(watermarkObject);
-        watermarkRect.anchorMin = new Vector2(1f, 1f);
-        watermarkRect.anchorMax = new Vector2(1f, 1f);
-        watermarkRect.pivot = new Vector2(1f, 1f);
-        watermarkRect.sizeDelta = new Vector2(84f, 84f);
-        watermarkRect.anchoredPosition = new Vector2(-18f, -18f);
-
-        LayoutElement watermarkLayout = watermarkObject.GetComponent<LayoutElement>();
-        if (watermarkLayout == null)
-        {
-            watermarkLayout = watermarkObject.AddComponent<LayoutElement>();
-        }
-        watermarkLayout.ignoreLayout = true;
-
-        Image watermarkImage = watermarkObject.GetComponent<Image>();
-        if (watermarkImage == null)
-        {
-            watermarkImage = watermarkObject.AddComponent<Image>();
-        }
-        watermarkImage.sprite = UIVisualResources.LoadIcon("progress");
-        watermarkImage.preserveAspect = true;
-        watermarkImage.color = new Color32(164, 206, 255, 18);
-        watermarkImage.raycastTarget = false;
+        DestroyChildIfExists(contentRoot.gameObject, "Watermark");
 
         if (_titleText != null)
         {
@@ -398,9 +375,9 @@ public class EndingPanel : MonoBehaviour
             _aiRateText.color = new Color32(178, 215, 255, 255);
         }
 
-        EnsureButtonIcon(_nextProjectButton, "progress", sharedFont);
-        EnsureButtonIcon(_restartButton, "protagonist", sharedFont);
-        EnsureButtonIcon(_menuButton, "reminder", sharedFont);
+        RemoveButtonIcon(_nextProjectButton, sharedFont);
+        RemoveButtonIcon(_restartButton, sharedFont);
+        RemoveButtonIcon(_menuButton, sharedFont);
     }
 
     private static ScrollRect EnsureDetailsScrollRect(Transform parent, string name)
@@ -576,30 +553,14 @@ public class EndingPanel : MonoBehaviour
         return button;
     }
 
-    private static void EnsureButtonIcon(Button button, string iconResource, TMP_FontAsset font)
+    private static void RemoveButtonIcon(Button button, TMP_FontAsset font)
     {
         if (button == null)
         {
             return;
         }
 
-        GameObject iconObject = FindOrCreateChild(button.gameObject, "Icon");
-        RectTransform iconRect = EnsureRectTransform(iconObject);
-        iconRect.anchorMin = new Vector2(0f, 0.5f);
-        iconRect.anchorMax = new Vector2(0f, 0.5f);
-        iconRect.pivot = new Vector2(0f, 0.5f);
-        iconRect.sizeDelta = new Vector2(18f, 18f);
-        iconRect.anchoredPosition = new Vector2(14f, 0f);
-
-        Image iconImage = iconObject.GetComponent<Image>();
-        if (iconImage == null)
-        {
-            iconImage = iconObject.AddComponent<Image>();
-        }
-        iconImage.sprite = UIVisualResources.LoadIcon(iconResource);
-        iconImage.preserveAspect = true;
-        iconImage.color = new Color32(236, 243, 255, 255);
-        iconImage.raycastTarget = false;
+        DestroyChildIfExists(button.gameObject, "Icon");
 
         TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
         if (label != null)
@@ -609,8 +570,31 @@ public class EndingPanel : MonoBehaviour
                 label.font = font;
             }
 
-            label.alignment = TextAlignmentOptions.MidlineLeft;
-            label.margin = new Vector4(28f, 0f, 10f, 0f);
+            label.alignment = TextAlignmentOptions.Center;
+            label.margin = Vector4.zero;
+        }
+    }
+
+    private static void DestroyChildIfExists(GameObject parent, string childName)
+    {
+        if (parent == null)
+        {
+            return;
+        }
+
+        Transform child = parent.transform.Find(childName);
+        if (child == null)
+        {
+            return;
+        }
+
+        if (Application.isPlaying)
+        {
+            Destroy(child.gameObject);
+        }
+        else
+        {
+            DestroyImmediate(child.gameObject);
         }
     }
 
