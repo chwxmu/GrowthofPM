@@ -156,6 +156,14 @@ public class TopStatusBar : MonoBehaviour
 
     private void AutoBindIfNeeded()
     {
+        BindSceneReferences();
+
+        EnsureEntryButtonVisuals();
+        EnsureVisualDecorations();
+    }
+
+    private void BindSceneReferences()
+    {
         _projectInfoText = _projectInfoText != null ? _projectInfoText : FindText("ProjectInfoText");
         _phaseText = _phaseText != null ? _phaseText : FindText("PhaseText");
 
@@ -191,72 +199,12 @@ public class TopStatusBar : MonoBehaviour
                 _scheduleEntryButton = scheduleTarget.GetComponent<Button>();
             }
         }
-
-        if (_scheduleEntryButton == null)
-        {
-            _scheduleEntryButton = CreateScheduleButton();
-        }
-
-        HideObsoleteSliders();
-        EnsureEntryButtonVisuals();
-        EnsureVisualDecorations();
-    }
-
-    private Button CreateScheduleButton()
-    {
-        GameObject buttonObject = new GameObject("ScheduleButton", typeof(RectTransform), typeof(Image), typeof(Button));
-        buttonObject.transform.SetParent(transform, false);
-
-        RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
-        buttonRect.anchorMin = new Vector2(1f, 0f);
-        buttonRect.anchorMax = new Vector2(1f, 0f);
-        buttonRect.pivot = new Vector2(1f, 0f);
-        buttonRect.sizeDelta = new Vector2(132f, 44f);
-
-        Vector2 anchoredPosition = new Vector2(-128f, 12f);
-        if (_quizEntryButton != null)
-        {
-            RectTransform quizRect = _quizEntryButton.GetComponent<RectTransform>();
-            if (quizRect != null)
-            {
-                anchoredPosition = new Vector2(quizRect.anchoredPosition.x - quizRect.sizeDelta.x - 12f, quizRect.anchoredPosition.y);
-            }
-        }
-
-        buttonRect.anchoredPosition = anchoredPosition;
-
-        Image image = buttonObject.GetComponent<Image>();
-        image.color = new Color32(63, 107, 186, 255);
-
-        Button button = buttonObject.GetComponent<Button>();
-
-        GameObject labelObject = new GameObject("Label", typeof(RectTransform));
-        labelObject.transform.SetParent(buttonObject.transform, false);
-
-        RectTransform labelRect = labelObject.GetComponent<RectTransform>();
-        labelRect.anchorMin = Vector2.zero;
-        labelRect.anchorMax = Vector2.one;
-        labelRect.offsetMin = Vector2.zero;
-        labelRect.offsetMax = Vector2.zero;
-
-        TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
-        if (_projectInfoText != null && _projectInfoText.font != null)
-        {
-            label.font = _projectInfoText.font;
-        }
-
-        label.fontSize = 24f;
-        label.alignment = TextAlignmentOptions.Center;
-        label.color = Color.white;
-        label.enableWordWrapping = false;
-        label.text = "日程安排";
-
-        return button;
     }
 
     private void EnsureEntryButtonVisuals()
     {
         SetQuizEntryLabel();
+        SetScheduleEntryLabel();
         AlignScheduleButtonLeftOfQuiz();
         EnsureEntryButtonIcon(_quizEntryButton, "key_hint");
         EnsureEntryButtonIcon(_scheduleEntryButton, "schedule");
@@ -269,12 +217,18 @@ public class TopStatusBar : MonoBehaviour
         EnsureDirectStatIcon("CommIcon", "communication_skill_icon", new Vector2(20f, -127f), LeftStatIconSize, false);
         EnsureDirectStatIcon("ManageIcon", "management_skill_icon", new Vector2(20f, -161f), LeftStatIconSize, false);
         EnsureDirectStatIcon("StressIcon", "stress_resistance_icon", new Vector2(20f, -195f), LeftStatIconSize, false);
-        EnsureDirectStatIcon("EnergyIcon", "energy_icon", new Vector2(-404f, 89f), EnergyIconSize, true);
+        EnsureDirectStatIcon("EnergyIcon", "energy_icon", new Vector2(-248f, 89f), EnergyIconSize, true);
     }
 
     private void EnsureAccentLine()
     {
-        GameObject accentObject = FindOrCreateChild(gameObject, "AccentLine");
+        Transform existingChild = transform.Find("AccentLine");
+        if (existingChild == null)
+        {
+            return;
+        }
+
+        GameObject accentObject = existingChild.gameObject;
         accentObject.transform.SetAsLastSibling();
 
         RectTransform accentRect = accentObject.GetComponent<RectTransform>();
@@ -297,18 +251,15 @@ public class TopStatusBar : MonoBehaviour
         accentImage.raycastTarget = false;
     }
 
-    private void HideObsoleteSliders()
-    {
-        HideSlider(_techSlider);
-        HideSlider(_commSlider);
-        HideSlider(_manageSlider);
-        HideSlider(_stressSlider);
-        HideSlider(_energySlider);
-    }
-
     private void EnsureDirectStatIcon(string iconName, string iconResource, Vector2 anchoredPosition, Vector2 size, bool useBottomRightAnchor)
     {
-        GameObject iconObject = FindOrCreateChild(gameObject, iconName);
+        Transform existingChild = transform.Find(iconName);
+        if (existingChild == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = existingChild.gameObject;
         RectTransform iconRect = iconObject.GetComponent<RectTransform>();
         if (iconRect == null)
         {
@@ -340,7 +291,13 @@ public class TopStatusBar : MonoBehaviour
             return;
         }
 
-        GameObject iconObject = FindOrCreateChild(button.gameObject, "Icon");
+        Transform existingChild = button.transform.Find("Icon");
+        if (existingChild == null)
+        {
+            return;
+        }
+
+        GameObject iconObject = existingChild.gameObject;
         iconObject.transform.SetAsFirstSibling();
 
         RectTransform iconRect = iconObject.GetComponent<RectTransform>();
@@ -401,6 +358,36 @@ public class TopStatusBar : MonoBehaviour
         quizLabel.text = "答题";
     }
 
+    private void SetScheduleEntryLabel()
+    {
+        if (_scheduleEntryButton == null)
+        {
+            return;
+        }
+
+        RectTransform scheduleRect = _scheduleEntryButton.GetComponent<RectTransform>();
+        if (scheduleRect != null)
+        {
+            scheduleRect.sizeDelta = new Vector2(132f, 44f);
+        }
+
+        TMP_Text scheduleLabel = _scheduleEntryButton.GetComponentInChildren<TMP_Text>(true);
+        if (scheduleLabel == null)
+        {
+            return;
+        }
+
+        if (_projectInfoText != null && _projectInfoText.font != null)
+        {
+            scheduleLabel.font = _projectInfoText.font;
+        }
+
+        scheduleLabel.enableWordWrapping = false;
+        scheduleLabel.alignment = TextAlignmentOptions.Center;
+        scheduleLabel.fontSize = 24f;
+        scheduleLabel.text = "日程安排";
+    }
+
     private void AlignScheduleButtonLeftOfQuiz()
     {
         if (_scheduleEntryButton == null || _quizEntryButton == null)
@@ -421,14 +408,6 @@ public class TopStatusBar : MonoBehaviour
 
         float spacing = 12f;
         scheduleRect.anchoredPosition = new Vector2(quizRect.anchoredPosition.x - quizRect.sizeDelta.x - spacing, quizRect.anchoredPosition.y);
-    }
-
-    private static void HideSlider(Slider slider)
-    {
-        if (slider != null)
-        {
-            slider.gameObject.SetActive(false);
-        }
     }
 
     private static void ApplyEntryButtonVisualState(Button button, bool interactable)
@@ -468,19 +447,6 @@ public class TopStatusBar : MonoBehaviour
     {
         Transform target = transform.Find(childName);
         return target != null ? target.GetComponent<Slider>() : null;
-    }
-
-    private static GameObject FindOrCreateChild(GameObject parent, string childName)
-    {
-        Transform target = parent != null ? parent.transform.Find(childName) : null;
-        if (target != null)
-        {
-            return target.gameObject;
-        }
-
-        GameObject child = new GameObject(childName, typeof(RectTransform));
-        child.transform.SetParent(parent.transform, false);
-        return child;
     }
 
     private static void UpdateSliderAndText(Slider slider, TMP_Text valueText, int value, int defaultMax)

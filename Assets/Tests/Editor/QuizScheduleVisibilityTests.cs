@@ -654,16 +654,14 @@ public class QuizScheduleVisibilityTests
     }
 
     [Test]
-    public void TopStatusBar_AwakeShouldHideSlidersAndCreateStatIcons()
+    public void TopStatusBar_AwakeShouldConfigureExistingStaticDecorations()
     {
         TopStatusBar topStatusBar = CreateTopStatusBar();
         InvokePrivate(topStatusBar, "AutoBindIfNeeded");
 
-        Assert.IsFalse(topStatusBar.transform.Find("TechSlider").gameObject.activeSelf);
-        Assert.IsFalse(topStatusBar.transform.Find("CommSlider").gameObject.activeSelf);
-        Assert.IsFalse(topStatusBar.transform.Find("ManageSlider").gameObject.activeSelf);
-        Assert.IsFalse(topStatusBar.transform.Find("StressSlider").gameObject.activeSelf);
-        Assert.IsFalse(topStatusBar.transform.Find("EnergySlider").gameObject.activeSelf);
+        Assert.NotNull(topStatusBar.transform.Find("QuizButton/Icon"));
+        Assert.NotNull(topStatusBar.transform.Find("ScheduleButton/Icon"));
+        Assert.NotNull(topStatusBar.transform.Find("AccentLine"));
 
         foreach (string iconName in new[] { "TechIcon", "CommIcon", "ManageIcon", "StressIcon", "EnergyIcon" })
         {
@@ -750,22 +748,28 @@ public class QuizScheduleVisibilityTests
         CreateTextChild(root.transform, "ProjectInfoText", "项目信息");
         CreateTextChild(root.transform, "PhaseText", "阶段");
         CreateTextChild(root.transform, "TechLabel", "技术力");
-        CreateSliderChild(root.transform, "TechSlider");
         CreateTextChild(root.transform, "TechValueText", "0");
         CreateTextChild(root.transform, "CommLabel", "沟通力");
-        CreateSliderChild(root.transform, "CommSlider");
         CreateTextChild(root.transform, "CommValueText", "0");
         CreateTextChild(root.transform, "ManageLabel", "管理力");
-        CreateSliderChild(root.transform, "ManageSlider");
         CreateTextChild(root.transform, "ManageValueText", "0");
         CreateTextChild(root.transform, "StressLabel", "抗压力");
-        CreateSliderChild(root.transform, "StressSlider");
         CreateTextChild(root.transform, "StressValueText", "0");
         CreateTextChild(root.transform, "EnergyLabel", "精力值");
-        CreateSliderChild(root.transform, "EnergySlider");
         CreateTextChild(root.transform, "EnergyValueText", "0");
-        CreateButtonChild(root.transform, "QuizButton", "答题");
-        CreateButtonChild(root.transform, "ScheduleButton", "日程安排");
+
+        Button quizButton = CreateButtonChild(root.transform, "QuizButton", "答题");
+        CreateImageChild(quizButton.transform, "Icon");
+
+        Button scheduleButton = CreateButtonChild(root.transform, "ScheduleButton", "日程安排");
+        CreateImageChild(scheduleButton.transform, "Icon");
+
+        CreateImageChild(root.transform, "TechIcon");
+        CreateImageChild(root.transform, "CommIcon");
+        CreateImageChild(root.transform, "ManageIcon");
+        CreateImageChild(root.transform, "StressIcon");
+        CreateImageChild(root.transform, "EnergyIcon");
+        CreateImageChild(root.transform, "AccentLine");
 
         return root.AddComponent<TopStatusBar>();
     }
@@ -786,19 +790,13 @@ public class QuizScheduleVisibilityTests
         return textComponent;
     }
 
-    private Slider CreateSliderChild(Transform parent, string name)
-    {
-        GameObject sliderObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Slider));
-        sliderObject.transform.SetParent(parent, false);
-        return sliderObject.GetComponent<Slider>();
-    }
-
     private Button CreateButtonChild(Transform parent, string name, string label)
     {
         GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
         buttonObject.transform.SetParent(parent, false);
 
-        GameObject labelObject = new GameObject("Label", typeof(RectTransform));
+        string labelName = name == "QuizButton" ? "QuizButtonLabel" : "Label";
+        GameObject labelObject = new GameObject(labelName, typeof(RectTransform));
         labelObject.transform.SetParent(buttonObject.transform, false);
 
         TextMeshProUGUI labelText = labelObject.AddComponent<TextMeshProUGUI>();
@@ -810,6 +808,13 @@ public class QuizScheduleVisibilityTests
 
         labelText.text = label;
         return buttonObject.GetComponent<Button>();
+    }
+
+    private Image CreateImageChild(Transform parent, string name)
+    {
+        GameObject imageObject = new GameObject(name, typeof(RectTransform), typeof(Image));
+        imageObject.transform.SetParent(parent, false);
+        return imageObject.GetComponent<Image>();
     }
 
     private static void DestroyAllOfType<T>() where T : Component
