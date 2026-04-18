@@ -17,6 +17,10 @@ public class PlayerData
     public int pendingProjectNumber = 0;
     public int totalQuizAnswered = 0;
     public int totalQuizCorrect = 0;
+    public int quizTechBonusGained = 0;
+    public int quizManageBonusGained = 0;
+    public int quizCommBonusGained = 0;
+    public int quizStressBonusGained = 0;
     public List<AITrustRecord> aiTrustRecords = new List<AITrustRecord>();
     public List<EventFlagRecord> eventFlags = new List<EventFlagRecord>();
     public List<string> savedScheduleTaskNames = new List<string>();

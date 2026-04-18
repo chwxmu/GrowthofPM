@@ -100,6 +100,7 @@ public class DailyTaskData
 [Serializable]
 public class QuizQuestionData
 {
+    public string questionType;
     public string question;
     public List<string> options;
     public int correctIndex;

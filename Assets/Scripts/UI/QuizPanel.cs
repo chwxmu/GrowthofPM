@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -12,12 +12,24 @@ public class QuizPanel : MonoBehaviour
 {
     private const float ContentSpacing = 10f;
     private const float QuestionBlockHeight = 98f;
-    private const float FeedbackBlockHeight = 52f;
+    private const float FeedbackBlockHeight = 50f;
+    private const float SelectionHintBlockHeight = 50f;
     private const float ActionRowHeight = 56f;
     private const float ContinueButtonWidth = 196f;
 #if UNITY_EDITOR
     private const string SimsunFontAssetPath = "Assets/Fonts/SIMSUN SDF.asset";
 #endif
+
+    private static readonly QuizQuestionType[] SelectableQuestionTypes =
+    {
+        QuizQuestionType.TechPower,
+        QuizQuestionType.ManagePower,
+        QuizQuestionType.CommPower,
+        QuizQuestionType.StressPower,
+        QuizQuestionType.Random
+    };
+
+    private const string QuestionTypeSelectionHint = "除随机题目外，其他类型题目答对一题可获得1点对应属性值，上限80；回答正确任意一题可获得10点精力值。";
 
     [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _questionText;
@@ -32,7 +44,9 @@ public class QuizPanel : MonoBehaviour
     private readonly List<TMP_Text> _optionLabels = new List<TMP_Text>();
 
     private QuizQuestionData _currentQuestion;
+    private QuizQuestionType _currentQuestionType = QuizQuestionType.None;
     private bool _answered;
+    private bool _isSelectingQuestionType;
 
     private void Awake()
     {
@@ -61,38 +75,10 @@ public class QuizPanel : MonoBehaviour
         gameObject.SetActive(true);
         RestorePanelVisibility();
 
-        List<QuizQuestionData> questions = DataManager.Instance != null ? DataManager.Instance.LoadQuizQuestions() : null;
-        _currentQuestion = PickRandomQuestion(questions);
+        _currentQuestion = null;
+        _currentQuestionType = QuizQuestionType.None;
         _answered = false;
-
-        if (_titleText != null)
-        {
-            _titleText.text = "答题挑战";
-        }
-
-        if (_questionText != null)
-        {
-            _questionText.text = _currentQuestion != null ? _currentQuestion.question : "暂无题目数据";
-        }
-
-        if (_feedbackText != null)
-        {
-            _feedbackText.text = string.Empty;
-            _feedbackText.gameObject.SetActive(false);
-        }
-
-        if (_continueButton != null)
-        {
-            _continueButton.gameObject.SetActive(false);
-        }
-
-        if (_closeButton != null)
-        {
-            _closeButton.gameObject.SetActive(true);
-            _closeButton.interactable = true;
-        }
-
-        BuildOptions();
+        ShowQuestionTypeSelection();
     }
 
     private void RestorePanelVisibility()
@@ -124,7 +110,129 @@ public class QuizPanel : MonoBehaviour
         }
     }
 
-    private void BuildOptions()
+    private void ShowQuestionTypeSelection(string overrideHint = "")
+    {
+        _isSelectingQuestionType = true;
+        _currentQuestion = null;
+        _currentQuestionType = QuizQuestionType.None;
+        _answered = false;
+
+        if (_titleText != null)
+        {
+            _titleText.text = "选择答题模块";
+        }
+
+        if (_questionText != null)
+        {
+            _questionText.text = "请选择本次答题类型";
+            _questionText.gameObject.SetActive(false);
+        }
+
+        string hintText = string.IsNullOrWhiteSpace(overrideHint) ? QuestionTypeSelectionHint : overrideHint.Trim();
+        SetFeedbackMessage(hintText, new Color32(176, 214, 255, 255), SelectionHintBlockHeight, true);
+
+        if (_continueButton != null)
+        {
+            _continueButton.gameObject.SetActive(false);
+        }
+
+        if (_closeButton != null)
+        {
+            _closeButton.gameObject.SetActive(true);
+            _closeButton.interactable = true;
+        }
+
+        BuildQuestionTypeOptions();
+    }
+
+    private void ShowQuestionForCurrentType()
+    {
+        List<QuizQuestionData> questions = DataManager.Instance != null ? DataManager.Instance.LoadQuizQuestions() : null;
+        _currentQuestion = PickQuestionForType(questions, _currentQuestionType);
+        if (_currentQuestion == null)
+        {
+            ShowQuestionTypeSelection("当前模块暂无题目，请选择其他类型。\n\n" + QuestionTypeSelectionHint);
+            return;
+        }
+
+        _isSelectingQuestionType = false;
+        _answered = false;
+
+        if (_titleText != null)
+        {
+            _titleText.text = "答题挑战 · " + GetQuestionTypeDisplayName(_currentQuestionType);
+        }
+
+        if (_questionText != null)
+        {
+            _questionText.text = _currentQuestion.question;
+            _questionText.gameObject.SetActive(true);
+        }
+
+        SetFeedbackMessage(string.Empty, new Color32(210, 240, 220, 255), FeedbackBlockHeight, false);
+
+        if (_continueButton != null)
+        {
+            _continueButton.gameObject.SetActive(false);
+        }
+
+        if (_closeButton != null)
+        {
+            _closeButton.gameObject.SetActive(true);
+            _closeButton.interactable = true;
+        }
+
+        BuildQuestionOptions();
+    }
+
+    private void BuildQuestionTypeOptions()
+    {
+        EnsureOptionCount(SelectableQuestionTypes.Length);
+
+        for (int i = 0; i < _optionButtons.Count; i += 1)
+        {
+            Button button = _optionButtons[i];
+            TMP_Text label = _optionLabels[i];
+            Image image = _optionButtonImages[i];
+            bool hasOption = i < SelectableQuestionTypes.Length;
+
+            if (button == null)
+            {
+                continue;
+            }
+
+            button.gameObject.SetActive(hasOption);
+            button.onClick.RemoveAllListeners();
+
+            if (!hasOption)
+            {
+                continue;
+            }
+
+            QuizQuestionType questionType = SelectableQuestionTypes[i];
+            if (label != null)
+            {
+                label.font = ResolveUIFont();
+                label.text = GetQuestionTypeDisplayName(questionType);
+            }
+
+            if (image != null)
+            {
+                image.color = new Color32(42, 56, 84, 220);
+            }
+
+            button.interactable = true;
+            button.onClick.AddListener(() => OnClickQuestionType(questionType));
+        }
+    }
+
+    private void OnClickQuestionType(QuizQuestionType questionType)
+    {
+        _currentQuestionType = questionType;
+        ShowQuestionForCurrentType();
+    }
+
+    private void BuildQuestionOptions()
     {
         int optionCount = _currentQuestion != null && _currentQuestion.options != null ? _currentQuestion.options.Count : 0;
         EnsureOptionCount(optionCount);
@@ -171,9 +279,14 @@ public class QuizPanel : MonoBehaviour
         }
     }
 
+    private void BuildOptions()
+    {
+        BuildQuestionOptions();
+    }
+
     private void OnClickOption(int selectedIndex)
     {
-        if (_answered || _currentQuestion == null || _currentQuestion.options == null)
+        if (_isSelectingQuestionType || _answered || _currentQuestion == null || _currentQuestion.options == null)
         {
             return;
         }
@@ -185,11 +298,9 @@ public class QuizPanel : MonoBehaviour
 
         _answered = true;
         bool isCorrect = selectedIndex == _currentQuestion.correctIndex;
-
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.RecordQuizAnswer(isCorrect);
-        }
+        GameManager.QuizAnswerRewardResult rewardResult = GameManager.Instance != null
+            ? GameManager.Instance.ApplyQuizAnswerRewards(isCorrect, _currentQuestionType)
+            : new GameManager.QuizAnswerRewardResult(isCorrect, isCorrect ? GameConstants.QUIZ_ENERGY_REWARD : 0, false, false, 0, StatType.TechPower, _currentQuestionType == QuizQuestionType.Random);
 
         for (int i = 0; i < _optionButtons.Count; i += 1)
         {
@@ -220,16 +331,8 @@ public class QuizPanel : MonoBehaviour
             }
         }
 
-        if (isCorrect && GameManager.Instance != null)
-        {
-            GameManager.Instance.AddEnergy(GameConstants.QUIZ_ENERGY_REWARD);
-        }
-
-        if (_feedbackText != null)
-        {
-            _feedbackText.gameObject.SetActive(true);
-            _feedbackText.text = BuildFeedbackText(isCorrect);
-        }
+        Color feedbackColor = isCorrect ? new Color32(210, 240, 220, 255) : new Color32(255, 214, 214, 255);
+        SetFeedbackMessage(BuildFeedbackText(rewardResult), feedbackColor, FeedbackBlockHeight, true);
 
         if (_continueButton != null)
         {
@@ -239,7 +342,13 @@ public class QuizPanel : MonoBehaviour
 
     private void OnClickContinue()
     {
-        ShowQuiz();
+        if (_currentQuestionType == QuizQuestionType.None)
+        {
+            ShowQuestionTypeSelection();
+            return;
+        }
+
+        ShowQuestionForCurrentType();
     }
 
     private void OnClickClose()
@@ -253,11 +362,26 @@ public class QuizPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private string BuildFeedbackText(bool isCorrect)
+    private string BuildFeedbackText(GameManager.QuizAnswerRewardResult rewardResult)
     {
-        if (isCorrect)
+        if (rewardResult.IsCorrect)
         {
-            return "回答正确，精力 +" + GameConstants.QUIZ_ENERGY_REWARD;
+            if (rewardResult.BonusGranted)
+            {
+                return "回答正确，精力 +" + rewardResult.EnergyReward + "，" + GetStatDisplayName(rewardResult.BonusStatType) + " +" + rewardResult.StatReward;
+            }
+
+            if (rewardResult.IsRandomModule)
+            {
+                return "回答正确，精力 +" + rewardResult.EnergyReward;
+            }
+
+            if (rewardResult.BonusReachedCap)
+            {
+                return "回答正确，精力 +" + rewardResult.EnergyReward + "。该模块属性奖励已达上限（" + GameConstants.QUIZ_MODULE_STAT_REWARD_CAP + "）。";
+            }
+
+            return "回答正确，精力 +" + rewardResult.EnergyReward;
         }
 
         string correctAnswer = string.Empty;
@@ -267,6 +391,19 @@ public class QuizPanel : MonoBehaviour
         }
 
         return "回答错误，正确答案：" + correctAnswer;
+    }
+
+    private void SetFeedbackMessage(string message, Color color, float blockHeight, bool visible)
+    {
+        if (_feedbackText == null)
+        {
+            return;
+        }
+
+        ApplyTextBlockHeight(_feedbackText, blockHeight);
+        _feedbackText.color = color;
+        _feedbackText.text = message;
+        _feedbackText.gameObject.SetActive(visible);
     }
 
     private void EnsureOptionCount(int targetCount)
@@ -502,6 +639,12 @@ public class QuizPanel : MonoBehaviour
             return;
         }
 
+        RectTransform rectTransform = text.rectTransform;
+        if (rectTransform != null)
+        {
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, blockHeight);
+        }
+
         LayoutElement layoutElement = text.GetComponent<LayoutElement>();
         if (layoutElement == null)
         {
@@ -563,6 +706,41 @@ public class QuizPanel : MonoBehaviour
         ApplyButtonLabelFont(_closeButton, sharedFont);
     }
 
+    private static QuizQuestionData PickQuestionForType(List<QuizQuestionData> questions, QuizQuestionType questionType)
+    {
+        if (questions == null || questions.Count == 0)
+        {
+            return null;
+        }
+
+        List<QuizQuestionData> filteredQuestions = new List<QuizQuestionData>();
+        foreach (QuizQuestionData question in questions)
+        {
+            if (!IsValidQuestion(question))
+            {
+                continue;
+            }
+
+            QuizQuestionType authoredType = ParseQuestionType(question.questionType);
+            if (questionType == QuizQuestionType.Random)
+            {
+                if (authoredType != QuizQuestionType.None)
+                {
+                    filteredQuestions.Add(question);
+                }
+
+                continue;
+            }
+
+            if (authoredType == questionType)
+            {
+                filteredQuestions.Add(question);
+            }
+        }
+
+        return PickRandomQuestion(filteredQuestions);
+    }
+
     private static QuizQuestionData PickRandomQuestion(List<QuizQuestionData> questions)
     {
         if (questions == null || questions.Count == 0)
@@ -573,12 +751,7 @@ public class QuizPanel : MonoBehaviour
         List<QuizQuestionData> validQuestions = new List<QuizQuestionData>();
         foreach (QuizQuestionData question in questions)
         {
-            if (question == null || string.IsNullOrWhiteSpace(question.question) || question.options == null || question.options.Count == 0)
-            {
-                continue;
-            }
-
-            if (question.correctIndex < 0 || question.correctIndex >= question.options.Count)
+            if (!IsValidQuestion(question))
             {
                 continue;
             }
@@ -593,6 +766,85 @@ public class QuizPanel : MonoBehaviour
 
         int randomIndex = UnityEngine.Random.Range(0, validQuestions.Count);
         return validQuestions[randomIndex];
+    }
+
+    private static bool IsValidQuestion(QuizQuestionData question)
+    {
+        return question != null
+            && !string.IsNullOrWhiteSpace(question.question)
+            && question.options != null
+            && question.options.Count > 0
+            && question.correctIndex >= 0
+            && question.correctIndex < question.options.Count;
+    }
+
+    private static QuizQuestionType ParseQuestionType(string rawType)
+    {
+        if (string.IsNullOrWhiteSpace(rawType))
+        {
+            return QuizQuestionType.None;
+        }
+
+        switch (rawType.Trim().ToLowerInvariant())
+        {
+            case "tech":
+            case "techpower":
+            case "tech_power":
+            case "technical":
+                return QuizQuestionType.TechPower;
+            case "manage":
+            case "managepower":
+            case "manage_power":
+            case "management":
+                return QuizQuestionType.ManagePower;
+            case "comm":
+            case "commpower":
+            case "comm_power":
+            case "communication":
+                return QuizQuestionType.CommPower;
+            case "stress":
+            case "stresspower":
+            case "stress_power":
+                return QuizQuestionType.StressPower;
+            case "random":
+                return QuizQuestionType.Random;
+            default:
+                return QuizQuestionType.None;
+        }
+    }
+
+    private static string GetQuestionTypeDisplayName(QuizQuestionType questionType)
+    {
+        switch (questionType)
+        {
+            case QuizQuestionType.TechPower:
+                return "技术力题目";
+            case QuizQuestionType.ManagePower:
+                return "管理力题目";
+            case QuizQuestionType.CommPower:
+                return "沟通力题目";
+            case QuizQuestionType.StressPower:
+                return "抗压力题目";
+            case QuizQuestionType.Random:
+                return "随机题目";
+            default:
+                return "题目";
+        }
+    }
+
+    private static string GetStatDisplayName(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.ManagePower:
+                return "管理力";
+            case StatType.CommPower:
+                return "沟通力";
+            case StatType.StressPower:
+                return "抗压力";
+            default:
+                return "技术力";
+        }
     }
 
     private static TMP_Text EnsureText(Transform parent, string name, TMP_FontAsset font, float fontSize, FontStyles fontStyle, TextAlignmentOptions alignment, float preferredHeight)
@@ -629,6 +881,13 @@ public class QuizPanel : MonoBehaviour
         text.enableWordWrapping = true;
         text.color = Color.white;
         text.margin = new Vector4(16f, 12f, 16f, 12f);
+
+        RectTransform rectTransform = text.rectTransform;
+        if (rectTransform != null)
+        {
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, preferredHeight);
+        }
+
         return text;
     }
 

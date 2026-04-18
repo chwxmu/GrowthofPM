@@ -28,3 +28,13 @@ public enum AIQuality
     Neutral,
     Bad
 }
+
+public enum QuizQuestionType
+{
+    None,
+    TechPower,
+    ManagePower,
+    CommPower,
+    StressPower,
+    Random
+}

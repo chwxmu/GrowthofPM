@@ -285,12 +285,13 @@ public class Phase2Flow7To12Tests
     }
 
     [Test]
-    public void QuizPanel_CorrectAnswerShouldAddEnergy()
+    public void QuizPanel_CorrectAnswerShouldAddEnergyAndTypedStatBonus()
     {
         GameManager gameManager = CreateComponent<GameManager>("GameManager");
         SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
         {
             energy = 100,
+            techPower = 12,
             aiTrustRecords = new List<AITrustRecord>()
         });
 
@@ -298,10 +299,12 @@ public class Phase2Flow7To12Tests
         InvokePrivate(panel, "EnsureLayout");
         SetPrivateField(panel, "_currentQuestion", new QuizQuestionData
         {
+            questionType = "techPower",
             question = "敏捷回顾会通常用于什么？",
             options = new List<string> { "估算工期", "总结改进" },
             correctIndex = 1
         });
+        SetPrivateField(panel, "_currentQuestionType", QuizQuestionType.TechPower);
         SetPrivateField(panel, "_answered", false);
 
         InvokePrivate(panel, "BuildOptions");
@@ -309,8 +312,11 @@ public class Phase2Flow7To12Tests
 
         TMP_Text feedbackText = GetPrivateField<TMP_Text>(panel, "_feedbackText");
         Assert.AreEqual(110, gameManager.CurrentPlayerData.energy);
+        Assert.AreEqual(13, gameManager.CurrentPlayerData.techPower);
+        Assert.AreEqual(1, gameManager.CurrentPlayerData.quizTechBonusGained);
         Assert.IsTrue(feedbackText.gameObject.activeSelf);
         StringAssert.Contains("回答正确", feedbackText.text);
+        StringAssert.Contains("技术力 +1", feedbackText.text);
     }
 
     [Test]
@@ -320,6 +326,7 @@ public class Phase2Flow7To12Tests
         SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
         {
             energy = 100,
+            techPower = 12,
             aiTrustRecords = new List<AITrustRecord>()
         });
 
@@ -327,10 +334,12 @@ public class Phase2Flow7To12Tests
         InvokePrivate(panel, "EnsureLayout");
         SetPrivateField(panel, "_currentQuestion", new QuizQuestionData
         {
+            questionType = "techPower",
             question = "哪项是风险应对策略？",
             options = new List<string> { "祈祷", "规避" },
             correctIndex = 1
         });
+        SetPrivateField(panel, "_currentQuestionType", QuizQuestionType.TechPower);
         SetPrivateField(panel, "_answered", false);
 
         InvokePrivate(panel, "BuildOptions");
@@ -338,7 +347,75 @@ public class Phase2Flow7To12Tests
 
         TMP_Text feedbackText = GetPrivateField<TMP_Text>(panel, "_feedbackText");
         Assert.AreEqual(100, gameManager.CurrentPlayerData.energy);
+        Assert.AreEqual(12, gameManager.CurrentPlayerData.techPower);
         StringAssert.Contains("正确答案：规避", feedbackText.text);
+    }
+
+    [Test]
+    public void QuizPanel_CorrectRandomQuestionShouldOnlyAddEnergy()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            energy = 100,
+            commPower = 21,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        QuizPanel panel = CreateComponent<QuizPanel>("QuizPanel");
+        InvokePrivate(panel, "EnsureLayout");
+        SetPrivateField(panel, "_currentQuestion", new QuizQuestionData
+        {
+            questionType = "commPower",
+            question = "项目沟通管理的目的是确保？",
+            options = new List<string> { "所有人都加班", "信息及时、准确地传递给相关方" },
+            correctIndex = 1
+        });
+        SetPrivateField(panel, "_currentQuestionType", QuizQuestionType.Random);
+        SetPrivateField(panel, "_answered", false);
+
+        InvokePrivate(panel, "BuildOptions");
+        InvokePrivate(panel, "OnClickOption", 1);
+
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(panel, "_feedbackText");
+        Assert.AreEqual(110, gameManager.CurrentPlayerData.energy);
+        Assert.AreEqual(21, gameManager.CurrentPlayerData.commPower);
+        Assert.AreEqual(0, gameManager.CurrentPlayerData.quizCommBonusGained);
+        StringAssert.DoesNotContain("沟通力 +1", feedbackText.text);
+    }
+
+    [Test]
+    public void QuizPanel_CorrectTypedQuestionAtCapShouldOnlyAddEnergy()
+    {
+        GameManager gameManager = CreateComponent<GameManager>("GameManager");
+        SetPrivateField(gameManager, "_currentPlayerData", new PlayerData
+        {
+            energy = 100,
+            managePower = 44,
+            quizManageBonusGained = GameConstants.QUIZ_MODULE_STAT_REWARD_CAP,
+            aiTrustRecords = new List<AITrustRecord>()
+        });
+
+        QuizPanel panel = CreateComponent<QuizPanel>("QuizPanel");
+        InvokePrivate(panel, "EnsureLayout");
+        SetPrivateField(panel, "_currentQuestion", new QuizQuestionData
+        {
+            questionType = "managePower",
+            question = "项目章程的主要作用是？",
+            options = new List<string> { "分配项目预算", "正式授权项目的存在" },
+            correctIndex = 1
+        });
+        SetPrivateField(panel, "_currentQuestionType", QuizQuestionType.ManagePower);
+        SetPrivateField(panel, "_answered", false);
+
+        InvokePrivate(panel, "BuildOptions");
+        InvokePrivate(panel, "OnClickOption", 1);
+
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(panel, "_feedbackText");
+        Assert.AreEqual(110, gameManager.CurrentPlayerData.energy);
+        Assert.AreEqual(44, gameManager.CurrentPlayerData.managePower);
+        Assert.AreEqual(GameConstants.QUIZ_MODULE_STAT_REWARD_CAP, gameManager.CurrentPlayerData.quizManageBonusGained);
+        StringAssert.Contains("已达上限", feedbackText.text);
     }
 
     [Test]
@@ -747,10 +824,10 @@ public class Phase2Flow7To12Tests
         {
             currentProject = 1,
             currentWeek = GameConstants.PROJECT1_WEEKS,
-            techPower = 90,
-            commPower = 92,
-            managePower = 95,
-            stressPower = 88,
+            techPower = 93,
+            commPower = 95,
+            managePower = 97,
+            stressPower = 80,
             aiTrustRecords = new List<AITrustRecord>()
         });
 

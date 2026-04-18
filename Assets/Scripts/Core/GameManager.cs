@@ -10,6 +10,28 @@ public class GameManager : Singleton<GameManager>
     private const string ManagePowerStatKey = "managePower";
     private const string StressPowerStatKey = "stressPower";
 
+    public readonly struct QuizAnswerRewardResult
+    {
+        public QuizAnswerRewardResult(bool isCorrect, int energyReward, bool bonusGranted, bool bonusReachedCap, int statReward, StatType bonusStatType, bool isRandomModule)
+        {
+            IsCorrect = isCorrect;
+            EnergyReward = energyReward;
+            BonusGranted = bonusGranted;
+            BonusReachedCap = bonusReachedCap;
+            StatReward = statReward;
+            BonusStatType = bonusStatType;
+            IsRandomModule = isRandomModule;
+        }
+
+        public bool IsCorrect { get; }
+        public int EnergyReward { get; }
+        public bool BonusGranted { get; }
+        public bool BonusReachedCap { get; }
+        public int StatReward { get; }
+        public StatType BonusStatType { get; }
+        public bool IsRandomModule { get; }
+    }
+
     [SerializeField] private GameState _currentState = GameState.Menu;
     [SerializeField] private PlayerData _currentPlayerData;
 
@@ -260,19 +282,50 @@ public class GameManager : Singleton<GameManager>
 
     public void RecordQuizAnswer(bool isCorrect)
     {
+        ApplyQuizAnswerRewards(isCorrect, QuizQuestionType.Random);
+    }
+
+    public QuizAnswerRewardResult ApplyQuizAnswerRewards(bool isCorrect, QuizQuestionType questionType)
+    {
         if (_currentPlayerData == null)
         {
-            return;
+            return new QuizAnswerRewardResult(isCorrect, 0, false, false, 0, StatType.TechPower, questionType == QuizQuestionType.Random);
         }
 
         _currentPlayerData.totalQuizAnswered = Mathf.Max(0, _currentPlayerData.totalQuizAnswered + 1);
+        int energyReward = 0;
+        bool bonusGranted = false;
+        bool bonusReachedCap = false;
+        int statReward = 0;
+        StatType bonusStatType = GetBonusStatType(questionType);
+
         if (isCorrect)
         {
             _currentPlayerData.totalQuizCorrect = Mathf.Max(0, _currentPlayerData.totalQuizCorrect + 1);
+            energyReward = GameConstants.QUIZ_ENERGY_REWARD;
+            _currentPlayerData.energy += energyReward;
+
+            if (questionType != QuizQuestionType.Random && questionType != QuizQuestionType.None)
+            {
+                int currentBonus = GetQuizModuleBonusProgress(questionType);
+                if (currentBonus < GameConstants.QUIZ_MODULE_STAT_REWARD_CAP)
+                {
+                    statReward = GameConstants.QUIZ_STAT_REWARD;
+                    ApplyQuizStatBonus(questionType, statReward);
+                    SetQuizModuleBonusProgress(questionType, currentBonus + statReward);
+                    bonusGranted = true;
+                }
+                else
+                {
+                    bonusReachedCap = true;
+                }
+            }
         }
 
         SaveProgress();
         NotifyDataChanged();
+
+        return new QuizAnswerRewardResult(isCorrect, energyReward, bonusGranted, bonusReachedCap, statReward, bonusStatType, questionType == QuizQuestionType.Random);
     }
 
     public void SaveScheduleSelection(List<DailyTaskData> selectedTasks)
@@ -723,6 +776,92 @@ public class GameManager : Singleton<GameManager>
     private static int ClampStat(int value)
     {
         return Mathf.Max(0, value);
+    }
+
+    private void ApplyQuizStatBonus(QuizQuestionType questionType, int amount)
+    {
+        if (_currentPlayerData == null || amount <= 0)
+        {
+            return;
+        }
+
+        switch (questionType)
+        {
+            case QuizQuestionType.TechPower:
+                _currentPlayerData.techPower = ClampStat(_currentPlayerData.techPower + amount);
+                break;
+            case QuizQuestionType.ManagePower:
+                _currentPlayerData.managePower = ClampStat(_currentPlayerData.managePower + amount);
+                break;
+            case QuizQuestionType.CommPower:
+                _currentPlayerData.commPower = ClampStat(_currentPlayerData.commPower + amount);
+                break;
+            case QuizQuestionType.StressPower:
+                _currentPlayerData.stressPower = ClampStat(_currentPlayerData.stressPower + amount);
+                break;
+        }
+    }
+
+    private int GetQuizModuleBonusProgress(QuizQuestionType questionType)
+    {
+        if (_currentPlayerData == null)
+        {
+            return 0;
+        }
+
+        switch (questionType)
+        {
+            case QuizQuestionType.TechPower:
+                return Mathf.Max(0, _currentPlayerData.quizTechBonusGained);
+            case QuizQuestionType.ManagePower:
+                return Mathf.Max(0, _currentPlayerData.quizManageBonusGained);
+            case QuizQuestionType.CommPower:
+                return Mathf.Max(0, _currentPlayerData.quizCommBonusGained);
+            case QuizQuestionType.StressPower:
+                return Mathf.Max(0, _currentPlayerData.quizStressBonusGained);
+            default:
+                return 0;
+        }
+    }
+
+    private void SetQuizModuleBonusProgress(QuizQuestionType questionType, int value)
+    {
+        if (_currentPlayerData == null)
+        {
+            return;
+        }
+
+        int clampedValue = Mathf.Clamp(value, 0, GameConstants.QUIZ_MODULE_STAT_REWARD_CAP);
+        switch (questionType)
+        {
+            case QuizQuestionType.TechPower:
+                _currentPlayerData.quizTechBonusGained = clampedValue;
+                break;
+            case QuizQuestionType.ManagePower:
+                _currentPlayerData.quizManageBonusGained = clampedValue;
+                break;
+            case QuizQuestionType.CommPower:
+                _currentPlayerData.quizCommBonusGained = clampedValue;
+                break;
+            case QuizQuestionType.StressPower:
+                _currentPlayerData.quizStressBonusGained = clampedValue;
+                break;
+        }
+    }
+
+    private static StatType GetBonusStatType(QuizQuestionType questionType)
+    {
+        switch (questionType)
+        {
+            case QuizQuestionType.ManagePower:
+                return StatType.ManagePower;
+            case QuizQuestionType.CommPower:
+                return StatType.CommPower;
+            case QuizQuestionType.StressPower:
+                return StatType.StressPower;
+            default:
+                return StatType.TechPower;
+        }
     }
 
     private int GetCurrentProjectNumber()

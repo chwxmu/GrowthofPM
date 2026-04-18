@@ -86,6 +86,33 @@ public class QuizScheduleVisibilityTests
     }
 
     [Test]
+    public void ShowQuiz_ShouldDisplayQuestionTypeSelection()
+    {
+        CreateComponent<DataManager>("DataManager");
+        QuizPanel quizPanel = CreateComponent<QuizPanel>("QuizPanel");
+
+        quizPanel.ShowQuiz();
+
+        TMP_Text titleText = GetPrivateField<TMP_Text>(quizPanel, "_titleText");
+        TMP_Text questionText = GetPrivateField<TMP_Text>(quizPanel, "_questionText");
+        TMP_Text feedbackText = GetPrivateField<TMP_Text>(quizPanel, "_feedbackText");
+        List<TMP_Text> optionLabels = GetPrivateField<List<TMP_Text>>(quizPanel, "_optionLabels");
+
+        Assert.AreEqual("选择答题模块", titleText.text);
+        Assert.AreEqual("请选择本次答题类型", questionText.text);
+        Assert.IsFalse(questionText.gameObject.activeSelf);
+        Assert.IsTrue(feedbackText.gameObject.activeSelf);
+        StringAssert.Contains("回答正确任意一题可获得10点精力值", feedbackText.text);
+        Assert.IsTrue(GetPrivateField<bool>(quizPanel, "_isSelectingQuestionType"));
+        Assert.AreEqual(5, optionLabels.Count);
+        Assert.AreEqual("技术力题目", optionLabels[0].text);
+        Assert.AreEqual("管理力题目", optionLabels[1].text);
+        Assert.AreEqual("沟通力题目", optionLabels[2].text);
+        Assert.AreEqual("抗压力题目", optionLabels[3].text);
+        Assert.AreEqual("随机题目", optionLabels[4].text);
+    }
+
+    [Test]
     public void CloseQuizAndReturn_ShouldReopenScheduleAndReleaseQuizRaycasts()
     {
         UIManager uiManager = CreateComponent<UIManager>("UIManager");

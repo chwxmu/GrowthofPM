@@ -2,6 +2,8 @@
 {
     public const int BASE_ENERGY_PER_WEEK = 300;
     public const int QUIZ_ENERGY_REWARD = 10;
+    public const int QUIZ_STAT_REWARD = 1;
+    public const int QUIZ_MODULE_STAT_REWARD_CAP = 80;
     public const int INITIAL_STAT_VALUE = 50;
     public const int PROJECT1_WEEKS = 9;
     public const int PROJECT2_WEEKS = 12;

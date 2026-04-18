@@ -1,104 +1,244 @@
-{
+﻿{
   "questions": [
     {
+      "questionType": "managePower",
       "question": "项目管理中，WBS 是指什么？",
-      "options": ["工作分解结构", "工作流程图", "风险登记册", "甘特图"],
-      "correctIndex": 0
+      "options": ["工作流程图", "风险登记册", "工作分解结构", "甘特图"],
+      "correctIndex": 2
     },
     {
+      "questionType": "managePower",
       "question": "PMBOK 中的五大过程组不包括以下哪一项？",
       "options": ["启动", "设计", "执行", "收尾"],
       "correctIndex": 1
     },
     {
+      "questionType": "techPower",
       "question": "关键路径法（CPM）的主要用途是什么？",
       "options": ["确定项目最短工期", "分配项目预算", "评估团队绩效", "管理项目风险"],
       "correctIndex": 0
     },
     {
+      "questionType": "techPower",
       "question": "敏捷开发中，Sprint 通常持续多长时间？",
-      "options": ["1天", "1-4周", "3个月", "半年"],
-      "correctIndex": 1
-    },
-    {
-      "question": "项目干系人是指？",
-      "options": ["仅指项目团队成员", "仅指项目出资方", "所有受项目影响或能影响项目的人", "仅指项目经理"],
+      "options": ["1天", "3个月", "1-4周", "半年"],
       "correctIndex": 2
     },
     {
+      "questionType": "commPower",
+      "question": "项目干系人是指？",
+      "options": ["仅指项目团队成员", "仅指项目出资方", "仅指项目经理", "所有受项目影响或能影响项目的人"],
+      "correctIndex": 3
+    },
+    {
+      "questionType": "stressPower",
       "question": "在项目管理中，'范围蔓延'是指什么？",
       "options": ["项目团队规模不断扩大", "项目需求不受控制地增长", "项目预算持续超支", "项目进度不断延期"],
       "correctIndex": 1
     },
     {
+      "questionType": "managePower",
       "question": "甘特图主要用于展示什么信息？",
-      "options": ["项目成本", "项目进度", "项目风险", "项目质量"],
-      "correctIndex": 1
+      "options": ["项目成本", "项目风险", "项目质量", "项目进度"],
+      "correctIndex": 3
     },
     {
+      "questionType": "stressPower",
       "question": "风险管理中，'风险转移'的典型方式是？",
-      "options": ["忽略风险", "购买保险或外包", "自行承担损失", "取消项目"],
-      "correctIndex": 1
+      "options": ["忽略风险", "自行承担损失", "取消项目", "购买保险或外包"],
+      "correctIndex": 3
     },
     {
+      "questionType": "commPower",
       "question": "Scrum 中的 Product Owner 主要职责是？",
       "options": ["编写代码", "管理产品待办列表", "主持每日站会", "部署上线"],
       "correctIndex": 1
     },
     {
+      "questionType": "commPower",
       "question": "项目沟通管理的目的是确保？",
-      "options": ["所有人都加班", "信息及时、准确地传递给相关方", "减少会议次数", "降低项目成本"],
-      "correctIndex": 1
+      "options": ["信息及时、准确地传递给相关方", "所有人都加班", "减少会议次数", "降低项目成本"],
+      "correctIndex": 0
     },
     {
+      "questionType": "stressPower",
       "question": "挣值管理中，CPI < 1 表示什么？",
-      "options": ["项目进度超前", "项目成本超支", "项目质量优秀", "项目范围缩小"],
-      "correctIndex": 1
+      "options": ["项目成本超支", "项目进度超前", "项目质量优秀", "项目范围缩小"],
+      "correctIndex": 0
     },
     {
+      "questionType": "managePower",
       "question": "以下哪项不是项目管理的约束条件（铁三角）？",
-      "options": ["范围", "时间", "成本", "团队人数"],
-      "correctIndex": 3
+      "options": ["团队人数", "范围", "时间", "成本"],
+      "correctIndex": 0
     },
     {
+      "questionType": "commPower",
       "question": "需求变更应该通过什么流程处理？",
-      "options": ["直接开发", "变更控制流程", "忽略不理", "交给客户自己处理"],
-      "correctIndex": 1
+      "options": ["直接开发", "忽略不理", "变更控制流程", "交给客户自己处理"],
+      "correctIndex": 2
     },
     {
+      "questionType": "techPower",
       "question": "在瀑布模型中，以下哪个阶段在编码之前？",
       "options": ["测试", "需求分析", "部署", "运维"],
       "correctIndex": 1
     },
     {
+      "questionType": "managePower",
       "question": "项目章程的主要作用是？",
       "options": ["分配项目预算", "正式授权项目的存在", "记录项目风险", "制定测试计划"],
       "correctIndex": 1
     },
     {
+      "questionType": "commPower",
       "question": "RACI 矩阵中的 'A' 代表什么？",
       "options": ["执行者", "负责人", "被咨询者", "被通知者"],
       "correctIndex": 1
     },
     {
+      "questionType": "techPower",
       "question": "迭代开发的核心理念是？",
-      "options": ["一次做完所有功能", "分多次逐步完善产品", "先写文档再开发", "只关注技术不关注需求"],
-      "correctIndex": 1
+      "options": ["一次做完所有功能", "先写文档再开发", "只关注技术不关注需求", "分多次逐步完善产品"],
+      "correctIndex": 3
     },
     {
+      "questionType": "managePower",
       "question": "项目收尾阶段需要做的工作不包括？",
       "options": ["经验总结", "合同关闭", "启动新项目", "文档归档"],
       "correctIndex": 2
     },
     {
+      "questionType": "stressPower",
       "question": "冲突解决策略中，'妥协'是指？",
-      "options": ["一方完全让步", "双方各让一步", "找上级裁决", "回避问题"],
+      "options": ["一方完全让步", "找上级裁决", "双方各让一步", "回避问题"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "techPower",
+      "question": "功能点分析（FPA）主要用于估算什么？",
+      "options": ["项目工期", "团队人数", "软件规模", "服务器数量"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "managePower",
+      "question": "RAID 日志通常不包含以下哪类内容？",
+      "options": ["风险", "假设", "问题", "代码实现细节"],
+      "correctIndex": 3
+    },
+    {
+      "questionType": "managePower",
+      "question": "里程碑的主要特征是什么？",
+      "options": ["表示项目中的关键检查点", "有明确持续时间且持续一周", "只用于记录人员名单", "只在项目结束时设置"],
+      "correctIndex": 0
+    },
+    {
+      "questionType": "managePower",
+      "question": "变更控制委员会（CCB）的主要职责是？",
+      "options": ["维护代码仓库", "审批重大变更请求", "执行测试用例", "采购开发设备"],
       "correctIndex": 1
     },
     {
-      "question": "功能点分析（FPA）主要用于估算什么？",
-      "options": ["项目工期", "软件规模", "团队人数", "服务器数量"],
+      "questionType": "managePower",
+      "question": "项目基线的主要作用是？",
+      "options": ["用于员工绩效打分", "记录日报内容", "作为范围、进度和成本控制的比较依据", "代替项目章程授权项目"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "techPower",
+      "question": "回归测试的主要目的是什么？",
+      "options": ["寻找新增需求", "验证改动未破坏原有功能", "评估团队满意度", "统计项目成本"],
       "correctIndex": 1
+    },
+    {
+      "questionType": "techPower",
+      "question": "压力测试主要关注哪方面？",
+      "options": ["界面美观程度", "代码注释规范", "会议纪要完整性", "系统在高负载下的表现"],
+      "correctIndex": 3
+    },
+    {
+      "questionType": "techPower",
+      "question": "灰度发布的主要优势是什么？",
+      "options": ["小范围验证并降低全量上线风险", "一次性替换所有旧系统", "只用于离线项目", "可以跳过回滚预案"],
+      "correctIndex": 0
+    },
+    {
+      "questionType": "techPower",
+      "question": "接口幂等性通常表示什么？",
+      "options": ["接口必须返回空结果", "接口只能调用一次", "多次相同请求产生一致结果", "接口必须使用 HTTPS"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "techPower",
+      "question": "以下哪类缺陷通常属于最高严重级别？",
+      "options": ["界面字体偏小", "导致核心功能无法使用或系统崩溃的问题", "文案存在轻微错别字", "图标颜色不统一"],
+      "correctIndex": 1
+    },
+    {
+      "questionType": "commPower",
+      "question": "项目例会结束后，最应该输出什么？",
+      "options": ["新的组织架构", "代码部署脚本", "预算报销单", "会议纪要及责任人和截止时间"],
+      "correctIndex": 3
+    },
+    {
+      "questionType": "commPower",
+      "question": "客户需求表述模糊时，项目经理首要应做什么？",
+      "options": ["立刻安排开发", "等客户下次再说", "追问并确认验收标准", "直接砍掉需求"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "commPower",
+      "question": "跨部门资源冲突迟迟无法解决时，更合适的做法是？",
+      "options": ["同步影响并升级协调", "私下抱怨对方团队", "停止全部项目工作", "绕过流程直接承诺客户"],
+      "correctIndex": 0
+    },
+    {
+      "questionType": "commPower",
+      "question": "向领导汇报延期风险时，重点应包括什么？",
+      "options": ["只说团队很辛苦", "只汇报延期天数", "影响、原因和备选方案", "先不说，等真延期再讲"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "commPower",
+      "question": "在紧急缺陷修复沟通中，最关键的是什么？",
+      "options": ["明确优先级、负责人和截止时间", "先让所有人各自处理", "尽量减少同步", "把责任全部推给测试"],
+      "correctIndex": 0
+    },
+    {
+      "questionType": "stressPower",
+      "question": "项目关键成员突然离职时，第一步更合理的做法是什么？",
+      "options": ["先评估影响并安排交接与替代方案", "立刻冻结整个项目一个月", "先不通知团队", "把责任全部归咎于该成员"],
+      "correctIndex": 0
+    },
+    {
+      "questionType": "stressPower",
+      "question": "上线前问题很多且时间紧张时，更合理的做法是？",
+      "options": ["要求团队把所有问题同时修完", "临时取消上线且不通知任何人", "按优先级先处理阻塞问题", "先忽略问题等客户反馈"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "stressPower",
+      "question": "风险应对中的“接受风险”通常表示什么？",
+      "options": ["完全不记录风险", "立即投入全部预算消除风险", "把风险转给供应商", "承认风险存在并准备应急预案"],
+      "correctIndex": 3
+    },
+    {
+      "questionType": "stressPower",
+      "question": "SPI < 1 通常说明什么？",
+      "options": ["项目成本节省", "项目进度落后于计划", "需求已经稳定", "沟通效率很高"],
+      "correctIndex": 1
+    },
+    {
+      "questionType": "stressPower",
+      "question": "团队连续加班后情绪失控时，更合理的做法是什么？",
+      "options": ["继续压任务不做调整", "让大家各自消化情绪", "调整节奏并重新排优先级", "只关注进度不关注状态"],
+      "correctIndex": 2
+    },
+    {
+      "questionType": "stressPower",
+      "question": "客户临时要求压缩工期时，更稳妥的回应是什么？",
+      "options": ["先评估范围、资源和风险后再协商承诺", "直接答应后再想办法", "立即拒绝并终止合作", "不回应客户消息"],
+      "correctIndex": 0
     }
   ]
 }
