@@ -79,6 +79,7 @@ public class GameSummaryPanel : MonoBehaviour
 
     private void OnClickRestart()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (DataManager.Instance != null)
         {
             DataManager.Instance.DeleteSave();
@@ -92,6 +93,7 @@ public class GameSummaryPanel : MonoBehaviour
 
     private void OnClickMenu()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         SceneManager.LoadScene("MenuScene");
     }
 

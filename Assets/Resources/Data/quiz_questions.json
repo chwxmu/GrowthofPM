@@ -1,244 +1,5680 @@
 ﻿{
-  "questions": [
-    {
-      "questionType": "managePower",
-      "question": "项目管理中，WBS 是指什么？",
-      "options": ["工作流程图", "风险登记册", "工作分解结构", "甘特图"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "managePower",
-      "question": "PMBOK 中的五大过程组不包括以下哪一项？",
-      "options": ["启动", "设计", "执行", "收尾"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "techPower",
-      "question": "关键路径法（CPM）的主要用途是什么？",
-      "options": ["确定项目最短工期", "分配项目预算", "评估团队绩效", "管理项目风险"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "techPower",
-      "question": "敏捷开发中，Sprint 通常持续多长时间？",
-      "options": ["1天", "3个月", "1-4周", "半年"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "commPower",
-      "question": "项目干系人是指？",
-      "options": ["仅指项目团队成员", "仅指项目出资方", "仅指项目经理", "所有受项目影响或能影响项目的人"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "stressPower",
-      "question": "在项目管理中，'范围蔓延'是指什么？",
-      "options": ["项目团队规模不断扩大", "项目需求不受控制地增长", "项目预算持续超支", "项目进度不断延期"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "managePower",
-      "question": "甘特图主要用于展示什么信息？",
-      "options": ["项目成本", "项目风险", "项目质量", "项目进度"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "stressPower",
-      "question": "风险管理中，'风险转移'的典型方式是？",
-      "options": ["忽略风险", "自行承担损失", "取消项目", "购买保险或外包"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "commPower",
-      "question": "Scrum 中的 Product Owner 主要职责是？",
-      "options": ["编写代码", "管理产品待办列表", "主持每日站会", "部署上线"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "commPower",
-      "question": "项目沟通管理的目的是确保？",
-      "options": ["信息及时、准确地传递给相关方", "所有人都加班", "减少会议次数", "降低项目成本"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "stressPower",
-      "question": "挣值管理中，CPI < 1 表示什么？",
-      "options": ["项目成本超支", "项目进度超前", "项目质量优秀", "项目范围缩小"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "managePower",
-      "question": "以下哪项不是项目管理的约束条件（铁三角）？",
-      "options": ["团队人数", "范围", "时间", "成本"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "commPower",
-      "question": "需求变更应该通过什么流程处理？",
-      "options": ["直接开发", "忽略不理", "变更控制流程", "交给客户自己处理"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "techPower",
-      "question": "在瀑布模型中，以下哪个阶段在编码之前？",
-      "options": ["测试", "需求分析", "部署", "运维"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "managePower",
-      "question": "项目章程的主要作用是？",
-      "options": ["分配项目预算", "正式授权项目的存在", "记录项目风险", "制定测试计划"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "commPower",
-      "question": "RACI 矩阵中的 'A' 代表什么？",
-      "options": ["执行者", "负责人", "被咨询者", "被通知者"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "techPower",
-      "question": "迭代开发的核心理念是？",
-      "options": ["一次做完所有功能", "先写文档再开发", "只关注技术不关注需求", "分多次逐步完善产品"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "managePower",
-      "question": "项目收尾阶段需要做的工作不包括？",
-      "options": ["经验总结", "合同关闭", "启动新项目", "文档归档"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "stressPower",
-      "question": "冲突解决策略中，'妥协'是指？",
-      "options": ["一方完全让步", "找上级裁决", "双方各让一步", "回避问题"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "techPower",
-      "question": "功能点分析（FPA）主要用于估算什么？",
-      "options": ["项目工期", "团队人数", "软件规模", "服务器数量"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "managePower",
-      "question": "RAID 日志通常不包含以下哪类内容？",
-      "options": ["风险", "假设", "问题", "代码实现细节"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "managePower",
-      "question": "里程碑的主要特征是什么？",
-      "options": ["表示项目中的关键检查点", "有明确持续时间且持续一周", "只用于记录人员名单", "只在项目结束时设置"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "managePower",
-      "question": "变更控制委员会（CCB）的主要职责是？",
-      "options": ["维护代码仓库", "审批重大变更请求", "执行测试用例", "采购开发设备"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "managePower",
-      "question": "项目基线的主要作用是？",
-      "options": ["用于员工绩效打分", "记录日报内容", "作为范围、进度和成本控制的比较依据", "代替项目章程授权项目"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "techPower",
-      "question": "回归测试的主要目的是什么？",
-      "options": ["寻找新增需求", "验证改动未破坏原有功能", "评估团队满意度", "统计项目成本"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "techPower",
-      "question": "压力测试主要关注哪方面？",
-      "options": ["界面美观程度", "代码注释规范", "会议纪要完整性", "系统在高负载下的表现"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "techPower",
-      "question": "灰度发布的主要优势是什么？",
-      "options": ["小范围验证并降低全量上线风险", "一次性替换所有旧系统", "只用于离线项目", "可以跳过回滚预案"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "techPower",
-      "question": "接口幂等性通常表示什么？",
-      "options": ["接口必须返回空结果", "接口只能调用一次", "多次相同请求产生一致结果", "接口必须使用 HTTPS"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "techPower",
-      "question": "以下哪类缺陷通常属于最高严重级别？",
-      "options": ["界面字体偏小", "导致核心功能无法使用或系统崩溃的问题", "文案存在轻微错别字", "图标颜色不统一"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "commPower",
-      "question": "项目例会结束后，最应该输出什么？",
-      "options": ["新的组织架构", "代码部署脚本", "预算报销单", "会议纪要及责任人和截止时间"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "commPower",
-      "question": "客户需求表述模糊时，项目经理首要应做什么？",
-      "options": ["立刻安排开发", "等客户下次再说", "追问并确认验收标准", "直接砍掉需求"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "commPower",
-      "question": "跨部门资源冲突迟迟无法解决时，更合适的做法是？",
-      "options": ["同步影响并升级协调", "私下抱怨对方团队", "停止全部项目工作", "绕过流程直接承诺客户"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "commPower",
-      "question": "向领导汇报延期风险时，重点应包括什么？",
-      "options": ["只说团队很辛苦", "只汇报延期天数", "影响、原因和备选方案", "先不说，等真延期再讲"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "commPower",
-      "question": "在紧急缺陷修复沟通中，最关键的是什么？",
-      "options": ["明确优先级、负责人和截止时间", "先让所有人各自处理", "尽量减少同步", "把责任全部推给测试"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "stressPower",
-      "question": "项目关键成员突然离职时，第一步更合理的做法是什么？",
-      "options": ["先评估影响并安排交接与替代方案", "立刻冻结整个项目一个月", "先不通知团队", "把责任全部归咎于该成员"],
-      "correctIndex": 0
-    },
-    {
-      "questionType": "stressPower",
-      "question": "上线前问题很多且时间紧张时，更合理的做法是？",
-      "options": ["要求团队把所有问题同时修完", "临时取消上线且不通知任何人", "按优先级先处理阻塞问题", "先忽略问题等客户反馈"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "stressPower",
-      "question": "风险应对中的“接受风险”通常表示什么？",
-      "options": ["完全不记录风险", "立即投入全部预算消除风险", "把风险转给供应商", "承认风险存在并准备应急预案"],
-      "correctIndex": 3
-    },
-    {
-      "questionType": "stressPower",
-      "question": "SPI < 1 通常说明什么？",
-      "options": ["项目成本节省", "项目进度落后于计划", "需求已经稳定", "沟通效率很高"],
-      "correctIndex": 1
-    },
-    {
-      "questionType": "stressPower",
-      "question": "团队连续加班后情绪失控时，更合理的做法是什么？",
-      "options": ["继续压任务不做调整", "让大家各自消化情绪", "调整节奏并重新排优先级", "只关注进度不关注状态"],
-      "correctIndex": 2
-    },
-    {
-      "questionType": "stressPower",
-      "question": "客户临时要求压缩工期时，更稳妥的回应是什么？",
-      "options": ["先评估范围、资源和风险后再协商承诺", "直接答应后再想办法", "立即拒绝并终止合作", "不回应客户消息"],
-      "correctIndex": 0
-    }
-  ]
+    "questions": [
+        {
+            "questionType": "managePower",
+            "question": "项目管理中，WBS 是指什么？",
+            "options": [
+                "工作流程图",
+                "风险登记册",
+                "工作分解结构",
+                "甘特图"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "PMBOK 中的五大过程组不包括以下哪一项？",
+            "options": [
+                "启动",
+                "设计",
+                "执行",
+                "收尾"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "关键路径法（CPM）的主要用途是什么？",
+            "options": [
+                "确定项目最短工期",
+                "分配项目预算",
+                "评估团队绩效",
+                "管理项目风险"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "敏捷开发中，Sprint 通常持续多长时间？",
+            "options": [
+                "1天",
+                "3个月",
+                "1-4周",
+                "半年"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目干系人是指？",
+            "options": [
+                "仅指项目团队成员",
+                "仅指项目出资方",
+                "仅指项目经理",
+                "所有受项目影响或能影响项目的人"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目管理中，'范围蔓延'是指什么？",
+            "options": [
+                "项目团队规模不断扩大",
+                "项目需求不受控制地增长",
+                "项目预算持续超支",
+                "项目进度不断延期"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "甘特图主要用于展示什么信息？",
+            "options": [
+                "项目成本",
+                "项目风险",
+                "项目质量",
+                "项目进度"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险管理中，'风险转移'的典型方式是？",
+            "options": [
+                "忽略风险",
+                "自行承担损失",
+                "取消项目",
+                "购买保险或外包"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "Scrum 中的 Product Owner 主要职责是？",
+            "options": [
+                "编写代码",
+                "管理产品待办列表",
+                "主持每日站会",
+                "部署上线"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目沟通管理的目的是确保？",
+            "options": [
+                "信息及时、准确地传递给相关方",
+                "所有人都加班",
+                "减少会议次数",
+                "降低项目成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "挣值管理中，CPI < 1 表示什么？",
+            "options": [
+                "项目成本超支",
+                "项目进度超前",
+                "项目质量优秀",
+                "项目范围缩小"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪项不是项目管理的约束条件（铁三角）？",
+            "options": [
+                "团队人数",
+                "范围",
+                "时间",
+                "成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "需求变更应该通过什么流程处理？",
+            "options": [
+                "直接开发",
+                "忽略不理",
+                "变更控制流程",
+                "交给客户自己处理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "在瀑布模型中，以下哪个阶段在编码之前？",
+            "options": [
+                "测试",
+                "需求分析",
+                "部署",
+                "运维"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目章程的主要作用是？",
+            "options": [
+                "分配项目预算",
+                "正式授权项目的存在",
+                "记录项目风险",
+                "制定测试计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "RACI 矩阵中的 'A' 代表什么？",
+            "options": [
+                "执行者",
+                "负责人",
+                "被咨询者",
+                "被通知者"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "迭代开发的核心理念是？",
+            "options": [
+                "一次做完所有功能",
+                "先写文档再开发",
+                "只关注技术不关注需求",
+                "分多次逐步完善产品"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目收尾阶段需要做的工作不包括？",
+            "options": [
+                "经验总结",
+                "合同关闭",
+                "启动新项目",
+                "文档归档"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "冲突解决策略中，'妥协'是指？",
+            "options": [
+                "一方完全让步",
+                "找上级裁决",
+                "双方各让一步",
+                "回避问题"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "功能点分析（FPA）主要用于估算什么？",
+            "options": [
+                "项目工期",
+                "团队人数",
+                "软件规模",
+                "服务器数量"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "RAID 日志通常不包含以下哪类内容？",
+            "options": [
+                "风险",
+                "假设",
+                "问题",
+                "代码实现细节"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "里程碑的主要特征是什么？",
+            "options": [
+                "表示项目中的关键检查点",
+                "有明确持续时间且持续一周",
+                "只用于记录人员名单",
+                "只在项目结束时设置"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "变更控制委员会（CCB）的主要职责是？",
+            "options": [
+                "维护代码仓库",
+                "审批重大变更请求",
+                "执行测试用例",
+                "采购开发设备"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目基线的主要作用是？",
+            "options": [
+                "用于员工绩效打分",
+                "记录日报内容",
+                "作为范围、进度和成本控制的比较依据",
+                "代替项目章程授权项目"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "回归测试的主要目的是什么？",
+            "options": [
+                "寻找新增需求",
+                "验证改动未破坏原有功能",
+                "评估团队满意度",
+                "统计项目成本"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "压力测试主要关注哪方面？",
+            "options": [
+                "界面美观程度",
+                "代码注释规范",
+                "会议纪要完整性",
+                "系统在高负载下的表现"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "灰度发布的主要优势是什么？",
+            "options": [
+                "小范围验证并降低全量上线风险",
+                "一次性替换所有旧系统",
+                "只用于离线项目",
+                "可以跳过回滚预案"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "接口幂等性通常表示什么？",
+            "options": [
+                "接口必须返回空结果",
+                "接口只能调用一次",
+                "多次相同请求产生一致结果",
+                "接口必须使用 HTTPS"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪类缺陷通常属于最高严重级别？",
+            "options": [
+                "界面字体偏小",
+                "导致核心功能无法使用或系统崩溃的问题",
+                "文案存在轻微错别字",
+                "图标颜色不统一"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目例会结束后，最应该输出什么？",
+            "options": [
+                "新的组织架构",
+                "代码部署脚本",
+                "预算报销单",
+                "会议纪要及责任人和截止时间"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "客户需求表述模糊时，项目经理首要应做什么？",
+            "options": [
+                "立刻安排开发",
+                "等客户下次再说",
+                "追问并确认验收标准",
+                "直接砍掉需求"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "跨部门资源冲突迟迟无法解决时，更合适的做法是？",
+            "options": [
+                "同步影响并升级协调",
+                "私下抱怨对方团队",
+                "停止全部项目工作",
+                "绕过流程直接承诺客户"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "向领导汇报延期风险时，重点应包括什么？",
+            "options": [
+                "只说团队很辛苦",
+                "只汇报延期天数",
+                "影响、原因和备选方案",
+                "先不说，等真延期再讲"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "在紧急缺陷修复沟通中，最关键的是什么？",
+            "options": [
+                "明确优先级、负责人和截止时间",
+                "先让所有人各自处理",
+                "尽量减少同步",
+                "把责任全部推给测试"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目关键成员突然离职时，第一步更合理的做法是什么？",
+            "options": [
+                "先评估影响并安排交接与替代方案",
+                "立刻冻结整个项目一个月",
+                "先不通知团队",
+                "把责任全部归咎于该成员"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "上线前问题很多且时间紧张时，更合理的做法是？",
+            "options": [
+                "要求团队把所有问题同时修完",
+                "临时取消上线且不通知任何人",
+                "按优先级先处理阻塞问题",
+                "先忽略问题等客户反馈"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险应对中的“接受风险”通常表示什么？",
+            "options": [
+                "完全不记录风险",
+                "立即投入全部预算消除风险",
+                "把风险转给供应商",
+                "承认风险存在并准备应急预案"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "SPI < 1 通常说明什么？",
+            "options": [
+                "项目成本节省",
+                "项目进度落后于计划",
+                "需求已经稳定",
+                "沟通效率很高"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "团队连续加班后情绪失控时，更合理的做法是什么？",
+            "options": [
+                "继续压任务不做调整",
+                "让大家各自消化情绪",
+                "调整节奏并重新排优先级",
+                "只关注进度不关注状态"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "客户临时要求压缩工期时，更稳妥的回应是什么？",
+            "options": [
+                "先评估范围、资源和风险后再协商承诺",
+                "直接答应后再想办法",
+                "立即拒绝并终止合作",
+                "不回应客户消息"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪一项最能表现项目的特征?",
+            "options": [
+                "需要制订进度计划",
+                "需要整合范围、进度和成本",
+                "有确定的期限",
+                "需要由专门的团队来实施"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下除了哪一项,其余都是项目团队需要考虑的事业环境因素?",
+            "options": [
+                "人员加班政策和时间记录要求",
+                "组织的标准流程和标准化的工作指南",
+                "干系人的风险承受力",
+                "信息收集与发布系统"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪一项是项目管理不可以逐渐细化的方面?",
+            "options": [
+                "项目范围",
+                "范围潜变",
+                "产品范围",
+                "假设条件"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "在组织战略发生变化之后,以下哪个也要发生变化?",
+            "options": [
+                "项目范围",
+                "项目集范围",
+                "项目组合范围",
+                "子项目范围"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目是",
+            "options": [
+                "在系统或过程中的一系列有顺序且相互关联的活动",
+                "一项以满足客户或市场需求为目的且可以产生收益的活动",
+                "以不断满足客户或市场需求为目的的持续性事业",
+                "为提供某项独特的结果而进行的临时性努力"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪一个说法是正确的?",
+            "options": [
+                "既然与以前项目的可交付成果比较,本项目的可交付成果中存在某些重复的元素,所以本项目从本质上讲不再是独特的",
+                "项目只能生产出有形的项目产品",
+                "项目大多是为了创造持久性的结果",
+                "持续时间长达10年的工作,不应该当项目来做"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个项目管理过程经常与渐进明细有关?",
+            "options": [
+                "识别干系人",
+                "定义范围",
+                "控制范围",
+                "指导与管理项目执行"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目集是",
+            "options": [
+                "持续较长时间(如一年以上)的一系列相关任务的组合",
+                "一组相互关联且被协调管理的项目",
+                "建设费用超过一亿美元的大项目",
+                "用于归集各项目的名词,以便每个项目都隶属于某个项目集"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于项目的说法都是正确的,除了",
+            "options": [
+                "项目经常作为实现组织战略计划的一种手段",
+                "项目可以在组织中的所有层次上进行",
+                "项目是那些在组织日常运营范围内无法有效开展的活动",
+                "项目可以由一个人、一个组织单元或多个组织单元构成"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目管理办公室",
+            "options": [
+                "其经理通常直接向组织的CEO汇报工作",
+                "开发项目管理的政策、程序和模板",
+                "调配与管理各项目所需的全部资源",
+                "协调管理一系列相互关联的项目"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于项目管理的说法,正确的是",
+            "options": [
+                "对项目范围、成本和进度的整合",
+                "在项目活动中运用各种知识、技能、工具和技术,来达到项目要求",
+                "把各种知识、技能、工具和技术应用于组织活动来提高经营绩效",
+                "在项目活动中运用各种知识、技能、工具和技术,来满足并超过项目干系人对项目的要求与期望"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "每个组织都为实现某些目标而从事某些项目与运营工作。下列关于项目与运营的说法,不正确的是",
+            "options": [
+                "项目和运营都受制于有限的资源",
+                "运营是持续不断和重复进行的,而项目是临时性的、独特的",
+                "项目与运营都需要被规划、执行和控制",
+                "运营是项目生命周期收尾阶段的重要工作之一"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目集管理通过以下哪个具体管理措施来关注项目间的依赖关系?",
+            "options": [
+                "审查项目并确定项目之间的资源分配优先顺序",
+                "特别关注各项目所共享的资源",
+                "处理同一个治理结构内的相关问题和变更管理",
+                "及时剔除不合理的项目,并补充新项目"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于PMBOK指南的描述都是正确的,除了",
+            "options": [
+                "它提供了一套项目管理的通用术语",
+                "人们普遍认为,使用PMBOK指南中的知识,能提高各种项目成功的可能性",
+                "它提供了一整套的项目管理方法论",
+                "它不包括新近出现、有待验证的项目管理技术"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个关于项目集的说法是正确的?",
+            "options": [
+                "只要你愿意,可以把任何项目放在一个项目集中",
+                "各项目因为共享资源而被放在一个项目集中",
+                "只有存在必然的内在联系的项目才能被放到一个项目集中",
+                "既然项目是临时的,项目集就必然是临时的"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "在范围、时间、成本和质量等相互制约的因素中,通常",
+            "options": [
+                "范围是最重要的",
+                "质量是最重要的",
+                "由管理层决定哪个更重要",
+                "由项目经理决定哪个更重要"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪一项是项目的一个实例?",
+            "options": [
+                "管理一个公司",
+                "批量生产一种新近开发出来的家用电冰箱",
+                "为公司运营提供信息技术支持",
+                "实施一套新的业务流程或程序"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "为了确保项目得到执行组织最大程度的支持,项目经理应该",
+            "options": [
+                "编制良好的沟通计划",
+                "把项目需求与执行组织的战略联系在一起",
+                "把项目需求与高级管理者的个人需求联系在一起",
+                "在项目计划中规定将如何进行团队建设"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目容易受到风险的影响,这是因为",
+            "options": [
+                "墨菲定律\"如果某件事情可能出错,它就会出错\"",
+                "每一个项目都是独特的",
+                "项目的资源不足",
+                "高级管理层的态度易变"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目组合管理的主要目标是",
+            "options": [
+                "正确地完成某个项目",
+                "正确地完成一系列相互关联的项目",
+                "选择一系列正确的且不一定相互关联的项目,并排定资源分配的优先顺序",
+                "选择一系列正确的且相互关联的项目,并排定资源分配的优先顺序"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个不是项目的可交付成果?",
+            "options": [
+                "项目管理团队所编制的项目管理计划",
+                "批量生产的汽车零配件",
+                "学校新开发的课程",
+                "研究课题所发现的知识"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下说法都正确,除了",
+            "options": [
+                "项目经理是被执行组织分派来保证项目目标实现的项目负责人",
+                "如果设立了项目管理办公室,那么项目经理的直接上级就是项目管理办公室的经理",
+                "在矩阵式组织中,项目经理通常向职能经理汇报工作",
+                "项目经理、职能经理和运营经理是现代组织中通常需要的三种重要角色"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "渐进明细性整合了项目的临时性与独特性这两个特征。在制定项目计划的过程中,渐进明细对以下哪一方面是非常重要的?",
+            "options": [
+                "假设条件",
+                "项目章程",
+                "项目管理信息系统",
+                "组织的方针政策和标准"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于项目管理的说法都是正确的,除了",
+            "options": [
+                "任何不确定性事件,即使不影响\"三重制约\"中的任何一个因素,都是项目风险",
+                "项目管理是以项目经理负责制为基础的目标管理",
+                "项目管理是以实现项目目标为宗旨的,项目的成功最终是以项目目标的完成为标志的",
+                "只要在预算内按时提交满足要求的产品就是好质量的项目"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目管理办公室(PMO)是",
+            "options": [
+                "组织中对所辖各项目进行集中协调管理的一个临时性部门",
+                "组织中对所辖各项目进行集中协调管理的一个永久性部门",
+                "组织中对相互关联的各项目进行集中协调管理的一个职能部门",
+                "组织中对相互关联的各项目进行集中协调管理的一个项目部门"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目管理知识体系指南中包括",
+            "options": [
+                "应用领域的知识",
+                "项目生命周期的知识",
+                "尚未得到广泛应用的项目管理新知识",
+                "产品生命周期的知识"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "某项目经理在管理项目的过程中,发现自己的项目管理知识和经验有所欠缺,他应该向谁求助?",
+            "options": [
+                "项目发起人",
+                "高级管理层",
+                "项目管理办公室",
+                "其他项目经理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个关于项目组合的说法是正确的?",
+            "options": [
+                "各项目因相互之间的直接关联而被放在一个项目组合中",
+                "可以从项目组合中剔除现有的项目,也可以向其中增加新项目",
+                "同一个项目组合中的项目都能得到一视同仁地对待",
+                "一个组织通常只能有一个项目组合"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个正确表述了从高到低的概念之间的层次结构?",
+            "options": [
+                "组织战略、项目集、项目组合、项目",
+                "项目组合、组织战略、项目集、项目",
+                "组织战略、项目组合、项目集、项目",
+                "项目集、项目组合、组织战略、项目"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下所有都是可用于项目集管理的措施,除了",
+            "options": [
+                "解决影响多个项目的资源制约",
+                "根据项目优先顺序来分配资源",
+                "处理同一个治理结构内的变更管理问题",
+                "调整对项目集有影响的组织战略方向"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "来自项目执行组织内部和外部的各种事业环境因素,可能限制项目经理管理项目时的灵活性。以下所有都是事业环境因素,除了",
+            "options": [
+                "项目管理信息系统",
+                "公司的工作授权系统",
+                "组织中的标准化流程",
+                "干系人的风险承受力"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理在管理项目时,应该能够以合理的行动来把项目管理知识应用于实践。以下哪项对项目经理如何行动有最重要的作用?",
+            "options": [
+                "项目经理的项目管理知识",
+                "项目经理的项目管理实践能力",
+                "项目经理的个人素质",
+                "项目经理的整合能力"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "每个组织都要为实现目标而开展工作。组织的工作可分为项目和运营两大类。项目与运营会在产品生命周期的以下时间相互交叉,除了",
+            "options": [
+                "在项目执行阶段",
+                "在项目收尾阶段",
+                "在产品更新改造时",
+                "在提高运营水平时"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个是项目管理办公室(PMO)的重要特性?",
+            "options": [
+                "用特定的资源去实现具体项目的目标",
+                "编制项目管理的规章制度",
+                "对在项目与职能部门兼职的人员进行管理",
+                "通过项目实施为所在公司赢得合理的利润"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理应该具备以下哪个技能?",
+            "options": [
+                "特定应用领域的技能",
+                "信息技术方面的技能",
+                "统计学应用技能",
+                "项目之间的协调技能"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目集是",
+            "options": [
+                "一群共享资源的项目",
+                "投资在1亿美元以上的大型项目",
+                "任意10个项目的集合",
+                "一组被协调管理的且相互关联的项目"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "不会直接产出可测量的项目产品、服务或成果的辅助性活动,通常被称为",
+            "options": [
+                "分立型投入(Discrete Effort)",
+                "分摊型投入 (Apportioned Effort)",
+                "附加活动 (AdditionAl Activity)",
+                "人力投入量 (Level of Effort)"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "在项目进度网络图中,你可以发现多种时差。在某特定活动中被使用且不影响任何后续活动的时差被称为",
+            "options": [
+                "内部时差",
+                "自由时差",
+                "总时差",
+                "项目时差"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "很多进度活动都可以采用多种方案加以实施,如使用不同的工具、不同的人力资源、不同的机器等。对各种可能的实施方法进行分析属于",
+            "options": [
+                "自制或外购分析",
+                "项目储备分析",
+                "效益成本分析",
+                "备选方案分析"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪种是最常用的进度网络图绘制方法?",
+            "options": [
+                "节点法",
+                "箭线法",
+                "双代号法",
+                "条件图形法"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "定义活动过程所得到的最终成果是",
+            "options": [
+                "可交付成果",
+                "活动",
+                "工作包",
+                "工作任务"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "向某个已经延误的活动增加新的资源,将导致的结果是",
+            "options": [
+                "活动可能延误更长时间",
+                "延误的时间被赶回",
+                "活动效率提高",
+                "活动生产率提高"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个不是定义活动过程的输出?",
+            "options": [
+                "活动清单",
+                "活动属性",
+                "活动顺序",
+                "里程碑清单"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "下面关于进度数据的说法,错误的是",
+            "options": [
+                "进度数据至少应包括进度里程碑、计划活动、活动属性以及已知的全部假设条件与制约因素",
+                "在进度模型中,把进度计划看成自变量,把进度数据看成因变量",
+                "进度数据可以包括资源直方图、现金流量预测以及订货与交货进度计划等",
+                "有了进度数据和进度模型,就可以很方便地更新项目进度计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "在使用节点法编制网络图时,很少用到的一种逻辑关系是",
+            "options": [
+                "完成到开始(FS)",
+                "完成到完成(FF)",
+                "开始到开始(SS)",
+                "开始到完成(SF)"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目进度压缩方法与以下哪个方法最为相似?",
+            "options": [
+                "范围蔓延",
+                "范围优化",
+                "价值工程",
+                "价值分析"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "采用三点估算法估算活动持续时间,需要搜集下列各项信息,除了",
+            "options": [
+                "最可能时间",
+                "平均时间",
+                "最乐观时间",
+                "最悲观时间"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "关键活动是指",
+            "options": [
+                "特别重要的活动",
+                "时差为负值的活动",
+                "时差为正值的活动",
+                "时差为零的活动"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "资源分解结构是一种资源层级结构,通常按以下哪个来分解?",
+            "options": [
+                "资源类别和数量",
+                "资源类别和类型",
+                "资源类别和使用时间",
+                "资源类别和成本"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下所有都是制订进度计划过程的输出,除了",
+            "options": [
+                "项目进度模型",
+                "进度管理计划",
+                "进度数据",
+                "进度基准"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "关于进度网络图,以下哪个说法是正确的?",
+            "options": [
+                "进度网络图就是进度计划",
+                "进度网络图通常用于向管理层汇报项目进展情况",
+                "进度网络图用于表示活动之间的逻辑关系",
+                "横道图是最简单的进度网络图"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "通常在项目的哪个阶段运用类比估算方法来估算项目持续时间或成本?",
+            "options": [
+                "启动",
+                "规划",
+                "执行",
+                "监控"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "在进度计划制订过程中,下列哪项将为最可能的活动历时估算提供最好的基础?",
+            "options": [
+                "行业协会发布的劳动生产率信息",
+                "咨询专家的经验",
+                "项目团队的经验",
+                "去年某个类似项目的进度计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动清单中应该包括",
+            "options": [
+                "项目所需的主要进度活动",
+                "项目所需的全部进度活动",
+                "项目所需的全部进度活动及其属性",
+                "项目所需的全部进度活动及其标志和工作描述"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "在制订进度计划时,如何设法克服资源制约因素的不利影响?",
+            "options": [
+                "赶工",
+                "使用蒙特卡罗方法",
+                "采用快速跟进方法",
+                "进行资源平衡"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "定义活动过程是对以下哪项进行定义和规划?",
+            "options": [
+                "进度活动",
+                "工作包",
+                "汇总活动",
+                "里程碑"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "为了加快项目进度,你决定在全部的文件编写工作结束之前3天就开始文件印刷的版面设计工作。这是一种什么逻辑关系?",
+            "options": [
+                "带时间滞后量的开始到开始关系",
+                "带时间提前量的完成到开始关系",
+                "带时间提前量的开始到开始关系",
+                "带时间滞后量的完成到开始关系"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "控制进度过程的输出是",
+            "options": [
+                "工作绩效信息",
+                "工作绩效测量结果",
+                "绩效报告",
+                "技术绩效测量结果"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动持续时间估算中,不能包括下列哪个?",
+            "options": [
+                "在下一个活动的开始时间与本活动的结束时间之间的时间",
+                "完成本活动所需的工作时段数",
+                "时间的可能变动区间",
+                "存在不确定性的工作时段数估计"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "分解是创建WBS过程的工具与技术之一,同时也是以下哪个过程的工具与技术?",
+            "options": [
+                "定义活动",
+                "估算活动资源",
+                "识别风险",
+                "制定资源分解结构"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "估算活动资源需求时,通常需要考虑以下所有因素,除了",
+            "options": [
+                "资源费率",
+                "资源日历",
+                "资源可得性",
+                "活动属性"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪项不是排列活动顺序过程的输入?",
+            "options": [
+                "活动清单",
+                "活动属性",
+                "项目范围说明书",
+                "工作分解结构"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于资源平衡的说法都是正确的,除了",
+            "options": [
+                "在项目各时段中平均分配资源,以便制订出平稳的进度计划",
+                "根据资源制约因素,来调整进度计划",
+                "解决同一资源在同一时间被分配至两个工作的问题",
+                "在保持关键路径不变的前提下,调整项目进度计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个是排列活动顺序的输出?",
+            "options": [
+                "项目进度计划",
+                "项目进度网络图",
+                "项目箭线网络图",
+                "项目紧前关系网络图"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动持续时间估算应该由谁来进行?",
+            "options": [
+                "项目经理",
+                "项目管理团队中最熟悉具体活动的人",
+                "职能经理",
+                "项目管理团队"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目进度计划中所安排的应急储备,通常应该随着项目的进展而逐渐",
+            "options": [
+                "增加",
+                "减少",
+                "保持不变",
+                "被隐藏"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动属性会随着项目的进展而不断更新,在项目初始阶段,活动属性包括",
+            "options": [
+                "活动名称、活动描述和逻辑关系",
+                "活动名称、活动描述和活动资源需求",
+                "活动标识、WBS标识和活动名称",
+                "活动标识、活动描述、紧前活动和紧后活动"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "控制进度一般不涉及以下哪一项?",
+            "options": [
+                "判断项目进度的当前状态",
+                "确定进度变更是否已经发生",
+                "管理实际发生的进度变更",
+                "根据客户需求变更进度计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "两种常用的进度网络绘图方法是",
+            "options": [
+                "节点法与箭线法",
+                "节点法与条件图法",
+                "节点法与逻辑横道图法",
+                "节点法与前导图法"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "定义活动的输入包括",
+            "options": [
+                "范围基准",
+                "项目工作说明书",
+                "项目网络图",
+                "项目范围说明书"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于资源平衡的说法都是正确的,除了",
+            "options": [
+                "可用于使各时期的资源需求量处于均衡水平",
+                "可用于解决资源短期的问题",
+                "资源平衡往往导致关键路径的改变",
+                "可用于平衡项目团队成员之间的工作量"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "估算活动资源过程的输出包括",
+            "options": [
+                "资源价格",
+                "活动持续时间估算",
+                "资源分解结构",
+                "出版的估算数据"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个关于关键链的说法是正确的?",
+            "options": [
+                "关键链是关键路径的另一个名称",
+                "关键链是次关键路径的另一个名称",
+                "关键链表示的是一系列活动之间的硬逻辑关系",
+                "关键链是资源约束下的关键路径"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "在以下哪种情况下,关键路径上的活动可能出现负的浮动时间?",
+            "options": [
+                "用顺推法所得到的完工日期晚于客户所要求的完工日期",
+                "用逆推法所得到的完工日期晚于客户所要求的完工日期",
+                "用顺推法所得到的完工日期早于客户所要求的完工日期",
+                "用逆推法所得到的完工日期早于客户所要求的完工日期"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "不遵守下列哪种逻辑关系,会给项目带来最大的不利影响?",
+            "options": [
+                "外部逻辑关系",
+                "选择性逻辑关系",
+                "软逻辑关系",
+                "硬逻辑关系"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "用快速跟进的方法来压缩进度,是指",
+            "options": [
+                "通过加班工作,使项目提前完工",
+                "以强有力的奖励手段,使项目提前完工",
+                "把工作并行实施,使项目提前完工",
+                "加快关键路径上的活动的进度,使项目提前完工"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪项不是估算成本过程的工具?",
+            "options": [
+                "储备分析",
+                "PERT估算",
+                "卖方投标分析",
+                "成本汇总"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目拟用的挣值管理规则应该在以下哪个文件中作出规定?",
+            "options": [
+                "项目成本管理计划",
+                "项目进度管理计划",
+                "项目范围管理计划",
+                "项目变更管理计划"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "控制成本过程的输出包括",
+            "options": [
+                "成本概算",
+                "成本预算",
+                "成本基准",
+                "成本预测"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "制定预算过程的主要输入包括",
+            "options": [
+                "范围基准、风险登记册、人力资源计划和组织过程资产",
+                "活动成本估算、范围基准、项目进度计划和资源日历",
+                "活动成本估算、风险登记册、项目进度计划和合同",
+                "成本基准、范围基准、项目进度计划和项目经理意见"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "下列哪项不是估算成本过程的输入?",
+            "options": [
+                "工作分解结构、项目进度计划",
+                "人力资源计划、工作分解结构词典",
+                "质量成本、项目进度计划",
+                "风险登记册、项目进度计划"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪种预测项目完工情况的方法最为准确?",
+            "options": [
+                "自下而上的ETC估算",
+                "按预算单价的ETC估算",
+                "按累计CPI进行的ETC估算",
+                "按关键比率的ETC估算"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目成本核算应该在什么时候进行?",
+            "options": [
+                "成本发生时",
+                "实际支付时",
+                "实际交货时",
+                "在上述各时间均可,取决于组织的具体需要"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目绩效报告中包括如下数字:PV=110、EV=100,AC=120,总预算为150。成本偏差是多少?",
+            "options": [
+                "-20",
+                "-10",
+                "+10",
+                "+20"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理通常有权决定项目预算中的各种类型的开支,除了",
+            "options": [
+                "直接成本",
+                "固定成本",
+                "应急储备",
+                "管理储备"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "什么情形下应该使用EAC为基础来计算完工尚需绩效指数(TCPI)?",
+            "options": [
+                "管理层认为BAC已明显不可行",
+                "项目成本超支比较严重",
+                "项目进度落后比较严重",
+                "项目必须在规定的时间完工"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "下列哪项是参数估算的例子?",
+            "options": [
+                "回归分析",
+                "学习曲线",
+                "自下而上",
+                "关键路径法"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪项是执行组织可以使用的完工估算预测技术?",
+            "options": [
+                "EAC=AC+(BAC-EV)/累计CPI",
+                "EAC=AC+BAC-EV",
+                "EAC=BAC/累计CPI",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "挣值管理整合了以下哪些要素?",
+            "options": [
+                "范围、时间和成本",
+                "时间、成本和质量",
+                "风险、时间和成本",
+                "资源、时间和成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "机会成本是",
+            "options": [
+                "开展一个新项目而必须付出的代价",
+                "为做一件事而放弃做另外一件事,假如做另外一件事可能得到收益",
+                "进行决策时无需考虑的虚拟成本",
+                "未来要开支的所有成本"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "可以利用相关变量之间的历史关系进行",
+            "options": [
+                "参数估算",
+                "类比估算",
+                "自下而上估算",
+                "参数估算或类比估算"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "为了确保项目按既定预算完工而必须在后续阶段达到的绩效水平,可以用哪个指标来衡量?",
+            "options": [
+                "成本绩效指数",
+                "进度绩效指数",
+                "完工尚需绩效指数",
+                "项目关键比率"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目的投资回收期是指",
+            "options": [
+                "还清项目所有贷款所需的时间",
+                "从项目开始到项目获得的累计利润等于项目成本所需的时间",
+                "公司为启动项目而取得足够的资金所需要的时间",
+                "在项目投产后,公司收回股权投资所需的时间"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "无法直接记入某个项目的成本,就只有用某种方法分摊到相关项目中。这种成本是",
+            "options": [
+                "固定成本",
+                "可变成本",
+                "直接成本",
+                "间接成本"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "预计的项目总成本为100 000美元。在制定预算过程中,项目团队把预算确定为90 000~ 110 000美元。这种估算是",
+            "options": [
+                "粗略量级估算",
+                "确定性估算",
+                "自下而上估算",
+                "类比估算"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "估算成本过程旨在",
+            "options": [
+                "对项目总成本作一个粗略的估算",
+                "估算项目中各项活动的成本",
+                "估算项目活动的直接成本",
+                "估算项目活动的人工费"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理进行项目决策时,需要考虑以下各种成本,除了",
+            "options": [
+                "间接成本",
+                "固定成本",
+                "可变成本",
+                "沉没成本"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "通常用货币单位来表示项目成本,但有时也可用非货币单位,以便",
+            "options": [
+                "提高成本估算的准确性",
+                "消除通货膨胀的影响,便于成本比较",
+                "更容易考核项目工作人员的业绩",
+                "更容易把成本与进度结合起来考核"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "沉没成本是",
+            "options": [
+                "管理储备中还没有用于项目的资金",
+                "已经列入项目预算的人力资源成本",
+                "为了防止过去的努力白费,而在进行决策时必须考虑的成本",
+                "已经花掉的资金,无论其用途是否合理"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目成本管理包括下列所有过程,除了",
+            "options": [
+                "估算资源",
+                "估算成本",
+                "制定预算",
+                "控制成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个代表着项目已经完工?",
+            "options": [
+                "EV=PV",
+                "EV=AC",
+                "EV=BAC",
+                "PV=BAC"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动成本估算中通常包括以下各种成本,除了",
+            "options": [
+                "活动所需全部资源的成本",
+                "直接成本和间接成本",
+                "应急储备",
+                "管理储备"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "如果挣值是300000美元,实际成本是355000美元,计划价值是370000美元,项目的进度绩效指数是",
+            "options": [
+                "85%",
+                "125%",
+                "116%",
+                "81%"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "成本预算与成本绩效基准之间的差额是",
+            "options": [
+                "管理储备",
+                "应急储备",
+                "应付未付的成本",
+                "应收未收的收入"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "在编制项目预算时,通常会把各时期的成本基准确定为略高于预计的成本支出数,以便",
+            "options": [
+                "允许适当的进度提前",
+                "应对已知风险的发生",
+                "考虑预计的债务",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下各项主要用于项目控制,除了",
+            "options": [
+                "偏差分析",
+                "绩效报告",
+                "挣值分析",
+                "成本效益分析"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个基准不用于挣值测量",
+            "options": [
+                "范围基准",
+                "进度基准",
+                "质量基准",
+                "成本基准"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "活动成本估算要考虑下列所有成本,除了",
+            "options": [
+                "人工成本",
+                "材料成本",
+                "通货膨胀补贴",
+                "机会成本"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "在挣值管理中,什么情况下使用(BAC-EV)/(CPI*SPI)来计算完工尚需估算?",
+            "options": [
+                "成本超支且进度落后",
+                "成本超支但进度提前",
+                "成本节约但进度落后",
+                "成本节约且进度提前"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目的成本偏差等于",
+            "options": [
+                "EV减AC",
+                "EV减PV",
+                "AC减EV",
+                "AC减PV"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目的成本偏差百分比等于",
+            "options": [
+                "EV/AC",
+                "EV/PV",
+                "CV/PV",
+                "CV/EV"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个最好地描述了参数估算?",
+            "options": [
+                "先估算出各活动的成本,再汇总至工作包和控制账户的成本",
+                "先估算出各时间段的成本,再加总得到整个项目的成本",
+                "依据过去项目所表现出来的各因素之间的量化关系,来预测项目成本",
+                "利用专家判断,由资深专家进行项目的成本估算"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个概念能最好地支持\"项目的成本超支往往是无法解决的\"这个说法?",
+            "options": [
+                "机会成本",
+                "沉没成本",
+                "固定成本",
+                "间接成本"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "可以使用下列各种方法计算挣值,除了",
+            "options": [
+                "顺推计算法",
+                "加权里程碑法",
+                "固定公式法",
+                "完成百分比法"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "对于固定资产,每年提取等额的折旧数,这是在采用",
+            "options": [
+                "加速折旧法",
+                "递减折旧法",
+                "直线折旧法",
+                "年数总和法"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "确定性估算的准确度是",
+            "options": [
+                "±5%",
+                "±10%",
+                "±20%",
+                "±50%"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "控制图中的控制上限和控制下限表明",
+            "options": [
+                "项目团队不受处罚的最大偏差范围",
+                "产品质量合格与不合格的分界线",
+                "生产过程不需采取纠正行动的界限",
+                "判断项目成败的重要统计依据"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "精确不同于准确,因为",
+            "options": [
+                "精确是指重复测量的结果的离散度很小,准确是指单次测量的结果与目标值很接近",
+                "准确是指重复测量的结果的离散度很小,精确是指单次测量的结果与目标值很接近",
+                "精确是用于测量成本的,准确是用于测量质量的",
+                "精确是用于测量质量的,准确是用于测量进度的"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "实施质量保证的主要效益包括",
+            "options": [
+                "生产率降低,成本降低,干系人满意度提高",
+                "生产率提高,成本降低,干系人满意度提高",
+                "生产率提高,成本增加,干系人满意度提高",
+                "生产率降低,成本增加,干系人满意度提高"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "流程图中通常包括以下所有,除了",
+            "options": [
+                "每个步骤的活动",
+                "每个活动的责任人",
+                "相关的决策点",
+                "相关活动的时间顺序"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "关于质量的说法, 以下哪项是正确的?",
+            "options": [
+                "质量偏低不是问题, 等级偏低是个问题",
+                "质量是一系列内在特性满足要求的程度",
+                "质量中明确或隐含的需求是需求开发的依据",
+                "质量决定着项目产品的功能多少"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "过程改进旨在",
+            "options": [
+                "消除非增值活动,减少浪费",
+                "提高项目产品质量",
+                "降低生产成本",
+                "提高干系人满意度"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "对用途相同但技术特性不同的产品或服务的级别分类,通常用于描述",
+            "options": [
+                "产品或服务的等级",
+                "产品或服务的质量",
+                "产品或服务满足需求的程度",
+                "产品或服务的成本多少"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个不是实施质量控制过程的输出?",
+            "options": [
+                "批准的变更请求",
+                "确认的变更",
+                "确认的可交付成果",
+                "完成的核对表"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "当一个过程处于受控状态中,对此过程可以怎么做?",
+            "options": [
+                "不应该调整该过程",
+                "应该调整该过程,以提高产品质量",
+                "应该在项目阶段结束时,及时调整该过程",
+                "应该为了使工作更具挑战性,而调整该过程"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量审计是以下哪个过程的工具?",
+            "options": [
+                "规划质量",
+                "实施质量保证",
+                "实施质量控制",
+                "流程再造"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量审计的目标包括以下所有,除了",
+            "options": [
+                "总结质量管理的经验教训",
+                "识别谁应该对质量问题负主要责任",
+                "识别有效的质量管理做法",
+                "确定对质量政策的遵守程度"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "下列哪项属于一致性质量成本的例子?",
+            "options": [
+                "返工",
+                "质量培训",
+                "废品",
+                "保修费用"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于标杆对照的说法都是正确的,除了",
+            "options": [
+                "识别可比项目的最佳实践,提出本项目的质量改进意见",
+                "建筑项目不能用软件开发项目的做法作为标杆",
+                "可以为本项目的绩效考核提供一个基础",
+                "可以据此确定项目质量标准"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量控制由谁来实施?",
+            "options": [
+                "项目团队成员",
+                "质量控制部门",
+                "高级管理层",
+                "职能部门经理"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个不是项目质量保证的特性?",
+            "options": [
+                "开展过程改进",
+                "检查特定可交付成果的质量",
+                "重新评价质量标准的合理性",
+                "由项目团队开展"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "在项目监控过程中,你可以做出项目产品不符合要求的结论,如果",
+            "options": [
+                "质量偏差超过控制上限或下限",
+                "质量偏差超过规格上限或下限",
+                "质量偏差呈现随机变化",
+                "质量偏差呈现有规律的变化"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "实施质量保证过程的输入包括",
+            "options": [
+                "绩效报告",
+                "工作绩效测量结果",
+                "质量控制测量结果",
+                "质量核对表"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪项最有助于减少缺陷率?",
+            "options": [
+                "改进过程",
+                "测试成品",
+                "定义质量标准",
+                "制定进度基准"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个不属于石川七大基本质量工具?",
+            "options": [
+                "控制图",
+                "鱼骨图",
+                "统计抽样",
+                "流程图"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量是指",
+            "options": [
+                "符合三重制约",
+                "符合要求",
+                "优于同类产品",
+                "产品的功能众多"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "根据项目管理计划的规定,在项目的每个阶段都要进行质量审计。这种审计是哪个过程的工作?",
+            "options": [
+                "实施质量保证",
+                "结束项目或阶段",
+                "规划质量",
+                "实施质量控制"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于质量测量指标的说法,哪一个是正确的?",
+            "options": [
+                "质量测量指标应该定得略高一些,以便使工作具有挑战性",
+                "质量测量指标通常以质量核对表的形式出现",
+                "质量测量指标不需要非常具体,以便有一定的灵活性",
+                "质量测量指标是对质量标准的非常具体的操作性定义,用于质量保证和质量控制中"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理关注项目能够满足进行该项目的本来需求的程度。项目经理在做",
+            "options": [
+                "整合管理",
+                "时间管理",
+                "质量管理",
+                "范围管理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于项目质量管理的说法都是正确的,除了",
+            "options": [
+                "项目质量管理既要考虑项目管理的质量,又要考虑项目产品的质量",
+                "项目质量管理同时兼顾项目过程的质量和项目结果的质量",
+                "项目质量管理方法适用于所有的项目,无论项目会产出怎样的结果",
+                "项目质量管理是为了保证项目结果达到尽可能高的质量标准"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下都是质量保证的目的,除了",
+            "options": [
+                "提高项目干系人对项目将要达到质量要求的信心",
+                "进行过程持续改进,减少非增值活动",
+                "消除导致质量不合格的原因",
+                "重新评价质量标准,确保质量标准的可行性"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "控制图在均值线的一侧有7个连续的数据点,这时应该怎样处理?",
+            "options": [
+                "不采取任何行动,因为没有超出控制界限",
+                "告诉客户",
+                "停止生产",
+                "在继续生产的同时,查明原因,寻求解决办法"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量成本包括以下所有,除了",
+            "options": [
+                "预防成本",
+                "评估成本",
+                "失败成本",
+                "生产成本"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目的质量保证工作通常由谁来执行?",
+            "options": [
+                "项目质量保证部门",
+                "项目团队成员",
+                "高级管理层",
+                "项目发起人"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "项目经理正在检查项目执行期间所遇到的问题、制约因素以及所发现的非增值活动,并设法在以后克服这些问题以及减少非增值活动。他正在做",
+            "options": [
+                "规划质量",
+                "实施质量保证",
+                "实施质量控制",
+                "实施质量审计"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "按照学习曲线理论,在重复进行同一工作时",
+            "options": [
+                "工作出错的可能性大大降低",
+                "随着生产速度的提高,生产成本下降",
+                "随着生产产量的提高,单位产量的耗时会有规律地减少",
+                "应该尽量实现自动化"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "在规划质量过程中,项目经理需要确定将来用于检查质量的目标值、控制界限、规格界限以及进行质量检查的频率。他应该使用以下哪个工具与技术?",
+            "options": [
+                "控制图",
+                "标杆对照",
+                "流程图",
+                "实验设计"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "techPower",
+            "question": "统计抽样是常用的质量检查方法。项目管理团队需要在以下哪个过程中确定进行统计抽样的频率、样本数以及相应的统计分析方法?",
+            "options": [
+                "实施质量保证",
+                "规划质量",
+                "实施质量控制",
+                "控制进度"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个是对质量审计的正确描述?",
+            "options": [
+                "质量审计是规划质量过程的工具与技术",
+                "质量审计是实施质量控制过程的工具与技术",
+                "质量审计是实施质量保证过程的工具与技术",
+                "质量审计是改进质量过程的工具与技术"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下关于质量成本的说法,哪个是正确的?",
+            "options": [
+                "增加评估成本,以便节约其他成本",
+                "增加预防成本,以便节约其他成本",
+                "增加外部失败成本,以便节约其他成本",
+                "增加内部失败成本,以便节约其他成本"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "可以用散点图表示两个变量之间的相关性。两个变量之间的关系的密切程度,取决于数据点分布",
+            "options": [
+                "靠近某条横直线的程度",
+                "靠近某条竖直线的程度",
+                "靠近某条曲线的程度",
+                "靠近对角线的程度"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "techPower",
+            "question": "质量审计可用于下列所有目的,除了",
+            "options": [
+                "识别质量管理中的最佳实践",
+                "认定质量责任该由谁来承担",
+                "总结质量管理的经验教训",
+                "确认已批准的变更请求的实施情况"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "以下哪个方法涉及把本项目计划要采取的做法与其他项目的做法进行比较,来识别最佳做法,形成改进意见?",
+            "options": [
+                "实验设计",
+                "标杆对照",
+                "过程改进",
+                "统计抽样"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "实验设计的特点是",
+            "options": [
+                "每次考察一个变量的变化对结果的影响",
+                "每次考察几个变量的一种组合对结果的影响",
+                "把本项目的质量做法与其他项目的质量做法进行比较",
+                "实施质量控制过程的一种技术"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "PDCA循环是项目管理五大过程组的理论基础。该循环又被称为戴明环,是由谁最先提出的?",
+            "options": [
+                "戴明(Deming)",
+                "休哈特(ShewhArt)",
+                "克劳斯比(Crosby)",
+                "朱兰(JurAn)"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "techPower",
+            "question": "实验设计可以帮助降低产品性能对环境变化或其他变化的敏感性,使产品性能更加稳定。尽管如此,实验设计并不等同于敏感性分析,因为",
+            "options": [
+                "实验设计考察多个变量的组合的变化对结果影响,而不是一次只考察一个变量的变化",
+                "实验设计用于质量管理,而敏感性分析用于成本管理",
+                "实验设计是一种统计方法,而敏感性分析是一种风险分析方法",
+                "实验设计是美国人首先提出来的,而敏感性分析是日本人首先采用的"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目管理办公室对项目结果负有直接或间接的责任。以下哪个不是项目管理办公室的职责?",
+            "options": [
+                "给项目提供行政支持服务",
+                "对项目进行业务培训和指导",
+                "项目之间的人员协调",
+                "制定项目干系人之间的沟通计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列关于项目生命周期、项目管理生命周期和产品生命周期的说法,正确的是",
+            "options": [
+                "项目变化和发展时,项目生命周期通常随之变化和发展",
+                "项目管理生命周期对于每个项目都是独特的",
+                "项目管理生命周期就是项目生命周期",
+                "典型的产品生命周期包括多个项目生命周期"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "大多数项目的项目生命周期都具有以下特点",
+            "options": [
+                "项目开始阶段,项目对资源的需求急剧增加;项目结束阶段,项目对资源的需求缓慢下降",
+                "项目大部分的预算都花费在启动和规划阶段",
+                "项目开始阶段,项目对资源的需求缓慢增加;项目结束阶段,项目对资源的需求急剧下降",
+                "项目干系人对项目的影响力随项目的实施而逐渐提高"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个关于项目生命周期的说法是正确的?",
+            "options": [
+                "所有项目的项目生命周期都包括启动、规划、执行、监控和收尾等5个阶段",
+                "干系人的职责和作用,在整个项目生命周期中通常保持不变",
+                "随着项目接近完工,项目失败的可能性降低,负面风险的影响也降低",
+                "即便同一类项目,也可以有不同的项目生命周期阶段划分"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "在下列哪一种组织结构中,项目成员在收尾阶段最感到忧心忡忡?",
+            "options": [
+                "职能型",
+                "矩阵型",
+                "项目型",
+                "弱矩阵型"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目阶段结束时,要对该阶段的可交付成果和绩效进行审查,其目的在于",
+            "options": [
+                "做出项目变更(包括纠偏)、项目继续或不继续的决策",
+                "获得客户对可交付成果的认可",
+                "调整项目目标",
+                "根据资源情况来决定是否需要补充资源"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪一项包括在组织过程资产里?",
+            "options": [
+                "历史资料、经验教训",
+                "组织文化",
+                "项目管理信息系统",
+                "人力资源库"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "客户是指",
+            "options": [
+                "付钱购买项目产品的个人或组织",
+                "将要使用项目产品的任何个人或组织",
+                "直接使用项目产品的个人或组织",
+                "项目发起人"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目阶段结束点,通常做出项目\"继续\"或\"终止\"的决定,以下哪个时点可设定为项目阶段结束点?",
+            "options": [
+                "项目经理更换时",
+                "项目团队成员出现重大变化时",
+                "一系列活动完成时",
+                "重要监控点"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "高层管理者应当在以下哪个时候对项目进行审查?",
+            "options": [
+                "客户提出重要意见时",
+                "项目出现不可接受的偏差时",
+                "完成一个里程碑时",
+                "完成一个生命周期阶段时"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目生命周期与产品生命周期的差别在于以下各项,除了",
+            "options": [
+                "项目生命周期的阶段之间可能相互交叉,而产品生命周期的阶段之间通常不相互交叉",
+                "项目生命周期其实就是项目管理过程,而产品生命周期则是产品导向过程",
+                "项目生命周期的终点与产品生命周期的终点不同",
+                "项目生命周期可以包括在多个产品生命周期中"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列关于项目阶段的说法,正确的是",
+            "options": [
+                "项目阶段就是项目管理过程组",
+                "一个项目阶段的结束通常包括核准开始下一个阶段",
+                "在可交付成果被确认符合技术要求后,就可以结束该项目阶段",
+                "项目阶段的结束涉及到可交付成果的交接"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "你和你的团队为了更好地制订项目计划,你们应该特别注意分析以下哪方的要求和期望?",
+            "options": [
+                "项目发起人",
+                "项目高级管理层",
+                "项目干系人",
+                "项目客户"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "把项目划分成通常顺序排列的多个阶段,阶段的名称和数量由项目所在组织根据管理与控制的需要确定。这些项目阶段的组合叫做",
+            "options": [
+                "项目生命周期",
+                "产品生命周期",
+                "项目运营周期",
+                "项目管理生命周期"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目经理是",
+            "options": [
+                "项目发起人派来实现项目目标的个人",
+                "项目执行组织派来实现项目目标的个人",
+                "通过竞争性投标,获得项目管理服务合同的个人",
+                "通常是指卖方组织中的项目负责人"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "一般来说,在处理干系人之间的利益冲突时,应优先考虑以下哪方的利益?",
+            "options": [
+                "发起人",
+                "管理层",
+                "客户",
+                "项目经理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "大多数组织都形成了自己独特的组织文化,组织文化体现在以下几个方面,除了",
+            "options": [
+                "大家应该遵守的标准和法规",
+                "大家共同的愿景、价值观以及信念",
+                "大家对工作伦理与工作时间安排的共同认识",
+                "组织中的政策与程序"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "维护和连续运营对项目至关重要",
+            "options": [
+                "应该作为项目生命周期收尾阶段的一项活动",
+                "生命周期成本的一大部分用于维护和运营,因此维护和运营应该作为项目生命周期中一个单独的阶段",
+                "但不应看作项目的一部分",
+                "所以应该看作整个项目中的一个子项目"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目生命周期的哪个阶段具有最大的风险和不确定性?",
+            "options": [
+                "概念阶段",
+                "计划编制阶段",
+                "实施阶段",
+                "收尾阶段"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "运营与项目有许多共同点,除了",
+            "options": [
+                "各阶段都需要不同的人员或组织参与",
+                "都受制于一些约束,包括资源约束",
+                "都需要规划、执行和控制",
+                "都需要服务于组织的经营或战略目标"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目治理是指",
+            "options": [
+                "把权力集中在项目经理手中",
+                "加大高级管理层对项目的控制力度",
+                "在不划分项目阶段的前提下,把项目作为一个整体加以控制",
+                "明确规定项目的决策点、决策人、决策过程和决策时间"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "进度计划压缩中的快速跟进技术,相当于以下哪种阶段与阶段之间的关系?",
+            "options": [
+                "交叠关系",
+                "顺序关系",
+                "迭代关系",
+                "螺旋关系"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "对于复杂的项目,尤其是那些跨职能部门的项目,下列哪一种组织结构最有效?",
+            "options": [
+                "矩阵型",
+                "项目型",
+                "职能型",
+                "不一定"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目启动阶段,谁领导着项目?",
+            "options": [
+                "项目经理",
+                "高层管理人员",
+                "公司首席执行官",
+                "项目发起人"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "在以下哪种组织结构中,项目经理将可能对项目资源进行最严格的控制?",
+            "options": [
+                "紧密式矩阵组织",
+                "项目型组织",
+                "平衡式矩阵组织",
+                "强矩阵组织"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "一般而言,房屋建设项目最不可能采用哪种阶段与阶段之间的关系?",
+            "options": [
+                "交叠关系",
+                "迭代关系",
+                "顺序关系",
+                "螺旋关系"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个因素最有可能导致项目干系人管理中的困难?",
+            "options": [
+                "干系人数量多",
+                "干系人对项目有不同的期望",
+                "干系人对项目的参与程度不同",
+                "干系人对项目的影响力不同"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "强矩阵组织和弱矩阵组织之间的主要差别在于",
+            "options": [
+                "组织的结构化、作风对项目产生的影响不同",
+                "项目团队成员之间以及他们与项目经理之间的亲近度不同",
+                "项目经理对项目资源的控制程度不同",
+                "项目团队成员之间的凝聚力不同"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "组织过程资产可以分为哪两大类?",
+            "options": [
+                "流程与程序、共享知识库",
+                "标准与规范、项目管理信息系统",
+                "模板与指南、基础设施",
+                "控制程序、工作授权系统"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "运营经理是",
+            "options": [
+                "项目经理的助手",
+                "负责向项目提供技术支持的经理",
+                "职能经理的代名词",
+                "组织中负责直接用于销售的产品或服务的生产的经理"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "一个项目经理遵循公司的国际项目程序,在项目阶段末对该阶段的可交付成果和绩效进行审查,其目的在于",
+            "options": [
+                "及时发现和纠正错误,并决定项目能否进入下一个阶段",
+                "获得客户对阶段可交付成果的认可",
+                "对风险进行实时监控",
+                "根据情况,调整项目计划"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "各项目的项目生命周期具有以下哪个共性?",
+            "options": [
+                "项目生命周期是指项目从开始到结束的时间长短",
+                "具有从启动、规划、执行到正式结束的总体结构",
+                "大多数项目的项目生命周期都是相同的",
+                "项目生命周期是循环往复的一段时间"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目发起人主要为项目提供",
+            "options": [
+                "项目范围说明书",
+                "项目资金",
+                "项目章程",
+                "项目验收标准"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于项目生命周期的说法,正确的是",
+            "options": [
+                "通常相互交叉而有时又按顺序排列的各阶段的集合",
+                "指启动、规划、执行、监控和收尾等五个过程组的集合",
+                "不同的组织通常采用阶段名称相同、阶段数量相同的项目生命周期",
+                "通常按顺序排列但也可能相互交叉的各阶段的集合"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于项目阶段和项目生命周期的说法都是正确的,除了",
+            "options": [
+                "阶段结束点是对项目进行检查、评估和控制的当然时点",
+                "通常应该在重要可交付成果形成的时点,对项目分阶段",
+                "项目生命周期可以包含在多个产品生命周期中",
+                "随着项目接近完工,项目对资源的需求逐渐达到最高峰"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于客户的说法,正确的是",
+            "options": [
+                "将要购买项目产品、服务或成果的个人或组织",
+                "将要使用项目产品、服务或成果的个人或组织",
+                "为项目提供财务资源的个人或组织",
+                "为项目提供专业技术或服务的个人或组织"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目执行组织的组织文化",
+            "options": [
+                "通常是相似的,会对项目实施产生影响",
+                "通常是独特的,会对项目实施产生影响",
+                "通常是相似的,不会对项目实施产生影响",
+                "通常是独特的,不会对项目实施产生影响"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目型组织中,全职项目团队成员的比例通常是",
+            "options": [
+                "很少",
+                "几乎100%",
+                "大约三分之一",
+                "大约三分之二"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个经理负责直接用于销售的产品的生产或直接用于销售的服务的提供?",
+            "options": [
+                "项目经理",
+                "项目管理办公室经理",
+                "职能经理",
+                "运营经理"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下所有都是组织过程资产的例子,除了",
+            "options": [
+                "标准化的工作指南",
+                "过程测量数据库",
+                "组织结构和组织文化",
+                "配置管理知识库"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个过程不属于监控过程组?",
+            "options": [
+                "核实范围",
+                "报告绩效",
+                "管理采购",
+                "管理项目团队"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目规划过程中,下列哪一项是适当的做法?",
+            "options": [
+                "邀请所有项目干系人参与",
+                "确定最初的项目团队成员",
+                "确定项目控制的临界值",
+                "核实范围"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目计划形成之前,谁应当对项目负责?",
+            "options": [
+                "高级管理层",
+                "项目发起人",
+                "职能经理",
+                "项目经理"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下都是启动过程的输入,除了",
+            "options": [
+                "合同",
+                "采购文件",
+                "商业论证",
+                "干系人登记册"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "启动过程组旨在",
+            "options": [
+                "正式授权开始一个新项目或现有项目的一个新阶段",
+                "批准市场分析报告以保证采取正确的市场行动",
+                "采用合适的项目选择过程",
+                "批准项目可行性研究报告"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在以下所有时间都需要进行收尾工作,除了",
+            "options": [
+                "项目阶段结束时",
+                "整个项目结束时",
+                "项目计划编制结束时",
+                "合同结束时"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "通常,可以用项目生命周期来定义",
+            "options": [
+                "产品导向过程",
+                "项目管理过程",
+                "产品生命周期",
+                "项目管理生命周期"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在下列哪一个项目管理过程组中确定项目成功标准、定义项目策略和确定产品描述?",
+            "options": [
+                "启动",
+                "规划",
+                "执行",
+                "监控"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在每一阶段开始时进行启动过程",
+            "options": [
+                "是一种资源浪费,应该尽量避免",
+                "有助于确保项目符合其预定的业务需要,并验证项目成功标准",
+                "有助于确保项目按原定计划进行",
+                "有利于确定每个阶段所需要的项目团队成员的种类、数量和技能水平"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个知识领域没有监控过程?",
+            "options": [
+                "项目采购管理",
+                "项目范围管理",
+                "项目整合管理",
+                "项目人力资源管理"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目整合管理知识领域",
+            "options": [
+                "高于其他八大知识领域",
+                "相对独立于其他八大知识领域",
+                "主要用于整合各分项计划,来形成综合性的项目计划",
+                "协调与统一其他八大知识领域的所有过程"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目管理的5大过程组是",
+            "options": [
+                "概念、规划、执行、检查、收尾",
+                "启动、规划、执行、监控、收尾",
+                "规划、开发、执行、收尾、交付",
+                "启动、执行、监督、评价、收尾"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目经理通常在什么时候任命?",
+            "options": [
+                "项目正式启动之后",
+                "项目计划编制开始之前",
+                "项目执行开始之前",
+                "制定项目范围说明书之前"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "变更请求是以下哪个过程的输出?",
+            "options": [
+                "制订项目管理计划",
+                "实施整体变更控制",
+                "规划风险管理",
+                "规划采购"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "验收已完成的可交付成果,是哪个过程的工作?",
+            "options": [
+                "结束项目或阶段",
+                "结束采购",
+                "实施质量控制",
+                "核实范围"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪项是项目收尾过程组的工作?",
+            "options": [
+                "检查已完可交付成果的质量是否合格",
+                "验收已确认的可交付成果",
+                "把已通过验收的可交付成果移交给客户",
+                "发现项目产品功能的偏差,提出纠偏建议"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目收尾过程中,通常要完成下列所有工作,除了",
+            "options": [
+                "获得客户和发起人的验收",
+                "总结\"剪裁\"项目管理过程的效果",
+                "补救项目产品、服务或成果中的缺陷",
+                "结束采购工作"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目成本预算在下列哪一个项目阶段编制?",
+            "options": [
+                "启动阶段",
+                "在项目生命周期开始之前",
+                "规划阶段",
+                "执行阶段"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于项目管理过程组或过程的说明,不正确的是",
+            "options": [
+                "项目管理过程组在不同类型的项目上都是相同的",
+                "当项目发生变更时,项目管理过程也发生变更",
+                "在不同项目上,各项目管理过程组一般都有基本相同的依赖关系和顺序关系",
+                "项目进入执行阶段后,仍然可以开展规划过程组的过程"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目管理过程组包括",
+            "options": [
+                "在整个项目持续时间内以不同程度相互重叠的活动",
+                "在整个项目持续时间内的每个阶段都以相同密集程度发生的、相互重叠的活动",
+                "在整个项目持续时间内的每个阶段孤立发生且只执行一次的各种活动",
+                "在整个项目持续时间内的每个阶段孤立但可重复发生的各种活动"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目的启动过程通常不由谁来完成?",
+            "options": [
+                "高级管理层",
+                "项目集经理",
+                "项目经理",
+                "项目组合经理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目文件是哪个过程的输入?",
+            "options": [
+                "识别干系人和实施采购",
+                "识别风险和实施采购",
+                "规划采购和实施采购",
+                "实施采购和管理采购"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "一个项目的正式授权是通过以下哪一项来完成的?",
+            "options": [
+                "对构思阶段放行口的批准",
+                "对项目章程的批准",
+                "对可行性研究报告的批准",
+                "对项目工作说明书的批准"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列哪个说法是正确的?",
+            "options": [
+                "项目管理团队在开展具体项目时必须严格遵守PMBOK指南所规定的项目管理过程",
+                "每一个项目管理过程在一个项目中可能不止进行一次",
+                "项目管理各过程之间通常相互独立并且严格按先后顺序排列",
+                "项目管理过程组等同于项目阶段"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于监控过程的说法,哪个是正确的?",
+            "options": [
+                "监控工作通常要由专人来开展",
+                "不仅要监控各阶段的工作,而且要监控各阶段之间的协调",
+                "监控只需要针对执行过程组进行",
+                "有些很小的变更可能不需要提交给整体变更控制过程做综合评审"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "规划过程组会产生",
+            "options": [
+                "项目管理计划",
+                "干系人登记册和干系人管理策略",
+                "项目经理计划和项目文件",
+                "项目管理计划和采购文件"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个过程不属于规划过程组?",
+            "options": [
+                "识别干系人",
+                "识别风险",
+                "收集需求",
+                "估算成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在下列哪个阶段识别与项目有关的质量标准,并且决定如何达到这些标准",
+            "options": [
+                "启动阶段",
+                "规划阶段",
+                "执行阶段",
+                "监控阶段"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "在多阶段项目中,启动过程组经常发生在",
+            "options": [
+                "项目构思阶段开始时",
+                "项目的每一个阶段开始时",
+                "项目计划阶段开始时",
+                "项目发起人要求时"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个过程不属于执行过程组?",
+            "options": [
+                "管理采购",
+                "管理项目团队",
+                "管理干系人期望",
+                "实施质量保证"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在开始一个项目之前,应该完成下列各项,除了",
+            "options": [
+                "指定项目经理,并组建项目管理团队",
+                "确定项目的总体需求",
+                "进行项目可行性研究,评价备选方案",
+                "确定项目目标,并说明做项目的理由"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目管理过程组",
+            "options": [
+                "在整个项目期间都以不同程度相互重叠",
+                "五大过程组在不同的项目上会以不同的顺序进行",
+                "是相互独立的,而且每个过程组在每个项目上只执行一次",
+                "等同于项目阶段"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "为了项目成功,项目团队通常必须做下列哪项工作?",
+            "options": [
+                "使用非结构化的项目管理方法来实现项目要求",
+                "在项目范围、时间、成本、质量、资源和风险等相互竞争的要求之间寻找平衡点",
+                "使用项目管理过程组中的所有过程,来实现项目目标",
+                "满足并超过项目干系人对项目的需要和期望"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目收尾过程组中包括以下哪个过程?",
+            "options": [
+                "合同收尾过程",
+                "结束采购过程",
+                "行政收尾过程",
+                "阶段收尾过程"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "启动过程组旨在获得授权,以便",
+            "options": [
+                "开始一个新项目或现有项目的一个新阶段",
+                "实施风险缓解策略",
+                "批准对项目的选择决策",
+                "批准市场分析报告"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "为了成功完成项目,项目干系人需要召开项目开踢会议,来宣布项目开始和项目计划。开踢会议应该在以下哪个时间召开?",
+            "options": [
+                "项目启动阶段开始时",
+                "项目启动阶段结束时",
+                "项目规划阶段开始时",
+                "项目规划阶段结束时"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "工作绩效信息是以下所有过程的输入,除了",
+            "options": [
+                "实施质量控制",
+                "控制范围",
+                "控制进度",
+                "控制成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目的渐进明细通常与哪个过程组有最密切的关系?",
+            "options": [
+                "启动",
+                "规划",
+                "执行",
+                "监控"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个是规划过程组的输出?",
+            "options": [
+                "项目章程与项目管理计划",
+                "项目管理计划与项目文件",
+                "项目文件与组织过程资产更新",
+                "项目基准与项目文件"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个过程组不会提出变更请求?",
+            "options": [
+                "规划过程组",
+                "执行过程组",
+                "监控过程组",
+                "收尾过程组"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "在项目整合管理中要使用哪个工具与技术来实施各过程?",
+            "options": [
+                "项目管理方法论",
+                "专家判断",
+                "挣值技术",
+                "项目管理信息系统"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "指导与管理项目执行过程需要做下列各项,除了",
+            "options": [
+                "实施由管理层提出的变更请求",
+                "按项目计划的规定,实施各种项目活动",
+                "随项目实施收集工作绩效信息",
+                "管理各种技术、人际和组织接口"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个不是实施整体变更控制过程的输入?",
+            "options": [
+                "项目管理计划",
+                "工作绩效信息",
+                "绩效报告",
+                "变更请求"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目可以由以下各方加以正式启动,除了",
+            "options": [
+                "项目经理",
+                "项目管理办公室",
+                "项目集经理",
+                "项目组合管理委员会"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "对项目管理各过程,下列哪个说法是正确的?",
+            "options": [
+                "根据管理层的管理偏好来执行项目管理过程",
+                "在各项目的管理中同等程度地加以严格实施",
+                "经验很多的项目经理可以凭直觉就决定不采用某个项目管理过程",
+                "项目管理团队必须考虑每一个项目管理过程,并决定其具体实施水平"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "监控项目工作过程涉及到以下所有,除了",
+            "options": [
+                "收集与发布项目绩效信息",
+                "执行风险应对计划",
+                "实施已批准的变更",
+                "做出预测,更新项目信息库"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目整合管理的过程包括以下所有,除了",
+            "options": [
+                "制定项目章程",
+                "制定初步项目范围说明书",
+                "实施整体变更控制",
+                "制定项目管理计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个是结束项目或阶段过程的输入?",
+            "options": [
+                "完成的可交付成果",
+                "验收的可交付成果",
+                "确认的可交付成果",
+                "最终的可交付成果"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "用于制定项目章程的专家判断的渠道不包括",
+            "options": [
+                "组织内的其他部门",
+                "顾问",
+                "项目管理团队",
+                "干系人,包括客户或发起人"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "合同是以下哪个项目管理过程的输入?",
+            "options": [
+                "实施采购",
+                "规划采购",
+                "创建工作分解结构",
+                "制定项目章程"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "关于实施整体变更控制,以下哪个说法是正确的?",
+            "options": [
+                "整体变更控制只针对较大的变更,而不必针对较小的变更",
+                "整体变更控制要针对所有变更,无论大小",
+                "整体变更控制通常由变更控制委员会进行",
+                "整体变更控制只针对关于项目计划的变更请求,而不针对各种纠正措施建议"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "实施整体变更控制过程包括以下各项,除了",
+            "options": [
+                "提出变更请求",
+                "审批变更请求",
+                "否决变更请求",
+                "更新变更请求状态"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目绩效测量基准通常是下列各种基准的综合,以便用于考核项目执行情况",
+            "options": [
+                "范围、进度、成本和质量基准",
+                "范围、进度和成本基准",
+                "进度、成本和质量基准",
+                "范围、进度、风险和成本基准"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个是对配置管理活动的最好描述?",
+            "options": [
+                "配置识别、配置状态记录、配置核实与审计",
+                "配置分析、配置状态记录、配置核实与审计",
+                "配置管理、配置控制、配置审计",
+                "配置识别、配置分析、配置管理"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "为了使项目收尾,除了下述哪项外,其余各项都需要具备?",
+            "options": [
+                "与团队成员交流项目情况",
+                "获得客户对项目成果的接受",
+                "审核项目文档的完整性",
+                "更新项目计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下所有都是制订项目管理计划过程的输入,除了",
+            "options": [
+                "项目章程",
+                "项目范围基准",
+                "过程改进计划",
+                "关于计划更新的变更请求"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个是监控项目工作过程的输入?",
+            "options": [
+                "工作绩效信息",
+                "绩效报告",
+                "批准的变更请求",
+                "提出的变更请求"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列关于配置控制的说法正确的是",
+            "options": [
+                "配置控制重点关注项目的进度和成本基准",
+                "配置控制重点关注项目的技术规范",
+                "配置控制重点关注项目的资源配置",
+                "配置控制重点关注项目的人力资源配置"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下所有都是项目管理团队通常要开展的活动,除了",
+            "options": [
+                "明确项目的产品范围和工作范围",
+                "监控项目进展,采取必要的纠正措施",
+                "运用灵活的、非结构化的方法来编制项目计划",
+                "为完成项目而开展各种类型的活动"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目整合管理包括",
+            "options": [
+                "项目与日常运营之间的整合",
+                "项目管理计划与项目文件之间的整合",
+                "协调与统一各种项目管理过程",
+                "以上全部"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目章程记录了如下内容,除了",
+            "options": [
+                "干系人管理策略",
+                "项目经理及其职责和职权",
+                "总体里程碑进度计划",
+                "项目目的或上项目的原因"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个不是项目绩效报告的主要内容?",
+            "options": [
+                "项目的当前状态",
+                "项目的风险状态",
+                "对项目完成情况的预测",
+                "项目中出现的问题"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列哪项不是整体变更控制的内容?",
+            "options": [
+                "对可能引起变更的因素施加影响",
+                "在整个项目期间和整个项目范围内协调各种类型的变更",
+                "确保项目的绩效测量基准不发生变化",
+                "当变更实际发生时对变更进行管理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目整合管理是指",
+            "options": [
+                "识别、比较和选择项目的资源配置方案",
+                "平衡相互竞争的项目目标,如范围、时间、成本和质量",
+                "协调项目管理各知识领域之间的相互影响",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于变更请求的说法都是正确的,除了",
+            "options": [
+                "变更请求包括对所有项目文件或计划的更新",
+                "变更请求包括为使未来项目绩效与项目计划一致而采取的纠正措施",
+                "变更请求包括为降低消极风险发生的概率而采取的预防措施",
+                "变更请求包括针对质量缺陷的补救建议"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "结束项目或阶段的依据包括以下所有,除了",
+            "options": [
+                "项目管理计划",
+                "验收的可交付成果",
+                "事业环境因素",
+                "组织过程资产"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于变更请求的说法都是正确的,除了",
+            "options": [
+                "可以由外部或内部项目干系人提出",
+                "可以来自项目干系人的自由选择或新颁发法律的强制要求",
+                "可以是直接提出的,或从某种事情推断而来的",
+                "可以是项目干系人以正式或非正式的形式提出的"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目工作说明书需涉及以下各项,除了",
+            "options": [
+                "产品范围描述",
+                "项目范围描述",
+                "经营需要",
+                "战略计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列关于行政收尾和合同收尾的说法,正确的是",
+            "options": [
+                "项目或阶段结束时都要进行行政收尾和合同收尾",
+                "行政收尾和合同收尾都需要进行产品核实,都需要总结经验教训,对相关资料进行整理和归档,更新组织过程资产",
+                "合同收尾通常在行政收尾之后进行",
+                "整个项目通常只需要做一次合同收尾和一次行政收尾"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪项通常不包括在工作绩效信息中?",
+            "options": [
+                "可交付成果的完成情况",
+                "项目进展情况",
+                "项目的累计成本支出情况",
+                "项目的累计成本偏差情况"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "变更控制委员会(CCB)是什么职能的组织?",
+            "options": [
+                "由负责批准或否决项目基准变更的主要干系人的代表所组成",
+                "由负责批准或否决项目基准变更的主要项目团队成员所组成",
+                "由负责批准或否决项目基准变更的主要行政人员所组成",
+                "由负责批准或否决项目基准变更的高级管理人员所组成"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个文件授权项目经理为开展项目活动而动用组织资源?",
+            "options": [
+                "项目章程",
+                "项目管理计划",
+                "项目工作说明书",
+                "项目文件"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个最好地描述了开展项目变更控制的目的?",
+            "options": [
+                "确保所有变更都经过批准,确保只有经批准的变更才能纳入计划中",
+                "确保所有变更都经过变更控制委员会的审批,并在批准后纳入计划中",
+                "确保把项目变更控制在最少的范围内",
+                "确保只有最重要的干系人才能提出变更请求,并参与对变更请求的审批工作"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在以下哪个文件中记录项目的总体里程碑进度计划和总体预算?",
+            "options": [
+                "项目管理计划",
+                "项目章程",
+                "项目文件",
+                "项目计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "指导与管理项目执行过程的工具是",
+            "options": [
+                "项目管理方法论",
+                "变更控制会",
+                "项目管理信息系统",
+                "项目管理计划更新"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下各项都是项目管理计划的组成部分,除了",
+            "options": [
+                "项目范围管理计划",
+                "项目范围基准",
+                "项目人力资源计划",
+                "项目风险登记册"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "为达到项目的完工标准而必须进行的各种活动,通常是下列哪个的一部分?",
+            "options": [
+                "行政收尾",
+                "实施质量控制过程",
+                "核实范围过程",
+                "监控项目工作"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "变更请求包括下列所有,除了",
+            "options": [
+                "纠正措施建议",
+                "预防措施建议",
+                "缺陷补救措施建议",
+                "组织过程资产更新建议"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下所有说法都是正确的,除了",
+            "options": [
+                "随着情况的变化,项目计划需要渐进明细、反复修正",
+                "渐进明细是随信息的逐渐增加、情况的逐渐明了而不断进行的",
+                "滚动式规划是渐进明细的一种常用方法",
+                "不能在一开始就明确所有细节的项目,很可能会失败"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "关于变更请求,以下哪个说法是不正确的?",
+            "options": [
+                "变更请求可以由任何干系人提出",
+                "变更请求可以口头或书面提出",
+                "变更请求可以正式或非正式提出",
+                "变更请求要通过变更控制系统中的相关过程进行处理"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于固定总价合同的说法,正确的是",
+            "options": [
+                "价格完全固定,不允许调整,以便卖方承担工作范围变更的风险",
+                "买方不需要准确定义所需采购的产品或服务",
+                "买方承担因合同履行不好而导致的成本增加",
+                "如果工作范围发生变化,则可以调整合同价格"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下都是合同提前终止的原因,除了",
+            "options": [
+                "双方协商一致",
+                "买方为了自己的便利",
+                "一方违约",
+                "项目完工"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "采购文件中应该包括",
+            "options": [
+                "所需的合同条款",
+                "初步估计的合同价格",
+                "详细的施工方法",
+                "详细的进度计划"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "在成本补偿合同下,买方为卖方报销合同工作实施的一切可列支成本,并支付一定的费用作为卖方的",
+            "options": [
+                "管理费",
+                "固定成本",
+                "间接成本",
+                "利润"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目采购管理是围绕以下哪项进行的?",
+            "options": [
+                "采购文件",
+                "建议书",
+                "合同",
+                "建议邀请书"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "在规划采购过程中,经常需要从外部寻求以下各种专家的专家判断",
+            "options": [
+                "采购专家、法律专家、技术专家",
+                "管理专家、法律专家、技术专家",
+                "采购专家、管理专家、技术专家",
+                "采购专家、法律专家、管理专家"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "投标人会议通常在什么时候举行?",
+            "options": [
+                "规划采购阶段",
+                "实施采购阶段",
+                "卖方选择阶段",
+                "管理采购阶段"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "根据买方在项目采购圈中的不同位置,买方也可以称为以下各项,除了",
+            "options": [
+                "雇主(Client)",
+                "承包商(ContrActor)",
+                "客户(Customer)",
+                "投标人(Bidder)"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "从买方的角度分析,对于固定价格合同,买方最重要的工作是什么?",
+            "options": [
+                "确定合同总价",
+                "处理合同执行过程中的变更",
+                "定义被采购产品或服务的范围",
+                "监督卖方控制成本的积极性"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于工料合同的说法都是正确的,除了",
+            "options": [
+                "工料合同是一种混合类型合同,既有成本补偿合同的特点,也有总价合同的特点",
+                "按卖方的实际成本给予付款,外加一定的利润",
+                "买方没有明确规定合同的总价值",
+                "在合同授予时,采购的准确数量没有明确规定"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "你已经发出了建议邀请书,潜在供应商有一些疑问。你决定开一次会来澄清工作说明书,以便每个人都能理解。你此时正处在下列哪个阶段?",
+            "options": [
+                "规划采购",
+                "实施采购",
+                "管理采购",
+                "结束采购"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "你和你的团队正在与你的供应商结束一项合同,证明合同已经完成的正式书面通知是由谁来发布?",
+            "options": [
+                "买方的高级管理层",
+                "买方的项目团队",
+                "买方的采购管理员",
+                "项目发起人"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "一般来说,准备建议书的成本",
+            "options": [
+                "不直接向买方收取任何费用",
+                "如果买方不与卖方交易,对买方而言就成了直接成本",
+                "如果买方与卖方交易,对买方而言就成了直接成本",
+                "不论买方与卖方交易与否,对买方而言就成了直接成本"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "你们正处于编制采购文件的过程中。如果打算以价格为基础来选择卖方,那么采购文件可以使用下列名称,除了",
+            "options": [
+                "投标邀请书",
+                "报价邀请书",
+                "建议邀请书",
+                "投标通知"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个文件中会包含关于合同所需产品或服务的详细属性?",
+            "options": [
+                "工作说明书(SOW)",
+                "项目章程",
+                "工作分解结构(WBS)",
+                "范围管理计划"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下关于采购工作说明书的说法都是正确的,除了",
+            "options": [
+                "详细描述拟采购的对象,以便潜在卖方确定他们是否有能力提供",
+                "详细描述拟采购的对象,以便为潜在卖方提供一个统一的报价基础",
+                "为了保证采购工作的严肃性,采购工作说明书一旦发出,就不能更改",
+                "每次进行采购,都需要编制采购工作说明书"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "采购审计",
+            "options": [
+                "识别卖方工作流程或可交付成果中的不足之处",
+                "识别项目活动是否符合组织和项目的相关方针、方法及流程",
+                "检查风险应对措施在处理已识别风险及其根源方面的有效性",
+                "对从规划采购到管理采购的所有采购过程进行结构化审查"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "如果潜在卖方的报价明显低于买方的独立估算,则可能表明以下所有,除了",
+            "options": [
+                "潜在卖方没有全面响应采购工作说明书",
+                "潜在卖方误解了采购工作说明书",
+                "采购工作说明书有缺陷",
+                "如果该潜在卖方中标,就可以为买方节约大量成本"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下各项都是规划采购过程的输出,除了",
+            "options": [
+                "采购管理计划",
+                "采购文件",
+                "建议书",
+                "供方选择标准"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "结束采购的输入包括",
+            "options": [
+                "采购文件",
+                "采购文档",
+                "建议书",
+                "合同"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "通常,买方比较喜欢的合同类型是",
+            "options": [
+                "固定总价合同",
+                "成本补偿合同",
+                "单价合同",
+                "工料合同"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "你正在考虑向新客户提供有偿咨询服务,这种情况下你的风险最低的合同类型是",
+            "options": [
+                "固定总价合同",
+                "工料合同",
+                "成本加固定费用合同",
+                "成本加激励费用合同"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "某项目采用成本加固定费用合同。合同中规定的目标成本为100000美元,并按10%提取利润。合同实施结束时,实际成本是110000美元,那么最终的合同价格是多少?",
+            "options": [
+                "120000美元",
+                "121000美元",
+                "110000美元",
+                "算不出来"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "采购审计的主要目的是",
+            "options": [
+                "验证卖方工作过程或可交付物的一致性",
+                "审查采购过程的有效性,以便对相关人员给予奖惩",
+                "鉴别可供以后采购借鉴的经验教训",
+                "确定合同双方是否认真履行了各自义务"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "实施采购过程包括下列所有工作,除了",
+            "options": [
+                "编制采购文件",
+                "获取卖方建议书",
+                "建议书评价",
+                "确定中标者并授予合同"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "可以在总价合同中加入经济价格调整条款,以便应对",
+            "options": [
+                "工作范围变更的风险",
+                "现场条件变化的风险",
+                "通货膨胀的风险",
+                "生产效率低下的风险"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "项目出项了一个紧急情况,你立即需要一名合同管理专家为你提供咨询服务,在这种情况下,你可能使用下列哪种合同?",
+            "options": [
+                "固定总价合同",
+                "总价加激励费用合同",
+                "总价加经济价格调整合同",
+                "工料合同"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "在成本加奖励费用合同下,买方为卖方报销一切合法成本,并且",
+            "options": [
+                "向卖方支付一笔固定的费用",
+                "就成本节约部分,按事先确定的分享比例,与卖方分享",
+                "基于买方对卖方绩效的主观判断,向卖方支付利润",
+                "在不超过最高限额的情况下,按合理标准向卖方支付利润"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "供方选择标准是以下哪个文件的一个组成部分?",
+            "options": [
+                "采购工作说明书",
+                "采购文件",
+                "建议邀请书",
+                "建议书"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "下列各项都是合同变更控制系统的组成部分,除了",
+            "options": [
+                "变更批准层次",
+                "跟踪系统",
+                "争议处理程序",
+                "哪些合同变更不需要书面文件"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下都是规划采购过程的输入,除了",
+            "options": [
+                "范围基准",
+                "合作协议",
+                "应用领域",
+                "活动资源需求"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "常用的合同种类包括以下所有,除了",
+            "options": [
+                "总价合同",
+                "成本补偿合同",
+                "混合型工料合同",
+                "价格调整合同"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "作为管理采购的输入之一,批准的变更请求包括",
+            "options": [
+                "根据新发布的法规,对合同可交付成果的质量标准的修改",
+                "根据买方意见,卖方对本月付款申请书的修改",
+                "根据经济价格调整条款,对合同价格的修改",
+                "买方单方面决定的对付款时间的推迟"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "managePower",
+            "question": "供方选择标准",
+            "options": [
+                "通常在实施采购过程中制定",
+                "必须是客观的标准",
+                "通常局限于价格",
+                "可以用包括价格在内的多种标准对卖方建议书进行打分"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "一名新项目经理即将第一次参加投标人会议。他向你询问关于投标人会议的注意事项。你可以给他的最好建议是",
+            "options": [
+                "限制参会者提问的次数,防止少数人问太多的问题",
+                "防止参会者私下向买方提问,因为他们可能不愿意当着竞争对手的面提问",
+                "项目经理不需要参加投标人会议,只需采购管理员参加",
+                "设法获得每个参会者的机密信息"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "以下哪个是结束采购过程的输入?",
+            "options": [
+                "合同(ContrAct)",
+                "采购文件(Procurement Documents)",
+                "采购文档(Procurement DocumentAtion)",
+                "合同往来函件(ContrAct Correspondence)"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "managePower",
+            "question": "质量审计、风险审计和采购审计,虽然分属不同的知识领域,但都具有一个共同点",
+            "options": [
+                "都属于执行过程组",
+                "都属于监控过程组",
+                "都属于收尾过程组",
+                "都涉及经验教训总结"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "managePower",
+            "question": "资源日历是以下哪个过程的输出?",
+            "options": [
+                "估算资源需求",
+                "实施采购",
+                "制订进度计划",
+                "制订人力资源计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "成本补偿合同的特点是",
+            "options": [
+                "买方向卖方支付实际成本,外加一笔管理费用",
+                "买方向卖方支付实际成本,外加一笔利润",
+                "买方向卖方支付实际成本,外加一笔杂项费用",
+                "买方向卖方支付实际成本,外加一笔奖金"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "managePower",
+            "question": "在哪种合同下,买方最需要准确地定义拟采购的产品、服务或成果?",
+            "options": [
+                "总价合同",
+                "单价合同",
+                "工料合同",
+                "成本补偿合同"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "作为组建项目团队过程的输出,资源日历通常用来记录",
+            "options": [
+                "项目团队成员的可用工作时间与休假时间",
+                "项目团队成员的日常工作时间以及在假期中工作的报酬标准",
+                "项目在何时需要何种以及多少资源",
+                "需要资源平衡的资源种类"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "可以使用以下哪种结构来把组织中的部门与项目中的工作包联系起来?",
+            "options": [
+                "工作分解结构",
+                "资源分解结构",
+                "风险分解结构",
+                "组织分解结构"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个说法是正确的?",
+            "options": [
+                "集中办公的团队更需要沟通规划",
+                "虚拟团队更需要沟通规划",
+                "项目管理团队更需要沟通规划",
+                "项目团队更需要沟通规划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "责任分配矩阵具有以下作用,除了",
+            "options": [
+                "反映与每个人有关的所有活动",
+                "反映与每个活动有关的所有人",
+                "为每个工作指定唯一责任点",
+                "使每个人都只负责一项工作"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "制订人力资源计划过程的输出包括",
+            "options": [
+                "人员配备管理计划",
+                "角色与职责",
+                "项目组织机构图",
+                "人力资源计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "高效的项目团队应该",
+            "options": [
+                "以领导为导向",
+                "以工作为导向",
+                "集中办公",
+                "通过电子网络联系"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目人力资源计划包括以下所有内容,除了",
+            "options": [
+                "项目中的角色与职责",
+                "资源直方图",
+                "项目组织机构图",
+                "人员配备管理计划"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目已经启动,刚刚进入了计划编制阶段。在计划编制阶段的早期,项目经理通常应该采用什么领导风格?",
+            "options": [
+                "指挥",
+                "授权",
+                "参与",
+                "民主"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目组织机构图可以展示以下所有,除了",
+            "options": [
+                "团队成员的角色",
+                "团队成员的职权",
+                "成员之间的报告关系",
+                "成员之间的隶属关系"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "评选月度最佳员工",
+            "options": [
+                "是一种良好的做法,能有效激励员工",
+                "是一种零和奖励,会破坏团队凝聚力",
+                "是一种赢-赢奖励,会提高团队凝聚力",
+                "是一种输-输奖励,会破坏团队凝聚力"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个不是管理项目团队过程的输出?",
+            "options": [
+                "变更请求",
+                "事业环境因素更新",
+                "项目管理计划更新",
+                "团队绩效评价"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "下列哪项可以使认可和奖励系统最为有效?",
+            "options": [
+                "给优秀员工大幅度涨工资",
+                "对加班工作多的员工给予最多奖励",
+                "根据员工的重要需求安排奖励",
+                "在项目结束时进行一次性奖励"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "人员的预分派不适用于",
+            "options": [
+                "在投标文件中所指定的人员",
+                "具有特定的知识和技能的人员,项目因他们才存在",
+                "项目章程中指定的项目经理",
+                "根据雇佣合同就位的优秀专业人员"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "为了获得项目所需的人力资源,项目经理经常要与以下各方谈判,除了",
+            "options": [
+                "高级管理层",
+                "职能部门经理",
+                "其他项目经理",
+                "外部资源供应商"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个是组建项目团队过程的输入?",
+            "options": [
+                "活动资源需求",
+                "资源日历",
+                "组织机构图",
+                "项目管理计划"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "管理项目团队过程属于",
+            "options": [
+                "规划过程组",
+                "执行过程组",
+                "监控过程组",
+                "收尾过程组"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目环境中,冲突是不可避免的,会因各种原因而产生。冲突最常见的来源包括",
+            "options": [
+                "成员个性、资源稀缺、进度优先级排序",
+                "进度优先级排序、资源稀缺、成员个性",
+                "资源稀缺、进度优先级排序、成员个性",
+                "资源稀缺、进度优先级排序、个人工作风格"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "可以用以下各种形式来记录团队成员的角色与职责,除了",
+            "options": [
+                "职位任命文件",
+                "层级型组织结构图",
+                "责任分配矩阵",
+                "职位描述文件"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "通过分享权力和使用人际关系技能,使他人为了共同目标而相互合作。这是",
+            "options": [
+                "领导力",
+                "团队建设",
+                "激励",
+                "影响力"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目人力资源管理不包括以下哪个过程?",
+            "options": [
+                "估算项目资源",
+                "管理项目团队",
+                "组建项目团队",
+                "建设项目团队"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在矩阵式管理之下,项目经理应该如何取得项目所需的人力资源?",
+            "options": [
+                "指令职能部门经理提供所需的人力资源",
+                "从执行组织外部招聘尽可能多的人力资源",
+                "直接向职能部门中的员工发出加入项目团队的邀请信",
+                "与职能部门经理就所需人力资源进行谈判"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "评价项目团队有效性的指标包括",
+            "options": [
+                "个人技能的改进、团队能力的改进、成员离职率下降、团队凝聚力提高",
+                "项目经理的权威加强、团队能力的改进、成员离职率下降、团队凝聚力提高",
+                "个人技能的改进、团队能力的改进、团队凝聚力提高、项目业绩提高",
+                "团队能力的改进、成员离职率下降、团队凝聚力提高、项目业绩提高"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目管理中,下列哪种谈判方法最有利于解决冲突?",
+            "options": [
+                "关注利益,而非立场",
+                "关注结果, 而非起因",
+                "关注方法,而非个人",
+                "关注结果,而非过程"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下关于项目管理团队的说法都是正确的,除了",
+            "options": [
+                "项目管理团队是项目团队中从事管理和领导活动的成员的集合",
+                "项目管理团队又称为执行团队、核心团队或领导团队",
+                "项目管理团队可以是整个项目团队",
+                "项目管理团队的成员通常在整个项目生命周期中维持不变"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "具有共同目标,通常不面对面工作,而是依靠电子通信工具相互联系的一群人,被称为",
+            "options": [
+                "项目团队",
+                "虚拟团队",
+                "虚假团队",
+                "项目管理团队"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "塔库曼的五阶段团队建设理论是",
+            "options": [
+                "形成、震荡、规范、成熟和解散",
+                "磨合、震荡、规范、成熟和解散",
+                "规范、磨合、震荡、成熟和解散",
+                "形成、规范、提高、成熟和解散"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "为了更好地完成工作任务,通常用责任分配矩阵来为每一项工作指定",
+            "options": [
+                "唯一的责任人",
+                "两个责任人,以便相互帮助",
+                "三个责任人,以便集体领导",
+                "一个或以上的责任人,视具体情况而定"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "建设项目团队过程的输出包括",
+            "options": [
+                "项目人员分派",
+                "活动资源需求",
+                "资源日历",
+                "团队绩效评价"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下关于人际交往的说法,正确的是",
+            "options": [
+                "人际交往有利于认识更多的人,以便从熟人中招聘员工",
+                "人际交往是指与周围的人发展良好的私人关系,以便能招聘到稀缺人才",
+                "人际交往是指了解会影响人员配备管理的政治和人际因素",
+                "人际交往是指仅与同职业的人保持正式和非正式的互动"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "出色的项目经理应该既是管理者又是领导者。领导涉及以下各项,除了",
+            "options": [
+                "为干系人创造利益",
+                "有效地沟通",
+                "激发和激励人们",
+                "确定方向"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "一个新员工被安排负责项目的资源保障工作,他必须了解项目可用资源的种类、属性、何时可用以及可用多长时间等信息,这时你建议他可以去查阅",
+            "options": [
+                "WBS词典",
+                "采购管理计划",
+                "资源日历",
+                "人力资源计划"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在制定人力资源计划时,往往需要使用资源直方图说明什么时候需要多少资源。资源直方图中的基本要素包括",
+            "options": [
+                "表示时间的横轴",
+                "表示各时段所需资源数量的柱子",
+                "表示可用的最大资源数量的横线",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个过程属于监控过程组?",
+            "options": [
+                "建设项目团队",
+                "管理项目团队",
+                "组建项目团队",
+                "以上都不是"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "奖励应该针对",
+            "options": [
+                "只有少数团队成员能够做到的事情",
+                "人人都能做到的行为",
+                "大多数人能做到的行为",
+                "团队成员解决管理层导致的问题的能力"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "你所负责的跨国项目中的许多人都在虚拟团队中工作。下列哪项最有助于成功地管理跨国虚拟团队?",
+            "options": [
+                "细致地规划团队沟通",
+                "了解团队成员之间的文化差异",
+                "鼓励采用面对问题的方法来解决冲突",
+                "指定一个成员充当联络员"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "塔库曼的团队建设理论认为,团队的生命周期通常要经过如下几个阶段",
+            "options": [
+                "形成、发展、规范、解散",
+                "形成、磨合、规范、终止",
+                "形成、震荡、规范、成熟、终止",
+                "形成、发展、成熟、解散"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目执行过程中,应该通过以下哪项工作来了解团队成员的表现,向团队成员提供反馈,并对团队中的角色与职责进行适当调整?",
+            "options": [
+                "项目绩效评估",
+                "团队绩效评价",
+                "组织绩效评价",
+                "报告项目绩效"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "赫兹伯格的双因素激励理论把与激励有关的因素分成",
+            "options": [
+                "低层次因素与高层次因素",
+                "成就因素、权力因素与亲和因素",
+                "保健因素与激励因素",
+                "X因素与Y因素"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个最好地描述了职责分配矩阵的作用?",
+            "options": [
+                "用于分配项目计划编制工作",
+                "用于联系项目工作与团队成员",
+                "用于确定成员对项目工作的质量责任",
+                "用于项目团队建设"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "人员配备管理计划中通常包括",
+            "options": [
+                "职责分配矩阵",
+                "人员遣散计划",
+                "组织结构图",
+                "角色与职责"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下都是风险管理规划会议的内容,除了",
+            "options": [
+                "识别风险",
+                "确定用于风险管理的进度活动及其所需成本",
+                "建立风险应急储备的使用方法",
+                "制定风险管理工作的相关模板"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险再评估与风险审计都是监控风险过程的工具,它们之间的主要差别在于",
+            "options": [
+                "项目阶段结束时进行风险再评估,整个项目结束时进行风险审计。",
+                "风险再评估由项目管理团队实施,风险审计由管理层实施。",
+                "风险再评估由项目管理团队实施,风险审计由项目经理实施。",
+                "风险再评估由项目团队实施,风险审计由项目团队之外的独立第三方实施。"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险数据质量评价是哪个过程的工具与技术?",
+            "options": [
+                "实施定性风险分析",
+                "实施定量风险分析",
+                "规划风险应对",
+                "监控风险"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险识别过程会得到",
+            "options": [
+                "风险分解结构",
+                "风险清单及风险特征",
+                "风险责任人",
+                "风险应对措施"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "最有可能导致项目风险管理失败的因素是",
+            "options": [
+                "风险应对计划不起作用",
+                "风险监控不力",
+                "缺乏风险登记册",
+                "项目范围说明书不够详细"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在风险管理中,风险责任人的主要责任是",
+            "options": [
+                "识别风险",
+                "预防风险发生",
+                "规划风险应对措施",
+                "实施风险应对措施"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "对未知风险通常应该采取以下哪项措施进行管理?",
+            "options": [
+                "事先制定应对措施",
+                "设法消除",
+                "制订应急计划",
+                "设法减轻"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "用来检查风险应对措施在处理已识别风险及其根源方面的有效性,以及用来检查风险管理过程的有效性的工具是",
+            "options": [
+                "风险评估",
+                "风险审计",
+                "偏差和趋势分析",
+                "技术绩效测量"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个不是识别风险过程所用的图解技术?",
+            "options": [
+                "因果图",
+                "亲和图",
+                "流程图",
+                "影响图"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "某个新产品研发项目,预计投资200万美元。该产品未来市场前景很好的概率为50%,可获利1000万美元;市场前景一般的概率为30%,可获利500万美元。该项目的预期货币价值是",
+            "options": [
+                "450万美元",
+                "650万美元",
+                "500万美元",
+                "数据不全,无法计算"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "不为处理某风险而修改项目计划的风险应对策略称为",
+            "options": [
+                "接受",
+                "转移",
+                "开拓",
+                "回避"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "给项目分配最有能力的人力资源,以确保抓住某个机会,这是属于",
+            "options": [
+                "风险接受",
+                "风险提高",
+                "风险开拓",
+                "风险分享"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目执行过程中未按时实现某个中期里程碑,就是项目不能按期完工的",
+            "options": [
+                "风险触发因素",
+                "风险警告信号",
+                "风险症状",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下都是风险管理计划的内容,除了",
+            "options": [
+                "风险类别",
+                "风险清单",
+                "风险概率和影响矩阵",
+                "风险概率和影响定义"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目风险管理包括以下所有过程,除了",
+            "options": [
+                "实施定量风险分析",
+                "规划风险管理",
+                "实施定性风险分析",
+                "实施风险应对措施"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "规划风险管理过程应该开始于",
+            "options": [
+                "项目启动阶段",
+                "项目规划阶段",
+                "项目执行阶段",
+                "项目监控阶段"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下各项都是风险减轻的例子,除了",
+            "options": [
+                "用应急储备来应对风险发生可能造成的影响",
+                "采用一个不太复杂的方法",
+                "进行多次实验",
+                "选择一个更稳定的供应商"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "人们应对风险的方式通常受以下哪一方面的影响?",
+            "options": [
+                "风险发生的可能性",
+                "风险后果的严重性",
+                "对风险的认知程度",
+                "对风险的态度"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在项目的早期,只知道某项目最短的工期为30天,最长的工期为60天。这时,可用以下哪种概率分布来表示各种可能工期的概率大小?",
+            "options": [
+                "贝塔分布",
+                "三角分布",
+                "对数分布",
+                "均匀分布"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个是定量风险分析的工具与技术?",
+            "options": [
+                "风险数据质量评估",
+                "风险概率和影响评估",
+                "风险概率和影响矩阵",
+                "专家访谈"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下哪个属于风险起因?",
+            "options": [
+                "项目需要申请环境许可证",
+                "政府机构可能延误颁发环境许可证",
+                "项目缺乏成熟的环境评审系统",
+                "项目也许不能通过环境评审"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在风险概率影响矩阵中,高风险区域的机会",
+            "options": [
+                "最容易抓住,但产生的效益最低",
+                "最容易抓住,且产生的效益最高",
+                "最难抓住,应该得到最大程度的监控",
+                "最难抓住,但是产生的效益最高"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "龙卷风图经常是下列哪种分析的表现形式?",
+            "options": [
+                "敏感性分析",
+                "预期货币价值分析",
+                "决策树分析",
+                "模拟分析"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "在风险分析过程中,可以采用多种标准对风险进行分类,以便制订有效的风险应对计划。以下各种都是风险分类的常用标准,除了",
+            "options": [
+                "工作分解结构",
+                "组织分解结构",
+                "风险的根本原因",
+                "项目阶段"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "下列对概率影响矩阵的描述中,最好的是",
+            "options": [
+                "用于风险优先级排序",
+                "为风险优先级排序提供一个客观标准",
+                "用于定性风险分析",
+                "由项目管理团队在风险管理计划中事先设定"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险概率和影响评估通常用于",
+            "options": [
+                "实施定性风险分析",
+                "实施定量风险分析",
+                "规划风险应对",
+                "监控风险"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险责任人需要参与下列哪个过程?",
+            "options": [
+                "识别风险",
+                "实施定性风险分析",
+                "实施定量风险分析",
+                "规划风险应对"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "所有已经识别的风险都要经过下列所有过程,除了",
+            "options": [
+                "实施定性风险分析",
+                "实施定量风险分析",
+                "规划风险应对",
+                "监控风险"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下都是项目的风险指示器,除了",
+            "options": [
+                "项目计划的详细程度",
+                "项目计划的质量",
+                "项目计划与项目需求的匹配程度",
+                "项目计划与假设条件的匹配程度"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "以下所有都会决定风险的排序,除了",
+            "options": [
+                "风险发生的概率",
+                "风险发生的后果",
+                "风险发生的紧急性",
+                "风险承受力"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "某项目是高风险项目,风险管理特别重要。在分析项目风险时项目管理团队需要开展风险数据质量评估以便",
+            "options": [
+                "使定量风险分析所依据的数据更加可靠",
+                "更好地进行风险应对规划",
+                "使定性风险分析具有较高的可信度",
+                "更有效地监控风险"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险概率影响矩阵",
+            "options": [
+                "在综合考虑风险概率与影响的基础上,对风险进行优先级排序",
+                "用于查询风险发生的概率和影响",
+                "用于有效管理风险",
+                "是有效的风险回避技术"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "stressPower",
+            "question": "次生风险是",
+            "options": [
+                "一个风险引起的另一个风险",
+                "因应对一个风险而直接导致的另一个风险",
+                "不太重要的风险",
+                "非紧急发生的风险"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "某公司正在项目选择过程中,有新建工厂和扩建现有工厂两个方案可供选择。如果新建,在市场需求强的情况下,能盈利10000万美元;在市场需求弱的情况下,将亏损4000万美元。如果扩建,在需求强的情况下,可盈利8000万美元;在需求弱的情况下,可盈利2000万美元。经过分析,发现60%的可能性需求强,40%的可能性需求弱。正确的做法是",
+            "options": [
+                "选择新建,因为预期货币价值为4400万美元",
+                "选择扩建,因为预期货币价值为5600万美元",
+                "暂时不做出决策,因为不知道市场需求中的概率和盈利",
+                "综合考虑项目干系人的风险态度后,再选择新建或扩建"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "下列哪一项是项目风险?",
+            "options": [
+                "刚浇注的楼板出现了裂缝",
+                "项目可能无法获得所需的设计工程师",
+                "合同规定的时间已过,供应商仍未供货",
+                "项目所需的钢材涨价了20%"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "项目经理邀请各主要干系人召开会议,对风险的概率和影响进行了评估。之后,他又分析了假设条件的合理性和现实性,并对风险数据的质量进行了评估。在他进行风险管理的下一个过程之前,他还必须",
+            "options": [
+                "识别风险的触发因素",
+                "制订风险应对计划",
+                "评估风险的发展趋势",
+                "使用标准化的风险级别矩阵"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "预期货币价值分析经常用哪种图形来表示?",
+            "options": [
+                "龙卷风图",
+                "概率分布图",
+                "因果图",
+                "决策树"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "stressPower",
+            "question": "风险管理计划中通常包括下列哪项?",
+            "options": [
+                "被指定的风险责任人",
+                "风险管理方法论",
+                "风险应对措施",
+                "风险登记册"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "实施定性风险分析过程的输出是",
+            "options": [
+                "风险应对措施",
+                "预测的风险发展趋势",
+                "量化风险优先级清单",
+                "被指定的风险责任人"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "stressPower",
+            "question": "核对表分析是以下哪个过程的工具与技术?",
+            "options": [
+                "识别风险",
+                "实施质量控制",
+                "规划质量",
+                "实施定性风险分析"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "工作分解结构的基础是",
+            "options": [
+                "产品需求",
+                "项目需求",
+                "干系人的全部需要和期望",
+                "产品需求和项目需求"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "项目范围说明书中通常包括以下哪些内容?",
+            "options": [
+                "产品范围、项目可交付成果、项目进度里程碑、项目除外责任",
+                "产品范围、产品验收标准、项目可交付成果、项目组织结构图、项目除外责任",
+                "产品范围、产品验收标准、项目可交付成果、项目除外责任、项目制约因素",
+                "产品范围、产品验收标准、项目可交付成果、项目假设条件、项目审批要求"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "random",
+            "question": "核实范围的主要内容是什么?",
+            "options": [
+                "确保项目可交付成果按时完成",
+                "通过确保客户对可交付成果的接受,保证项目不偏离轨道",
+                "确保可交付成果符合技术规格",
+                "给人们提供一个发表不同意见的机会"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个是收集需求的输入?",
+            "options": [
+                "项目工作说明书",
+                "项目章程",
+                "干系人管理策略",
+                "采购工作说明书"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "以下关于产品范围和项目范围的说法,哪个是正确的?",
+            "options": [
+                "项目范围服务于产品范围",
+                "项目范围的变化必然引起产品范围的变化",
+                "产品范围的变化必然引起项目范围的变化",
+                "产品范围服务于项目范围"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "控制账户是工作分解结构某个层次上的要素,以便",
+            "options": [
+                "指定工作的责任人或小组",
+                "进行挣值管理",
+                "与工作包一一对应",
+                "汇总项目的成本数据"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个不是项目范围管理的过程?",
+            "options": [
+                "收集需求",
+                "创建工作分解结构",
+                "实施工作分解结构",
+                "核实范围"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "random",
+            "question": "用来衡量产品范围完成情况的文件是",
+            "options": [
+                "项目管理计划",
+                "项目范围说明书",
+                "项目工作分解结构",
+                "产品需求文件"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪项是收集需求过程的工具与技术?",
+            "options": [
+                "控制图",
+                "鱼骨图",
+                "流程图",
+                "亲和图"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "下列四个选项中,不属于备选方案识别技术的例子是",
+            "options": [
+                "价值工程",
+                "横向思维",
+                "配对比较",
+                "名义小组技术"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "范围蔓延是指",
+            "options": [
+                "项目范围的合理延伸",
+                "产品范围的合理延伸",
+                "经过批准的项目范围或产品范围变更",
+                "未得到控制的项目范围或产品范围变更"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "项目范围变更",
+            "options": [
+                "也叫做范围潜变",
+                "是不可避免的",
+                "会影响进度、成本等,必须被拒绝",
+                "应该由项目发起人来审批"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "定义范围过程旨在",
+            "options": [
+                "制订范围管理计划",
+                "制定项目范围说明书",
+                "制定项目工作说明书",
+                "制定工作分解结构"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "核实范围过程与实施质量控制过程的关系是",
+            "options": [
+                "经质量检查合格的可交付成果才能进行范围核实",
+                "经范围核实符合要求的可交付成果才能进行质量检查",
+                "应根据具体需要,先做质量检查或先做范围核实",
+                "质量检查和范围核实通常可以同时进行"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "应该在什么阶段核实范围,以保证在可交付成果完成时及时进行验收?",
+            "options": [
+                "项目执行",
+                "项目监控",
+                "项目收尾",
+                "项目变更"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "系统工程、价值工程、价值分析和系统分析经常用于",
+            "options": [
+                "备选方案识别",
+                "可交付成果识别",
+                "项目制约因素分析",
+                "产品分析"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "核实范围过程旨在",
+            "options": [
+                "审核项目范围基准的正确性",
+                "审核工作分解结构和工作分解结构词典的正确性",
+                "审核项目范围说明书的正确性",
+                "验收已经完成的可交付成果"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个是控制范围过程的输出?",
+            "options": [
+                "工作绩效信息",
+                "工作绩效测量结果",
+                "技术绩效测量结果",
+                "绩效报告"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "在整个项目生命周期中,用于监督、核实和控制项目范围的文件不包括",
+            "options": [
+                "项目工作说明书",
+                "项目范围说明书",
+                "工作分解结构",
+                "工作分解结构词典"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "在项目的环境中,\"范围\"可以指",
+            "options": [
+                "产品范围和工作范围",
+                "产品范围和项目范围",
+                "项目范围和管理范围",
+                "项目范围和需求范围"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "以下各项都是收集需求过程的输出,除了",
+            "options": [
+                "需求管理计划",
+                "需求识别文件",
+                "需求文件",
+                "需求跟踪矩阵"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "工作分解结构的第一层通常可以是",
+            "options": [
+                "项目阶段",
+                "高层次的可交付成果",
+                "准备外包出去的子项目",
+                "以上都是"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "下列哪一项最恰当地描述了项目范围说明书?",
+            "options": [
+                "项目范围说明书是规划范围过程的输出",
+                "项目范围说明书识别项目的目标和可交付成果",
+                "项目范围说明书一经制定,就不允许更改",
+                "每个项目只能有一份项目范围说明书"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "项目范围管理旨在确保",
+            "options": [
+                "做尽可能多的工作,使项目尽可能完美",
+                "做而且只做为成功完成项目所需要的工作",
+                "为客户提供额外的产品功能",
+                "确定不包括在项目范围内的工作"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个不是创建工作分解结构过程的输出?",
+            "options": [
+                "项目范围说明书",
+                "工作分解结构",
+                "工作分解结构词典",
+                "范围基准"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "你正在管理一个新产品研发项目,要研制出一种永不卡住的拉练。\"永不卡住\"是属于",
+            "options": [
+                "项目需求",
+                "商业需求",
+                "交付需求",
+                "产品需求"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "项目范围说明书",
+            "options": [
+                "用来记录项目的主要可交付成果及所需开展的项目工作",
+                "有助于创建WBS",
+                "用来明确怎样对已完可交付成果进行正式核实与接受",
+                "用来指导对项目范围变更请求的审批"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "收集需求的工具与技术中,通常采取\"一对一\"的形式的是",
+            "options": [
+                "访谈",
+                "问卷调查",
+                "德尔菲技术",
+                "引导式研讨会"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个文件会明确说明那些被排除在项目之外的内容?",
+            "options": [
+                "工作分解结构",
+                "项目范围说明书",
+                "项目范围管理计划",
+                "工作分解结构词典"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "工作分解结构底层的要素是",
+            "options": [
+                "控制账户",
+                "规划包",
+                "规划要素",
+                "工作包"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "random",
+            "question": "在以下哪种情况下,应该采用观察的方法来收集项目干系人的需求?",
+            "options": [
+                "干系人的数量很少时",
+                "需要用渐进明细的理念来开发需求时",
+                "干系人不愿或不能说明他们的需求时",
+                "需要组建焦点小组时"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "random",
+            "question": "项目需求包括下列所有,除了",
+            "options": [
+                "产品性能需求",
+                "商业需求",
+                "项目管理需求",
+                "交付需求"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个是收集需求过程的输入?",
+            "options": [
+                "项目工作说明书",
+                "项目范围管理计划",
+                "干系人登记册",
+                "干系人管理策略"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个是控制范围过程的输出?",
+            "options": [
+                "工作绩效信息",
+                "工作绩效测量结果",
+                "绩效报告",
+                "质量控制测量结果"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "关于WBS的说法,哪项是正确的?",
+            "options": [
+                "WBS的第一层可以是可交付成果、项目阶段或子项目",
+                "WBS的第一层可以是可交付成果、项目部门或子项目",
+                "WBS的第一层可以是可交付成果、项目阶段或项目活动",
+                "WBS的第一层可以是项目部门、项目阶段或项目活动"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "定义范围的一个输入是",
+            "options": [
+                "项目工作说明书",
+                "需求文件",
+                "工作分解结构(WBS)",
+                "需求跟踪矩阵"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "random",
+            "question": "收集需求过程是",
+            "options": [
+                "定义并记录干系人的需求",
+                "主要关注产品需求",
+                "主要关注项目需求",
+                "主要关注性能需求"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "以下哪个最好地描述了工作分解结构(WBS)?",
+            "options": [
+                "WBS是对工作成果的层级分解",
+                "WBS是对工作本身的层级分解",
+                "WBS是对项目产品的层级分解",
+                "WBS是对项目活动的层级分解"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "核实范围过程旨在",
+            "options": [
+                "正式验收可交付成果",
+                "审查项目范围文件的正确性",
+                "检查可交付成果的技术正确性",
+                "发现项目范围偏差,管理项目范围基准变更"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "random",
+            "question": "编制工作分解结构,必须遵守下列哪个规则?",
+            "options": [
+                "100%规则",
+                "对称规则",
+                "编号规则",
+                "一次分解到位规则"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "在项目团队中,沟通",
+            "options": [
+                "越多越好",
+                "只能针对那些有利于项目成功的信息",
+                "应该在所有的项目团队成员之间进行",
+                "应该把所有信息发送给所有团队成员"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "问题日志用来记录和监督问题的解决情况。以下哪项对于确保问题解决最有用?",
+            "options": [
+                "把问题作为一个单独的活动,列入项目进度计划中。",
+                "把问题的解决方案作为一个工作包,列入项目工作分解结构中。",
+                "项目经理亲自负责制定和执行问题的解决方案。",
+                "为问题的解决指定责任人,并规定解决日期。"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "信息发送者对下列哪一项负责?",
+            "options": [
+                "确保信息被正确接收和理解",
+                "促使信息接收者赞同信息的内容",
+                "尽量减少沟通中的噪声",
+                "确保信息清晰和完整以便被正确理解"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下所有信息都对项目的沟通需求有直接影响,除了",
+            "options": [
+                "项目持续时间长短",
+                "组织机构图",
+                "参与项目工作的人数",
+                "项目的跨学科、跨专业程度"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "沟通管理计划通常不包括",
+            "options": [
+                "项目干系人的沟通要求",
+                "项目主要里程碑和目标日期",
+                "接收信息的人或组织",
+                "信息分发的时间框架和频率"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下都是沟通管理计划的内容,除了",
+            "options": [
+                "谁可以接收什么信息",
+                "谁可以直接与项目经理沟通",
+                "分配给沟通活动的时间和资金",
+                "问题升级流程"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目沟通管理包括以下所有过程,除了",
+            "options": [
+                "识别干系人",
+                "规划沟通",
+                "控制沟通",
+                "管理干系人期望"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "在项目沟通中,谁负责确保信息的清楚、明确和完整?",
+            "options": [
+                "项目经理",
+                "信息发送者",
+                "信息接收者",
+                "沟通双方"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "经常可以用挣值管理的方法来预测项目完工时的成本。这种预测方法属于",
+            "options": [
+                "判断方法",
+                "计量经济学方法",
+                "模拟预测方法",
+                "时间序列方法"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "作为项目经理获取、存储和向干系人发布项目成本、进度和绩效信息的标准工具,报告系统常用于",
+            "options": [
+                "规划沟通过程",
+                "发布信息过程",
+                "报告绩效过程",
+                "管理干系人期望过程"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "管理干系人期望过程属于",
+            "options": [
+                "启动过程组",
+                "规划过程组",
+                "执行过程组",
+                "监控过程组"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "除下列哪项外,其余都是规划沟通的依据?",
+            "options": [
+                "干系人登记册",
+                "干系人管理策略",
+                "事业环境因素",
+                "沟通技术"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "进行项目沟通需求分析,旨在确定",
+            "options": [
+                "能用于沟通的时间和资金多少",
+                "所需信息的类型和格式,以及信息对干系人的价值",
+                "可使用的沟通技术",
+                "沟通渠道的多少"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "下列哪种方式最适合于向高层管理者报告每月的项目进度?",
+            "options": [
+                "里程碑图",
+                "汇总横道图",
+                "网络图",
+                "绩效报告"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "沟通管理计划为项目沟通活动提供以下何种信息?",
+            "options": [
+                "如何满足项目干系人的沟通需求",
+                "定期向项目干系人提供什么信息",
+                "规划项目的沟通活动",
+                "明确项目团队成员的沟通责任"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "发布信息过程的输入包括",
+            "options": [
+                "工作绩效信息",
+                "工作绩效测量结果",
+                "绩效报告",
+                "信息发布工具"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪个不是管理干系人期望过程的输入?",
+            "options": [
+                "变更日志",
+                "变更请求",
+                "问题日志",
+                "干系人登记册"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "在沟通管理中,强调向正确的人提供正确的信息,也强调只提供所需要的信息。前者和后者分别是指",
+            "options": [
+                "及时的沟通,充分的沟通",
+                "有效率的沟通,有效果的沟通",
+                "充分的沟通,及时的沟通",
+                "有效果的沟通,有效率的沟通"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "绩效报告中通常不包括以下哪项?",
+            "options": [
+                "本报告期完成的工作",
+                "累计偏差情况",
+                "预测的项目完工时间和成本",
+                "已提出的全部变更请求"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目经理应该是一个多面的角色,其中包括作为沟通者。项目经理有多少时间是花费在沟通上面的?",
+            "options": [
+                "20%~50%",
+                "75%~90%",
+                "30%~60%",
+                "10%~30%"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目沟通系统中,对项目沟通效果起关键作用的是",
+            "options": [
+                "项目发起人",
+                "高级管理层",
+                "项目经理",
+                "项目团队"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪个最好地描述了事业环境因素对规划沟通过程的影响?",
+            "options": [
+                "项目执行组织的组织结构对项目的沟通需求有重要影响",
+                "项目执行组织的标准化工作流程对项目的沟通需求有重要影响",
+                "项目执行组织的沟通管理计划模板对项目的沟通规划有重要影响",
+                "项目执行组织的经验教训文档对项目的沟通规划有重要影响"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪个是识别干系人过程的输入?",
+            "options": [
+                "人力资源计划",
+                "组织机构图",
+                "采购文件",
+                "活动资源需求"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目绩效报告的主要目的是",
+            "options": [
+                "让项目干系人了解项目并取得他们的支持",
+                "向高级管理层报告项目问题",
+                "让客户了解已经完成的工作包",
+                "向职能经理提供项目信息"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪个过程会导致问题日志更新?",
+            "options": [
+                "发布信息",
+                "管理干系人期望",
+                "报告绩效",
+                "规划沟通"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "工作绩效信息中不包括",
+            "options": [
+                "已实现的进度",
+                "已发生的成本",
+                "已产生的进度和成本偏差",
+                "可交付成果的状态"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目经理经常使用哪种沟通方法来发布项目绩效报告?",
+            "options": [
+                "交互式沟通",
+                "非正式沟通",
+                "推式沟通",
+                "拉式沟通"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "在项目计划阶段,有8个关键项目干系人被识别;项目执行过程中,又发现原来遗漏掉的2个重要干系人。此时,项目潜在的沟通渠道增加了多少?",
+            "options": [
+                "28",
+                "17",
+                "16",
+                "45"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "在沟通管理中,个人通过对信息的感觉和认知,建立对信息的理解,这个过程属于",
+            "options": [
+                "理解",
+                "解码",
+                "编码",
+                "接收"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下都是拉式沟通的例子,除了",
+            "options": [
+                "电子邮件",
+                "项目网页",
+                "共享在线知识库",
+                "带密码保护的在线项目管理计划"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "识别干系人过程的输入包括",
+            "options": [
+                "项目工作说明书",
+                "项目范围说明书",
+                "采购文件",
+                "干系人登记册"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "questionType": "commPower",
+            "question": "使用凸显模型对干系人进行分析,应该考虑以下所有,除了",
+            "options": [
+                "干系人在项目上的利益",
+                "干系人对项目施加影响的能力",
+                "干系人的紧急程度",
+                "干系人参与项目的合法性"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪个说法是正确的?",
+            "options": [
+                "为了保证项目成功,应该尽可能多地开展沟通",
+                "项目资源只能用来沟通有利于项目成功的信息",
+                "为鼓励充分沟通,在规划沟通时,不能限制谁应该与谁沟通",
+                "应该把项目的所有信息发送给所有的干系人"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "一个公共卫生项目,建立了一个公开的电子网页,用来向广大市民发布项目进展情况。这是属于",
+            "options": [
+                "交互式沟通",
+                "口头沟通",
+                "推式沟通",
+                "拉式沟通"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "报告绩效过程会导致的组织过程资产更新,通常包括对绩效报告的格式的更新和相关的经验教训。以下所有都应该记录在经验教训文档中,除了",
+            "options": [
+                "问题的起因",
+                "所采取的纠正措施",
+                "采取该纠正措施的理由",
+                "变更请求状态更新"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "在规划沟通时,需要根据下列哪个因素来确定沟通需求?",
+            "options": [
+                "项目团队成员是集中办公还是分散办公",
+                "收集和发布信息的方法",
+                "需要收集的信息种类",
+                "发布信息的频率高低"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "用来计算项目团队中潜在沟通渠道数量的公式是",
+            "options": [
+                "n(n-2)/2,其中n代表团队成员的人数",
+                "n(n-1)/2,其中n代表团队成员的人数",
+                "n(n-1)/4,其中n代表团队成员的人数",
+                "[n(n-1)2]/4,其中n代表团队成员的人数"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "questionType": "commPower",
+            "question": "项目经理发现一个团队成员的工作表现不佳。他处理这个问题的最好沟通方法是",
+            "options": [
+                "正式书面沟通",
+                "正式口头沟通",
+                "非正式书面沟通",
+                "非正式口头沟通"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "questionType": "commPower",
+            "question": "以下哪一种预测方法属于时间序列方法?",
+            "options": [
+                "线性预测",
+                "回归分析",
+                "德尔菲法",
+                "模拟预测"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "questionType": "commPower",
+            "question": "干系人登记册中通常包括",
+            "options": [
+                "干系人的基本信息、评估信息和分类",
+                "干系人的基本信息、分类和管理策略",
+                "干系人的基本信息、所在位置和分类",
+                "干系人的基本信息、在项目中的角色和分类"
+            ],
+            "correctIndex": 0
+        }
+    ]
 }

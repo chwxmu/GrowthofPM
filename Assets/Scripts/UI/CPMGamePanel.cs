@@ -161,6 +161,7 @@ public class CPMGamePanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         _isSuccessful = _game.IsSolved();
         _hasPendingResult = true;
         SetNodeInteractionEnabled(false);
@@ -197,6 +198,7 @@ public class CPMGamePanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         _game.Reset();
         _dragSourceIndex = -1;
         if (_feedbackText != null)
@@ -216,6 +218,7 @@ public class CPMGamePanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         gameObject.SetActive(false);
         _hasPendingResult = false;
         _onCompleted?.Invoke(_isSuccessful);

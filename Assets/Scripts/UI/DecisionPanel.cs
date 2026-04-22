@@ -237,6 +237,7 @@ public class DecisionPanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         _hasViewedAiAdvice = true;
         _aiAdviceText.text = _currentAdviceText;
 
@@ -277,6 +278,7 @@ public class DecisionPanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         _selectionLocked = true;
         _hasPendingSelection = true;
         _selectedOptionIndex = selectedIndex;
@@ -310,6 +312,7 @@ public class DecisionPanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         if (_closeButton != null)
         {
             _closeButton.interactable = false;
@@ -500,7 +503,7 @@ public class DecisionPanel : MonoBehaviour
         string statChangeText = BuildStatChangeText(option != null ? option.effects : null);
         if (string.IsNullOrWhiteSpace(statChangeText))
         {
-            return "效果：无属性变化";
+            return "无效果";
         }
 
         return "效果：" + statChangeText;

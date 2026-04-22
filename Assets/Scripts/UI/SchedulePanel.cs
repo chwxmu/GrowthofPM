@@ -189,11 +189,18 @@ public class SchedulePanel : MonoBehaviour
 
     private void OnClickClose()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         gameObject.SetActive(false);
     }
 
     private void OnClickConfirm()
     {
+        if (_onConfirm == null)
+        {
+            return;
+        }
+
+        GameAudioManager.Instance.PlayButtonClick();
         _onConfirm?.Invoke(new List<DailyTaskData>(_selectedTasks));
     }
 
@@ -210,6 +217,7 @@ public class SchedulePanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         _selectedTasks.Add(task);
         _remainingEnergy -= Mathf.Max(0, task.energyCost);
         RebuildAvailableList();
@@ -225,6 +233,7 @@ public class SchedulePanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         DailyTaskData task = _selectedTasks[index];
         _selectedTasks.RemoveAt(index);
         _remainingEnergy = Mathf.Min(_maxEnergy, _remainingEnergy + (task != null ? Mathf.Max(0, task.energyCost) : 0));

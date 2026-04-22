@@ -706,6 +706,11 @@ public class StoryManager : Singleton<StoryManager>
         GetCheckpointAfterDecision(out checkpointStage, out checkpointDecisionIndex);
         GameManager.Instance.ApplyStatChanges(option.effects);
         GameManager.Instance.ModifyHiddenRisk(option.riskChange);
+        if (!string.IsNullOrWhiteSpace(option.setEventFlagId))
+        {
+            GameManager.Instance.SetEventFlag(option.setEventFlagId, option.setEventFlagValue);
+        }
+
         GameManager.Instance.UpdateFlowCheckpoint(checkpointStage, checkpointDecisionIndex);
         if (AIAdvisor.Instance != null)
         {

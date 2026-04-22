@@ -75,6 +75,8 @@ public class OptionData
     public string narrative;
     public StatEffects effects;
     public int riskChange;
+    public string setEventFlagId;
+    public bool setEventFlagValue;
     public string conditionStat;
     public int conditionThreshold;
     public string conditionDescription;

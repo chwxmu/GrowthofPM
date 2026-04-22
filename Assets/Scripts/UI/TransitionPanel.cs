@@ -63,6 +63,7 @@ public class TransitionPanel : MonoBehaviour
 
     private void OnClickStart()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (StoryManager.Instance != null)
         {
             StoryManager.Instance.StartCurrentProjectFromTransition();

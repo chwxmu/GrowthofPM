@@ -109,16 +109,41 @@
         { "speaker": "老周", "location": "公司会议室", "text": "支付接口必须等银行那边开通，那个是外部依赖，不能压缩。" }
       ],
       "decisionEvent": {
-        "eventId": "p2_w3_minigame",
-        "description": "你需要将四个任务模块按正确的依赖顺序连接起来（CPM关键路径小游戏）。\n\n模块：服务器扩容、数据库分库分表、支付接口、前端秒杀页面\n正确顺序：服务器扩容 → 数据库分库分表 → 支付接口 → 前端秒杀页面",
-        "aiAdvice": "按照经验，这些任务可以并行执行以节省时间。",
+        "eventId": "",
+        "description": "你需要将四个任务模块按正确的依赖顺序连接起来。\n\n模块：a服务器扩容、b数据库分库分表、c支付接口、d前端秒杀页面。",
+        "aiAdvice": "",
         "aiQuality": "",
         "aiRecommendedOption": -1,
         "conditionStat": "",
         "conditionThreshold": 0,
-        "isMiniGame": true,
-        "miniGameType": "cpm",
-        "options": []
+        "isMiniGame": false,
+        "miniGameType": "",
+        "options": [
+          {
+            "text": "a-b-c-d",
+            "narrative": "你按依赖顺序先推进基础设施与数据库，再对接支付并完成前端联调，路径安排合理。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0,
+            "setEventFlagId": "cpmCorrect",
+            "setEventFlagValue": true
+          },
+          {
+            "text": "a-b-d-c",
+            "narrative": "你提前推进了前端秒杀页面，但支付接口依赖尚未打通，联调顺序出现错位。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0,
+            "setEventFlagId": "cpmCorrect",
+            "setEventFlagValue": false
+          },
+          {
+            "text": "b-a-d-c",
+            "narrative": "你把数据库改造放在服务器扩容前，导致环境与依赖准备节奏紊乱，路径安排不合理。",
+            "effects": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 },
+            "riskChange": 0,
+            "setEventFlagId": "cpmCorrect",
+            "setEventFlagValue": false
+          }
+        ]
       },
       "fixedStatChanges": { "techPower": 0, "commPower": 0, "managePower": 0, "stressPower": 0 }
     },

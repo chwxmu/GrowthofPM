@@ -754,6 +754,7 @@ public class GameManager : Singleton<GameManager>
             _currentProjectStory = DataManager.Instance.LoadProjectStory(_currentPlayerData.currentProject);
         }
 
+        GameAudioManager.Instance.PlaySharedBgm();
         UIManager.Instance.RebuildPanelRegistry();
         UIManager.Instance.HideAllPanels();
         NotifyDataChanged();

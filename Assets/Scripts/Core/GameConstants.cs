@@ -1,6 +1,8 @@
 ﻿public static class GameConstants
 {
     public const int BASE_ENERGY_PER_WEEK = 300;
+    public const float AUDIO_BGM_VOLUME = 0.35f;
+    public const float AUDIO_SFX_VOLUME = 1f;
     public const int QUIZ_ENERGY_REWARD = 10;
     public const int QUIZ_STAT_REWARD = 1;
     public const int QUIZ_MODULE_STAT_REWARD_CAP = 80;
@@ -13,6 +15,10 @@
     public const string EVENT_FLAG_CPM_CORRECT = "cpmCorrect";
     public const string MINI_GAME_TYPE_CPM = "cpm";
     public const string MINI_GAME_TYPE_RISK_DASHBOARD = "risk_dashboard";
+    public const string AUDIO_BGM_MAIN = "Audio/背景音乐";
+    public const string AUDIO_SFX_BUTTON = "Audio/按键音效";
+    public const string AUDIO_SFX_QUIZ_CORRECT = "Audio/回答正确";
+    public const string AUDIO_SFX_QUIZ_WRONG = "Audio/回答错误";
     public const string DATA_PROJECT2_STORY_RESOURCE_PATH = "Data/project2/story";
     public const string PROJECT2_AI_NAME = "阿法";
     public const string PROJECT2_AI_PERSONALITY = "激进、结果导向，倾向牺牲长期质量换短期进度。";

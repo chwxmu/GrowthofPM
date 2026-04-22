@@ -67,7 +67,7 @@ public class DialoguePanel : MonoBehaviour
         EnsureLayout();
         if (_clickButton != null)
         {
-            _clickButton.onClick.AddListener(OnClickNext);
+            _clickButton.onClick.AddListener(OnClickNextByButton);
         }
     }
 
@@ -85,8 +85,19 @@ public class DialoguePanel : MonoBehaviour
     {
         if (_clickButton != null)
         {
-            _clickButton.onClick.RemoveListener(OnClickNext);
+            _clickButton.onClick.RemoveListener(OnClickNextByButton);
         }
+    }
+
+    private void OnClickNextByButton()
+    {
+        if (_dialogues.Count == 0)
+        {
+            return;
+        }
+
+        GameAudioManager.Instance.PlayButtonClick();
+        OnClickNext();
     }
 
     public void ShowDialogues(List<DialogueLine> dialogues, Action onComplete)

@@ -228,6 +228,7 @@ public class QuizPanel : MonoBehaviour
 
     private void OnClickQuestionType(QuizQuestionType questionType)
     {
+        GameAudioManager.Instance.PlayButtonClick();
         _currentQuestionType = questionType;
         ShowQuestionForCurrentType();
     }
@@ -296,8 +297,9 @@ public class QuizPanel : MonoBehaviour
             return;
         }
 
-        _answered = true;
         bool isCorrect = selectedIndex == _currentQuestion.correctIndex;
+        GameAudioManager.Instance.PlayQuizAnswerResult(isCorrect);
+        _answered = true;
         GameManager.QuizAnswerRewardResult rewardResult = GameManager.Instance != null
             ? GameManager.Instance.ApplyQuizAnswerRewards(isCorrect, _currentQuestionType)
             : new GameManager.QuizAnswerRewardResult(isCorrect, isCorrect ? GameConstants.QUIZ_ENERGY_REWARD : 0, false, false, 0, StatType.TechPower, _currentQuestionType == QuizQuestionType.Random);
@@ -342,6 +344,7 @@ public class QuizPanel : MonoBehaviour
 
     private void OnClickContinue()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (_currentQuestionType == QuizQuestionType.None)
         {
             ShowQuestionTypeSelection();
@@ -353,6 +356,7 @@ public class QuizPanel : MonoBehaviour
 
     private void OnClickClose()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (StoryManager.Instance != null)
         {
             StoryManager.Instance.CloseQuizAndReturn();

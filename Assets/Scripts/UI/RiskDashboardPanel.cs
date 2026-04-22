@@ -197,6 +197,7 @@ public class RiskDashboardPanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         bool isCorrect = _game.TryFixModule(moduleIndex);
         if (_resultText != null)
         {
@@ -268,6 +269,7 @@ public class RiskDashboardPanel : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         gameObject.SetActive(false);
         RiskDashboardGame.SessionResult result = _pendingResult;
         _pendingResult = null;

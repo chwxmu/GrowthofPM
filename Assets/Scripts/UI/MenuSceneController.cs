@@ -27,6 +27,7 @@ public class MenuSceneController : MonoBehaviour
 
     private void Start()
     {
+        GameAudioManager.Instance.PlaySharedBgm();
         RefreshContinueButton();
     }
 
@@ -153,16 +154,19 @@ public class MenuSceneController : MonoBehaviour
 
     private static void OnClickNewGame()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         GameManager.Instance.StartNewGame();
     }
 
     private static void OnClickContinueGame()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         GameManager.Instance.ContinueGame();
     }
 
     private static void OnClickQuit()
     {
+        GameAudioManager.Instance.PlayButtonClick();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

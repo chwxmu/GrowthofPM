@@ -109,6 +109,7 @@ public class EndingPanel : MonoBehaviour
 
     private void OnClickNextProject()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (StoryManager.Instance != null)
         {
             StoryManager.Instance.ContinueToNextProjectFromEnding();
@@ -117,6 +118,7 @@ public class EndingPanel : MonoBehaviour
 
     private void OnClickRestart()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         if (DataManager.Instance != null)
         {
             DataManager.Instance.DeleteSave();
@@ -130,6 +132,7 @@ public class EndingPanel : MonoBehaviour
 
     private void OnClickMenu()
     {
+        GameAudioManager.Instance.PlayButtonClick();
         SceneManager.LoadScene("MenuScene");
     }
 

@@ -128,6 +128,7 @@ public class TopStatusBar : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         if (StoryManager.Instance != null)
         {
             StoryManager.Instance.OpenQuizFromSchedule();
@@ -145,6 +146,7 @@ public class TopStatusBar : MonoBehaviour
             return;
         }
 
+        GameAudioManager.Instance.PlayButtonClick();
         if (StoryManager.Instance != null)
         {
             StoryManager.Instance.OpenScheduleFromTopBar();
